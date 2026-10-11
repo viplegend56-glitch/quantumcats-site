@@ -2603,9 +2603,9 @@ function drawHoarding(b, t) {
   // hazard stripes along the bottom edge
   for (let i = 0; i < 8; i++) { const a0 = u0 + (u1 - u0) * i / 8, a1 = u0 + (u1 - u0) * (i + 0.5) / 8; ctx.fillStyle = i % 2 ? 'rgba(247,200,106,.55)' : 'rgba(20,16,10,.8)'; poly([pt(a0, z0), pt(a1, z0), pt(a1, z0 + 0.22), pt(a0, z0 + 0.22)]); ctx.fill(); }
   let a = pt(u0, z1), c = pt(u1, z1); if (c[0] < a[0]) [a, c] = [c, a];
-  const dlen = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, ux = (c[0] - a[0]) / dlen, uy = (c[1] - a[1]) / dlen, hpx = pt(u0, z0)[1] - a[1];
+  const dlen = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, ux = (c[0] - a[0]) / dlen, uy = (c[1] - a[1]) / dlen, hpx = (z1 - z0) * K; // the panel's height on screen, whichever face it is on
   ctx.save(); ctx.transform(ux, uy, 0, 1, a[0], a[1]); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = `700 ${Math.max(6, hpx * 0.26)}px "Chakra Petch", sans-serif`; ctx.fillStyle = `rgba(247,200,106,${0.95 * fl})`; ctx.shadowColor = 'rgba(247,200,106,.8)'; ctx.shadowBlur = 6;
+  ctx.font = `700 ${Math.max(6, hpx * 0.3)}px "Chakra Petch", sans-serif`; ctx.fillStyle = `rgba(247,200,106,${0.95 * fl})`; ctx.shadowColor = 'rgba(247,200,106,.8)'; ctx.shadowBlur = 6;
   ctx.fillText('COMING', dlen / 2, hpx * 0.3, dlen * 0.9); ctx.fillText('SOON', dlen / 2, hpx * 0.58, dlen * 0.9);
   ctx.restore();
 }
