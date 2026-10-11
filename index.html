@@ -1241,7 +1241,12 @@ const VENT = { x: M(10.7), y: M(16.6) };                                       /
 const ARENA = { x: M(5.45), y: M(13.4), r: 0.95 }; ARENA.slots = [[ARENA.x - 0.3, ARENA.y + 0.22], [ARENA.x + 0.3, ARENA.y - 0.22]]; // the two cats square up in the middle of the ring
 const YARD = { x: M(4.7), y: M(15.4), w: 2.5, d: 2.2 };                        // the yard, in the left corner
 const EXC = { x: M(5.7), y: M(10.77) };                                        // the exchange kiosk
-const CASINO = { x: M(5.7), y: M(8.27) };                                     // the casino, the kiosk just above the exchange on the left edge
+const CASINO = { x: M(5.7), y: M(8.27) };                                     // the casino, above the exchange on the left edge
+const SLOTS = [-0.55, 0, 0.55].map(dy => [CASINO.x - 1.0, CASINO.y + dy]);          // three slot machines against the wall, facing the plaza
+const TABLE = { x: CASINO.x + 0.25, y: CASINO.y + 1.4, r: 0.42 };                  // the card table, the dealer behind it on the wall side
+const CASINO_SPOTS = [...SLOTS.map(q => [CASINO.x - 0.25, q[1]]), [TABLE.x + 0.75, TABLE.y - 0.32], [TABLE.x + 0.75, TABLE.y + 0.32]]; // where a cat stands to play
+const EXC_DESKS = [[EXC.x - 0.85, EXC.y - 0.45], [EXC.x - 0.85, EXC.y + 0.45]];     // two trading desks against the wall
+const EXC_SPOTS = EXC_DESKS.map(q => [EXC.x - 0.05, q[1]]);                          // the stools in front of them
 const BAZ = { x: M(12.1), y: M(4.85), w: 3.0, d: 0.7 };                       // the shop: three stalls against the back wall, top right, clear of the bunks
 const BAZ_SPOTS = [0, 1, 2].map(i => [BAZ.x + 0.5 + i * 1.0, BAZ.y + BAZ.d + 0.55]);
 // bins along the two front edges: where trash and litter go
@@ -1262,8 +1267,8 @@ const ST = {
   vent:   { label: 'the heater',      spot: () => [rand(VENT.x + 0.26, VENT.x + 1.4), rand(VENT.y + 0.26, VENT.y + 1.04)] },
   trays:  { label: 'the scrapyard',   spot: () => [rand(TRAYS.x - 1.3, TRAYS.x - 0.5), rand(TRAYS.y + 0.5, TRAYS.y + 2.9)] },
   loft:   { label: 'the bunks',       spot: () => [rand(LOFT.x + 0.4, LOFT.x + 1.7), rand(LOFT.y + 0.4, LOFT.y + 0.9)] },
-  exchange: { label: 'the exchange',  spot: () => [rand(EXC.x + 1.05, EXC.x + 1.95), rand(EXC.y - 0.8, EXC.y + 0.8)] },
-  casino:   { label: 'the casino',    spot: () => [rand(CASINO.x + 1.05, CASINO.x + 1.95), rand(CASINO.y - 0.7, CASINO.y + 0.7)] },
+  exchange: { label: 'the exchange',  spot: me => { const taken = cats.filter(c => c !== me && (c.act === 'sell' || c.act === 'buy')).map(c => [c.tx, c.ty]); const free = EXC_SPOTS.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); const q = pick(free.length ? free : EXC_SPOTS); return [q[0], q[1]]; } },
+  casino:   { label: 'the casino',    spot: me => { const taken = cats.filter(c => c !== me && c.act === 'gamble').map(c => [c.tx, c.ty]); const free = CASINO_SPOTS.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); const q = pick(free.length ? free : CASINO_SPOTS); return [q[0], q[1]]; } },
   arena:    { label: 'the arena',     spot: () => [rand(ARENA.x - 0.3, ARENA.x + 0.3), rand(ARENA.y - 0.3, ARENA.y + 0.3)] },
   lab:      { label: 'the lab',       spot: me => { const taken = cats.filter(c => c !== me && c.act === 'work' && JOBS[c.job].st === 'lab').map(c => [c.tx, c.ty]); const free = LAB_CONSOLES.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); const q = pick(free.length ? free : LAB_CONSOLES); return [q[0], q[1]]; } },
   yard:     { label: 'the yard',      spot: () => [rand(YARD.x + 0.4, YARD.x + YARD.w - 0.4), rand(YARD.y + 0.4, YARD.y + YARD.d - 0.4)] },
@@ -1278,7 +1283,8 @@ const QLAMPS = [[QUAY - 0.7, 4], [QUAY - 0.7, 11], [QUAY - 0.7, 18], [4, QUAY - 
 const OBST = [
   { x: CRATES.x, y: CRATES.y, w: CRATES.w, d: CRATES.d },      // diner counter
   { x: TRAYS.x, y: TRAYS.y, w: TRAYS.w, d: TRAYS.d },          // scrapyard strip
-  { x: 5.0, y: CASINO.y - 0.8, w: EXC.x + 0.8 - 5.0, d: EXC.y - CASINO.y + 1.6 }, // the casino and the exchange, one block out from the left wall (no slot between or behind them to wedge into)
+  { x: 5.0, y: CASINO.y - 0.85, w: CASINO.x - 0.5 - 5.0, d: EXC.y + 0.85 - (CASINO.y - 0.85) }, // the slot machines, the trading desks and the wall behind them, one block
+  { x: CASINO.x - 0.5, y: TABLE.y - 0.6, w: TABLE.x - 0.1 - (CASINO.x - 0.5), d: 1.2 },           // the dealer's side of the card table
   { x: LAB.x - LAB.w / 2, y: 5.0, w: LAB.w, d: LAB.y + LAB.d / 2 - 5.0 }, // lab, and the slot between it and the buildings behind
   { x: 5.0, y: FRIDGE.y - 0.9, w: FRIDGE.x - 5.0, d: 1.8 },                 // the slots between the fridge and the buildings behind it
   { x: FRIDGE.x - 0.9, y: 5.0, w: 1.8, d: FRIDGE.y - 5.0 },
@@ -1292,7 +1298,7 @@ const OBST = [
   ...BUILD.map(b => ({ x: b.x, y: b.y, w: b.w, d: b.d })),
   { x: 1.6, y: 1.6, w: 3.4, d: BLK - 1.6 }, { x: 1.6, y: 1.6, w: BLK - 1.6, d: 3.4 }, // the two back edges as solid walls, so nothing wedges into the slots between buildings
 ];
-const OBC = [[CRY.x, CRY.y, 0.55], [FRIDGE.x, FRIDGE.y, FRIDGE.r + 0.35], [CRY.x, CRY.y, 2.15, 'circle']]; // round ones: the beacon, the fridge with its plinth, and the whole circle (only a cat with a seat in it may enter)
+const OBC = [[CRY.x, CRY.y, 0.55], [FRIDGE.x, FRIDGE.y, FRIDGE.r + 0.35], [TABLE.x, TABLE.y, TABLE.r + 0.05], [CRY.x, CRY.y, 2.15, 'circle']]; // round ones: the beacon, the fridge with its plinth, and the whole circle (only a cat with a seat in it may enter)
 let steerSelf = null; // who is being steered right now, so the circle can let its own cats through
 // repulsion away from anything within m of (px, py); [fx, fy, strength]
 function pushOut(px, py, m) {
@@ -1528,8 +1534,8 @@ function nearPlace(x, y) {
   if (!placeSpots) placeSpots = [
     ...MEET_ORDER.map(i => [...chairAt(i), 0.7]), ...LAB_CONSOLES.map(q => [q[0], q[1], 0.8]), ...DINER_STOOLS.map(q => [q[0], q[1], 0.8]), [CRATES.x + 0.8, CRATES.y + 1.95, 1.1],
     ...BAZ_SPOTS.map(q => [q[0], q[1], 0.8]), ...BINS.map(b => { const d = DEST.bin(b[0], b[1]); return [d[0], d[1], 0.7]; }),
-    [ARENA.x, ARENA.y, ARENA.r + 0.6], [EXC.x + 1.5, EXC.y, 1.2], [VENT.x + 0.83, VENT.y + 0.65, 1.1], [TRAYS.x - 0.9, TRAYS.y + 1.7, 1.7], [LOFT.x + 1.05, LOFT.y + 0.65, 1.4],
-    [YARD.x + YARD.w / 2, YARD.y + YARD.d / 2, 1.9], [FRIDGE.x + 0.9, FRIDGE.y + 1.1, 1.4], [VAULT.x, VAULT.y, 1.0], [CASINO.x + 1.5, CASINO.y, 1.2],
+    [ARENA.x, ARENA.y, ARENA.r + 0.6], ...EXC_SPOTS.map(q => [q[0], q[1], 0.8]), ...CASINO_SPOTS.map(q => [q[0], q[1], 0.8]), [VENT.x + 0.83, VENT.y + 0.65, 1.1], [TRAYS.x - 0.9, TRAYS.y + 1.7, 1.7], [LOFT.x + 1.05, LOFT.y + 0.65, 1.4],
+    [YARD.x + YARD.w / 2, YARD.y + YARD.d / 2, 1.9], [FRIDGE.x + 0.9, FRIDGE.y + 1.1, 1.4], [VAULT.x, VAULT.y, 1.0],
     [CRY.x - 3.6, CRY.y - 3.6, 1.4], // the bit of floor the countdown over the beacon hangs in front of on screen, so nothing hides behind the clock
     [DOCK.x, DOCK.y, 0.9],
   ];
@@ -1795,8 +1801,8 @@ const PLACES = {
   crates:   { title: 'The diner',       kind: 'food',                      pt: [CRATES.x + 0.8, CRATES.y + 1.2], stats: ['spent', 'here', 'visits'],   desc: 'Sardines, mostly. A meal costs ' + fmtSol(FOOD) + ' SOL at launch and gets dearer as the chart climbs. Most grudges on the block start here.' },
   vent:     { title: 'The heater',      kind: 'warmth',                    pt: [VENT.x + 0.7, VENT.y + 0.5], stats: ['spent', 'here', 'visits'],   desc: 'The only warm spot on the block. A warm-up costs ' + fmtSol(WARM) + ' SOL. It gets crowded when the weather turns.' },
   trays:    { title: 'The scrapyard',   kind: 'lost and found',            pt: [TRAYS.x - 0.7, TRAYS.y + 1.6], stats: ['here', 'found', 'visits'],   desc: 'Where broke cats hunt for food, and where every dropped token on the block ends up. Whatever a decohered or lost cat scatters lands here, and whoever digs it out keeps it.' },
-  exchange: { title: 'The exchange',    kind: 'where cats buy back',       pt: [EXC.x + 0.5, EXC.y],  stats: ['here', 'bought', 'buysol'],  desc: 'A kiosk with a ticker on the front. Any cat with SOL to spare walks up and buys ' + TK + '. Cats never sell here, there is no sell button. Every buy goes straight to the chart.' },
-  casino:   { title: 'The casino',      kind: 'where cats gamble · the house is the treasury', pt: [CASINO.x + 0.5, CASINO.y], stats: ['here', 'wagered', 'spent'], desc: 'A kiosk next to the exchange with three reels and a marquee. A cat with SOL to spare puts a slice of it on a spin against the house: a win pays double out of the treasury, now and then four times, and a loss goes to the treasury. The odds favour the house, a little.' },
+  exchange: { title: 'The exchange',    kind: 'where cats buy back',       pt: [EXC.x + 0.5, EXC.y],  stats: ['here', 'bought', 'buysol'],  desc: 'Two trading desks against the wall, each with a screen. Any cat with SOL to spare sits down and buys ' + TK + '. Cats never sell here, there is no sell button. Every buy goes straight to the chart.' },
+  casino:   { title: 'The casino',      kind: 'where cats gamble · the house is the treasury', pt: [CASINO.x + 0.5, CASINO.y], stats: ['here', 'wagered', 'spent'], desc: 'Three slot machines against the wall and a card table with a bot dealer. A cat with SOL to spare puts a slice of it on a spin or a hand against the house: a win pays double out of the treasury, now and then four times, and a loss goes to the treasury. The odds favour the house, a little.' },
   arena:    { title: 'The arena',       kind: 'where cats wager · entry fee',          pt: [ARENA.x, ARENA.y],  stats: ['spent', 'here', 'wagered'], desc: 'A ring painted on the pavement. Entry costs a little SOL, paid to the treasury. Two cats put up a stake of ' + TK + ', the box flips a quantum coin weighted by their coherence, and the winner takes the pot. Every wager is a transfer between the two wallets.' },
   loft:     { title: 'The bunks',       kind: 'where cats sleep · rent per night',          pt: [LOFT.x + 1.0, LOFT.y + 0.55],  stats: ['spent', 'here', 'stolen'],  desc: 'Bunks over the corner shop, rent due every night, cheaper the higher a cat\u2019s level. Tired cats climb in and sleep it off. A cat with light paws can sneak in and lift a few thousand ' + TK + ' from a sleeper, if it doesn’t get caught.' },
   lab:      { title: 'The lab',         kind: 'quantum jobs · pays from the fee pool', pt: [LAB.x, LAB.y + LAB.d / 2 + 0.4], stats: ['here', 'circuits', 'paid'], desc: 'Where the cats work, under the big billboard. Samplers, factorers and searchers run quantum jobs at the consoles along the glass and get paid out of the creator fees for every job that finishes clean. The chip itself hangs in the dilution fridge in the corner, a few thousandths of a degree above absolute zero, wired to the lab by the pipes. A cat that is losing coherence sits still out in the open near the circle to pull itself together, and pays the lab a little cryo time for it. Open from day one.' },
@@ -3008,8 +3014,8 @@ const SIGNS = {
   crates:   [CRATES.x + 0.8, CRATES.y + 0.95, 1.72, 'DINER', '255,138,92'],
   vent:     [VENT.x - 0.35, VENT.y + 1.0, 1.1, 'HEATER', '255,138,92'],
   trays:    [TRAYS.x + 0.3, TRAYS.y + 1.6, 1.3, 'SCRAPYARD', '154,123,255'],
-  exchange: [EXC.x, EXC.y + 0.7, 2.3, 'EXCHANGE', '92,255,170'],
-  casino:   [CASINO.x, CASINO.y + 0.7, 2.3, 'CASINO', '255,79,174'],
+  exchange: [EXC.x - 0.8, EXC.y, 1.9, 'EXCHANGE', '92,255,170'],
+  casino:   [CASINO.x - 0.95, CASINO.y, 2.2, 'CASINO', '255,79,174'],
   arena:    [ARENA.x, ARENA.y + 0.9, 1.45, 'ARENA', '255,200,80'],
   lab:      [LAB.x, LAB.y + LAB.d / 2, 3.05, 'LAB', '120,200,255'],
   yard:     [YARD.x + YARD.w / 2, YARD.y + YARD.d + 0.1, 1.6, 'YARD', '92,255,170'],
@@ -3282,43 +3288,67 @@ function drawHeater(t) {
   if (!reduce) { const s = (t * 0.7) % 1, sp = P(hx + 0.16, hy + 0.16, 1.55 + s * 0.8); ctx.fillStyle = `rgba(200,205,230,${(1 - s) * 0.3})`; ctx.beginPath(); ctx.arc(sp[0], sp[1], K * 0.05 * (1 + s), 0, TAU); ctx.fill(); }
 }
 function drawExchange(t) {
-  const busy = hereAt('exchange').length > 0, up = mkt.mom >= 0;
-  const ax = EXC.x - 0.7, ay = EXC.y - 0.7;
-  drawBox(ax, ay, 1.4, 1.4, 1.5, { t: '#1C2A3A', l: '#13202E', r: '#0D1622', e: 'rgba(92,255,170,.6)' });
-  drawBox(ax - 0.1, ay - 0.1, 1.6, 1.6, 0.14, { t: '#2A3D52', l: '#1C2C3C', r: '#13202E', e: 'rgba(92,255,170,.5)' }, 1.5);
-  // ticker screen on the front-left face
-  const o = P(ax + 0.15, ay + 1.4, 1.25), len = 1.1 * K, hz = 0.75 * K, fl = busy ? 0.9 + 0.1 * Math.sin(t * 6) : 0.75;
-  ctx.save(); ctx.transform(0.866, 0.5, 0, 1, o[0], o[1]);
-  ctx.fillStyle = 'rgba(4,10,12,.95)'; ctx.fillRect(0, 0, len, hz);
-  ctx.strokeStyle = `rgba(92,255,170,${0.8 * fl})`; ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, len - 1, hz - 1);
-  const h = mkt.hist, n = Math.min(h.length, 40);
-  if (n > 2) {
-    let lo = Infinity, hi = -Infinity; for (let i = h.length - n; i < h.length; i++) { lo = Math.min(lo, h[i]); hi = Math.max(hi, h[i]); }
-    ctx.beginPath();
-    for (let i = 0; i < n; i++) { const v = h[h.length - n + i], x = 4 + (len - 8) * i / (n - 1), y = hz - 4 - (hz - 10) * ((v - lo) / Math.max(1e-12, hi - lo)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
-    ctx.strokeStyle = up ? `rgba(92,255,170,${fl})` : `rgba(255,79,174,${fl})`; ctx.lineWidth = 1.4; ctx.stroke();
-  }
-  ctx.restore();
-  const g = P(EXC.x, EXC.y, 1.75); glowDot(g[0], g[1], Math.max(1.4, K * 0.08), '92,255,170', busy ? 0.9 : 0.4);
+  // two trading desks against the wall: a desk, a screen with the chart line on it, a keyboard, a stool in front
+  const traders = cats.filter(c => c.state === 'act' && (c.act === 'sell' || c.act === 'buy')), up = mkt.mom >= 0, col = '92,255,170';
+  EXC_DESKS.forEach(([dx, dy], i) => {
+    const used = traders.some(c => Math.hypot(c.x - EXC_SPOTS[i][0], c.y - EXC_SPOTS[i][1]) < 0.45);
+    drawBox(dx - 0.28, dy - 0.26, 0.56, 0.52, 0.62, { t: '#1C2A3A', l: '#13202E', r: '#0D1622', e: `rgba(${col},.45)` });
+    drawBox(dx - 0.1, dy - 0.2, 0.2, 0.4, 0.06, { t: '#2A3D52', l: '#1C2C3C', r: '#13202E' }, 0.62);                       // keyboard
+    drawBox(dx - 0.26, dy - 0.05, 0.08, 0.1, 0.28, STEEL, 0.62);                                                            // the stand
+    // the screen: a panel facing the plaza (the +x face), the chart on it
+    const z0 = 0.9, z1 = 1.45, u0 = dy - 0.3, u1 = dy + 0.3, pt = (u, z) => P(dx - 0.2, u, z);
+    const q = [pt(u0, z0), pt(u1, z0), pt(u1, z1), pt(u0, z1)]; ctx.fillStyle = 'rgba(4,10,12,.95)'; poly(q); ctx.fill(); ctx.strokeStyle = `rgba(${col},${used ? .9 : .5})`; ctx.lineWidth = 1; poly(q); ctx.stroke();
+    const h = mkt.hist, n = Math.min(h.length, 30);
+    if (n > 2) { let lo = Infinity, hi = -Infinity; for (let k = h.length - n; k < h.length; k++) { lo = Math.min(lo, h[k]); hi = Math.max(hi, h[k]); } ctx.beginPath(); for (let k = 0; k < n; k++) { const v = h[h.length - n + k], u = u0 + 0.05 + (0.5) * k / (n - 1), z = z0 + 0.06 + (z1 - z0 - 0.12) * ((v - lo) / Math.max(1e-12, hi - lo)); const pp = pt(u, z); k ? ctx.lineTo(pp[0], pp[1]) : ctx.moveTo(pp[0], pp[1]); } ctx.strokeStyle = up ? `rgba(92,255,170,${used ? 1 : .6})` : `rgba(255,79,174,${used ? 1 : .6})`; ctx.lineWidth = 1.3; ctx.stroke(); }
+    const g = pt(dy, (z0 + z1) / 2); glowDot(g[0], g[1], K * 0.5, col, used ? 0.2 : 0.08);
+    drawStool(EXC_SPOTS[i][0], EXC_SPOTS[i][1], t, used, col);
+  });
 }
-function drawCasino(t) {
-  const busy = hereAt('casino').length > 0, ax = CASINO.x - 0.7, ay = CASINO.y - 0.7, col = '255,79,174';
-  drawBox(ax, ay, 1.4, 1.4, 1.5, { t: '#2A1A3A', l: '#1E1230', r: '#150C24', e: `rgba(${col},.6)` });
-  drawBox(ax - 0.1, ay - 0.1, 1.6, 1.6, 0.14, { t: '#3D2A52', l: '#2C1C3C', r: '#1E1230', e: `rgba(${col},.5)` }, 1.5);
-  // the marquee: a chase of lights round the roof edge
-  for (let i = 0; i < 16; i++) { const f = i / 16, e = i < 8 ? P(ax - 0.1 + 1.6 * (i / 7), ay + 1.5, 1.66) : P(ax + 1.5, ay - 0.1 + 1.6 * ((i - 8) / 7), 1.66); const on = ((i + Math.floor(t * (busy ? 8 : 3))) % 4) === 0; glowDot(e[0], e[1], Math.max(1.2, K * 0.05), i % 2 ? '247,200,106' : col, on ? 0.95 : 0.25); }
-  // the reels on the front-left face
-  const o = P(ax + 0.15, ay + 1.4, 1.25), len = 1.1 * K, hz = 0.75 * K;
-  ctx.save(); ctx.transform(0.866, 0.5, 0, 1, o[0], o[1]);
-  ctx.fillStyle = 'rgba(12,4,16,.95)'; ctx.fillRect(0, 0, len, hz);
-  ctx.strokeStyle = `rgba(${col},.8)`; ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, len - 1, hz - 1);
-  const SYM = ['7', '★', '◆', '♠', '●'], cw = (len - 12) / 3;
-  ctx.font = `700 ${Math.max(6, hz * 0.42)}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  for (let i = 0; i < 3; i++) { const x = 4 + i * (cw + 2); ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.fillRect(x, 4, cw, hz - 8); const spin = busy ? Math.floor(t * (6 + i * 2)) : Math.floor(t * 0.4 + i * 1.3); const sym = SYM[(spin + i * 2) % SYM.length]; ctx.fillStyle = sym === '7' ? '#F7C86A' : i % 2 ? '#5CF2FF' : '#FF4FAE'; ctx.fillText(sym, x + cw / 2, hz / 2 + 1); }
+function drawCasino(t, part) {
+  // three slot machines in a row against the wall, and a card table with a dealer bot behind it (drawn as two pieces so cats sort in between)
+  const players = cats.filter(c => c.state === 'act' && c.act === 'gamble'), col = '255,79,174', SYM = ['7', '★', '◆', '♠', '●'];
+  if (part !== 'table') SLOTS.forEach(([sx, sy], i) => {
+    const used = players.some(c => Math.hypot(c.x - CASINO_SPOTS[i][0], c.y - CASINO_SPOTS[i][1]) < 0.45);
+    drawBox(sx - 0.25, sy - 0.22, 0.5, 0.44, 1.25, { t: '#2A1A3A', l: '#1E1230', r: '#150C24', e: `rgba(${col},.6)` });
+    drawBox(sx - 0.27, sy - 0.24, 0.54, 0.48, 0.1, { t: '#3D2A52', l: '#2C1C3C', r: '#1E1230', e: `rgba(247,200,106,.6)` }, 1.25); // the top with its light
+    const top = P(sx, sy, 1.42); glowDot(top[0], top[1], Math.max(1.5, K * 0.08), used ? '247,200,106' : col, Math.sin(t * (used ? 10 : 2) + i) > 0 ? 0.95 : 0.3);
+    // the reels, on the face that looks at the plaza
+    const z0 = 0.72, z1 = 1.08, pt = (u, z) => P(sx + 0.27, u, z), q = [pt(sy - 0.18, z0), pt(sy + 0.18, z0), pt(sy + 0.18, z1), pt(sy - 0.18, z1)];
+    ctx.fillStyle = 'rgba(12,4,16,.96)'; poly(q); ctx.fill(); ctx.strokeStyle = `rgba(${col},.8)`; ctx.lineWidth = 1; poly(q); ctx.stroke();
+    let a = pt(sy - 0.18, z1), c = pt(sy + 0.18, z1); if (c[0] < a[0]) [a, c] = [c, a];
+    const dlen = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, ux = (c[0] - a[0]) / dlen, uy = (c[1] - a[1]) / dlen, hpx = (z1 - z0) * K;
+    ctx.save(); ctx.transform(ux, uy, 0, 1, a[0], a[1]); ctx.font = `700 ${Math.max(5, hpx * 0.6)}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let k = 0; k < 3; k++) { const spin = used ? Math.floor(t * (6 + k * 2)) : Math.floor(t * 0.3 + k + i * 2), sym = SYM[(spin + k + i) % SYM.length]; ctx.fillStyle = sym === '7' ? '#F7C86A' : k % 2 ? '#5CF2FF' : '#FF4FAE'; ctx.fillText(sym, dlen * (0.2 + 0.3 * k), hpx * 0.5); }
+    ctx.restore();
+    // the lever, and the pay slot
+    const l0 = P(sx + 0.1, sy + 0.3, 1.0), l1 = P(sx + 0.1, sy + 0.42, used ? 0.85 : 1.25); ctx.strokeStyle = '#C3CBEE'; ctx.lineWidth = Math.max(1.5, K * 0.04); ctx.beginPath(); ctx.moveTo(l0[0], l0[1]); ctx.lineTo(l1[0], l1[1]); ctx.stroke(); ctx.fillStyle = '#FF4F5E'; ctx.beginPath(); ctx.arc(l1[0], l1[1], Math.max(1.5, K * 0.05), 0, TAU); ctx.fill();
+    const g = P(sx + 0.27, sy, 0.9); glowDot(g[0], g[1], K * 0.4, col, used ? 0.22 : 0.08);
+  });
+  if (part === 'slots') return;
+  // the card table: a round felt top on a post, chips and cards on it
+  const { x: tx, y: ty, r } = TABLE, busyT = players.some(c => Math.hypot(c.x - tx, c.y - ty) < 1.2);
+  const b0 = P(tx, ty, 0), tp = P(tx, ty, 0.55);
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(b0[0], b0[1], K * r * 1.1, K * r * 0.55, 0, 0, TAU); ctx.fill();
+  ctx.strokeStyle = '#4A5080'; ctx.lineWidth = Math.max(3, K * 0.1); ctx.beginPath(); ctx.moveTo(b0[0], b0[1]); ctx.lineTo(tp[0], tp[1]); ctx.stroke();
+  ctx.fillStyle = '#2A1A3A'; ctx.beginPath(); ctx.ellipse(tp[0], tp[1] + K * 0.06, K * r * 1.2247, K * r * 0.7071, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#1E6A3A'; ctx.beginPath(); ctx.ellipse(tp[0], tp[1], K * r * 1.2247, K * r * 0.7071, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(247,200,106,.8)'; ctx.lineWidth = Math.max(1, K * 0.03); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(tp[0], tp[1], K * r * 0.8, K * r * 0.46, 0, Math.PI * 0.1, Math.PI * 0.9); ctx.stroke();
+  for (const [ox, oy, c0] of [[-0.18, 0.1, '#FF4F5E'], [-0.1, 0.16, '#5CF2FF'], [0.12, 0.14, '#F7C86A']]) { const q = P(tx + ox, ty + oy, 0.56); for (let k = 0; k < 3; k++) { ctx.fillStyle = c0; ctx.beginPath(); ctx.ellipse(q[0], q[1] - k * 1.6, K * 0.05, K * 0.028, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.6)'; ctx.lineWidth = 0.6; ctx.stroke(); } }
+  for (let k = 0; k < 2; k++) { const q = P(tx + 0.02 + k * 0.1, ty - 0.14, 0.56); ctx.fillStyle = '#F4E6C8'; ctx.save(); ctx.translate(q[0], q[1]); ctx.transform(0.866, 0.5, -0.866, 0.5, 0, 0); ctx.fillRect(-K * 0.045, -K * 0.065, K * 0.09, K * 0.13); ctx.restore(); }
+  if (busyT) { const q = P(tx, ty, 0.56); ctx.fillStyle = '#F4E6C8'; ctx.save(); ctx.translate(q[0], q[1] - Math.abs(Math.sin(t * 4)) * K * 0.08); ctx.transform(0.866, 0.5, -0.866, 0.5, 0, 0); ctx.fillRect(-K * 0.045, -K * 0.065, K * 0.09, K * 0.13); ctx.restore(); }
+  // the dealer: a slim bot in a vest and bow tie, behind the table on the wall side
+  const d0 = P(tx - 0.85, ty, 0), u = K * 0.5, deal = busyT ? Math.sin(t * 4) : 0;
+  ctx.save(); ctx.translate(d0[0], d0[1]);
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(0, 0, u * 0.4, u * 0.16, 0, 0, TAU); ctx.fill();
+  ctx.strokeStyle = '#2E3568'; ctx.lineWidth = Math.max(2, u * 0.12); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-u * 0.1, -u * 0.05); ctx.lineTo(-u * 0.1, -u * 0.5); ctx.moveTo(u * 0.1, -u * 0.05); ctx.lineTo(u * 0.1, -u * 0.5); ctx.stroke();
+  ctx.fillStyle = '#F4E6C8'; rrect(-u * 0.24, -u * 1.25, u * 0.48, u * 0.8, u * 0.12); ctx.fill();                              // shirt
+  ctx.fillStyle = '#1A1D33'; ctx.beginPath(); ctx.moveTo(-u * 0.24, -u * 1.25); ctx.lineTo(-u * 0.08, -u * 1.25); ctx.lineTo(-u * 0.14, -u * 0.5); ctx.lineTo(-u * 0.24, -u * 0.5); ctx.closePath(); ctx.moveTo(u * 0.24, -u * 1.25); ctx.lineTo(u * 0.08, -u * 1.25); ctx.lineTo(u * 0.14, -u * 0.5); ctx.lineTo(u * 0.24, -u * 0.5); ctx.closePath(); ctx.fill(); // vest
+  ctx.fillStyle = '#C8263A'; ctx.beginPath(); ctx.moveTo(0, -u * 1.18); ctx.lineTo(-u * 0.09, -u * 1.24); ctx.lineTo(-u * 0.09, -u * 1.12); ctx.closePath(); ctx.moveTo(0, -u * 1.18); ctx.lineTo(u * 0.09, -u * 1.24); ctx.lineTo(u * 0.09, -u * 1.12); ctx.closePath(); ctx.fill(); // bow tie
+  ctx.fillStyle = '#22284F'; rrect(-u * 0.26, -u * 1.6, u * 0.52, u * 0.34, u * 0.1); ctx.fill();                              // head
+  ctx.fillStyle = '#5CF2FF'; ctx.fillRect(-u * 0.16, -u * 1.5, u * 0.32, u * 0.07);                                            // visor
+  ctx.strokeStyle = '#F4E6C8'; ctx.lineWidth = Math.max(2, u * 0.1); ctx.beginPath(); ctx.moveTo(u * 0.22, -u * 1.05); ctx.lineTo(u * 0.55, -u * (0.78 + deal * 0.18)); ctx.stroke(); // the dealing arm
   ctx.restore();
-  // dice on the roof
-  for (const [dx, dy, rot] of [[0.35, 0.35, 0], [0.75, 0.55, 0.4]]) { drawBox(ax + dx, ay + dy, 0.22, 0.22, 0.22, { t: '#F4E6C8', l: '#D9CBB0', r: '#B8AA90', e: 'rgba(20,10,0,.3)' }, 1.64); const d = P(ax + dx + 0.11, ay + dy + 0.11, 1.86); ctx.fillStyle = '#1A1D33'; for (const [px_, py_] of rot ? [[-3, -2], [3, 2], [0, 0]] : [[-3, -2], [3, -2], [-3, 2], [3, 2]]) { ctx.beginPath(); ctx.arc(d[0] + px_, d[1] + py_, Math.max(0.8, K * 0.025), 0, TAU); ctx.fill(); } }
-  const g = P(CASINO.x, CASINO.y, 1.75); glowDot(g[0], g[1], Math.max(1.4, K * 0.08), col, busy ? 0.9 : 0.4);
+  const g = P(CASINO.x - 0.95, CASINO.y, 2.05); glowDot(g[0], g[1], Math.max(1.4, K * 0.08), col, busyT || players.length ? 0.9 : 0.4);
 }
 function drawArena(t) {
   const here = hereAt('arena'), live = here.length >= 2, c = P(ARENA.x, ARENA.y), rx = 1.2247 * ARENA.r * K, ry = 0.7071 * ARENA.r * K;
@@ -3510,6 +3540,8 @@ function seatOf(c) {
   if (c.act === 'work') return { z: 0.3, view: c.y > LAB.y + LAB.d / 2 ? 'R' : 'L' };
   if (c.act === 'task') return { z: 0, view: c.dir || (c.face < 0 ? 'L' : 'R') };
   if (c.act === 'shop') return { z: 0, view: 'R' };
+  if (c.act === 'sell' || c.act === 'buy') return { z: 0.3, view: 'L', sit: false }; // up on the desk stool, facing the screen
+  if (c.act === 'gamble') return { z: 0, view: Math.hypot(c.x - TABLE.x, c.y - TABLE.y) < 1 ? viewToward(c, TABLE.x, TABLE.y) : 'L' }; // facing the machine, or the table
   if (c.act === 'wager') { const p = byId(c.partner); return { z: 0, view: p ? viewToward(c, p.x, p.y) : 'R' }; }
   if (c.act === 'idle') return { z: 0, view: c.dir || (c.face < 0 ? 'L' : 'R') };
   return null;
@@ -3836,8 +3868,9 @@ function render(t, dt) {
   L.push([DOCK.x + DOCK.y - 0.3, () => drawDock(t)]);
   for (const q of critters) L.push([q.x + q.y + 0.6, () => drawDrone(q, t)]);
   L.push([LOFT.x + 1.0 + LOFT.y + 0.55, () => drawLoft(t)]);
-  L.push([EXC.x + EXC.y, () => drawExchange(t)]);
-  L.push([CASINO.x + CASINO.y, () => drawCasino(t)]);
+  L.push([EXC.x - 0.85 + EXC.y, () => drawExchange(t)]);
+  L.push([CASINO.x - 1.0 + CASINO.y, () => drawCasino(t, 'slots')]);
+  L.push([TABLE.x + TABLE.y, () => drawCasino(t, 'table')]);
   L.push([BAZ.x + 1.5 + BAZ.y + 0.3, () => drawBazaar(t)]);
   for (const [bx, by] of BINS) L.push([bx + by, () => drawBin(bx, by, t)]);
   for (const q of board.tasks) if (q.x != null) L.push([q.x + q.y + 0.005, () => drawTaskItem(q, t)]);
