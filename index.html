@@ -1244,6 +1244,8 @@ const EXC = { x: M(5.7), y: M(10.77) };                                        /
 const CASINO = { x: M(5.7), y: M(8.27) };                                     // the casino, above the exchange on the left edge
 const SLOTS = [-0.55, 0, 0.55].map(dy => [CASINO.x - 1.0, CASINO.y + dy]);          // three slot machines against the wall, facing the plaza
 const TABLE = { x: CASINO.x + 0.25, y: CASINO.y + 1.4, r: 0.42 };                  // the card table, the dealer behind it on the wall side
+const DOCK = { x: M(8.3), y: M(16.6) }; // the sweeper bots' charging pad, halfway between the yard and the heater
+const DOCK_SLOTS = [[DOCK.x - 0.32, DOCK.y + 0.1], [DOCK.x + 0.32, DOCK.y - 0.1]]; // two bays on the pad
 const CASINO_SPOTS = [...SLOTS.map(q => [CASINO.x - 0.25, q[1]]), [TABLE.x + 0.75, TABLE.y - 0.32], [TABLE.x + 0.75, TABLE.y + 0.32]]; // where a cat stands to play
 const EXC_DESKS = [[EXC.x - 0.85, EXC.y - 0.45], [EXC.x - 0.85, EXC.y + 0.45]];     // two trading desks against the wall
 const EXC_SPOTS = EXC_DESKS.map(q => [EXC.x - 0.05, q[1]]);                          // the stools in front of them
@@ -1291,6 +1293,7 @@ const OBST = [
   { x: BAZ.x - 0.2, y: 5.0, w: BAZ.w + 0.4, d: BAZ.y - 5.0 },                 // and behind the shop
   ...BINS.map(([bx, by]) => ({ x: bx - 0.22, y: by - 0.22, w: 0.44, d: 0.44 })),
   { x: VAULT.x - 0.45, y: VAULT.y - 0.45, w: 0.9, d: 0.9 },    // treasury
+  { x: DOCK.x - 0.6, y: DOCK.y - 0.5, w: 1.2, d: 1.0, dock: true }, // the charging pad: the bots' own, cats go round
   { x: LOFT.x - 0.12, y: 5.0, w: LOFT.w + 0.24, d: LOFT.y + 0.06 - 5.0 }, // the bunks' back wall, and the slot behind it
   { x: LOFT.x - 0.12, y: LOFT.y, w: 0.14, d: LOFT.d + 0.06 },             // the bunks' side wall: in by the open front only
   { x: BAZ.x - 0.1, y: BAZ.y - 0.1, w: BAZ.w + 0.2, d: BAZ.d + 0.2 }, // the shop stalls
@@ -1304,6 +1307,7 @@ let steerSelf = null; // who is being steered right now, so the circle can let i
 function pushOut(px, py, m) {
   let fx = 0, fy = 0, best = 0, who = -1;
   for (let i = 0; i < OBST.length; i++) { const o = OBST[i];
+    if (o.dock && steerSelf && steerSelf.bot) continue; // the pad is the bots' to roll onto
     const nx = clamp(px, o.x, o.x + o.w), ny = clamp(py, o.y, o.y + o.d); let dx = px - nx, dy = py - ny, dd = Math.hypot(dx, dy);
     if (dd === 0) { // inside: leave by the nearest side
       const l = px - o.x, r = o.x + o.w - px, t = py - o.y, b = o.y + o.d - py, mn = Math.min(l, r, t, b);
@@ -1316,6 +1320,7 @@ function pushOut(px, py, m) {
     const dx = px - cx, dy = py - cy, dd = Math.hypot(dx, dy) || 0.001;
     if (dd < r + m) { const f = clamp((r + m - dd) / m, 0, 2); fx += dx / dd * f; fy += dy / dd * f; if (f > best) { best = f; who = 1000 + i; } }
   }
+  for (const q of board.tasks) { if (q.x == null || (steerSelf && steerSelf.task === q.id)) continue; const dx = px - q.x, dy = py - q.y, dd = Math.hypot(dx, dy) || 0.001; if (dd < 0.3 + m) { const f = clamp((0.3 + m - dd) / m, 0, 2); fx += dx / dd * f; fy += dy / dd * f; if (f > best) { best = f; who = 3000; } } } // nothing walks through what is lying on the floor, except the cat going for it
   if (steerSelf && steerSelf.bot) { // the sweeper bots also keep out of every place the cats use: the yard, the arena, the stools, the consoles, the queues
     if (!placeSpots) nearPlace(0, 0);
     for (let i = 0; i < placeSpots.length; i++) { const [cx, cy, r] = placeSpots[i]; const dx = px - cx, dy = py - cy, dd = Math.hypot(dx, dy) || 0.001;
@@ -1537,7 +1542,7 @@ function nearPlace(x, y) {
     [ARENA.x, ARENA.y, ARENA.r + 0.6], ...EXC_SPOTS.map(q => [q[0], q[1], 0.8]), ...CASINO_SPOTS.map(q => [q[0], q[1], 0.8]), [VENT.x + 0.83, VENT.y + 0.65, 1.1], [TRAYS.x - 0.9, TRAYS.y + 1.7, 1.7], [LOFT.x + 1.05, LOFT.y + 0.65, 1.4],
     [YARD.x + YARD.w / 2, YARD.y + YARD.d / 2, 1.9], [FRIDGE.x + 0.9, FRIDGE.y + 1.1, 1.4], [VAULT.x, VAULT.y, 1.0],
     [CRY.x - 3.6, CRY.y - 3.6, 1.4], // the bit of floor the countdown over the beacon hangs in front of on screen, so nothing hides behind the clock
-    [DOCK.x, DOCK.y, 0.9],
+    [DOCK.x, DOCK.y, 1.1],
   ];
   for (const [px, py, r] of placeSpots) if (Math.hypot(x - px, y - py) < r) return true;
   return false;
@@ -1548,7 +1553,6 @@ const board = { tasks: [], done: [], seq: 0, next: 0, badge: null, badgeCool: 0 
 const FLAG_COOL = 600, FLAG_AFTER = 300, BOARD_MAX = 3; // the badge shows once something has lain untouched for five minutes; a flag hides it for ten; never more than three things out at once
 // deliveries: a drone comes in high over the harbour side, drops down over a clear bit of the ring, leaves the thing and climbs out again
 const deliveries = []; let deliverySeq = 0;
-const DOCK = { x: M(9.3), y: M(16.8) }; // the sweeper bots' charging pad, left of the heater
 function skyPoint() { return Math.random() < 0.5 ? [BLK + rand(2.5, 5), rand(5, BLK)] : [rand(5, BLK), BLK + rand(2.5, 5)]; }
 function sendDrone(kind) {
   if (board.tasks.length + deliveries.filter(d => d.state !== 'out').length >= BOARD_MAX) return null; // three things out is the limit, counting what is on its way
@@ -1577,22 +1581,21 @@ function stepDeliveries(dt) {
   }
 }
 // sweeper bots: two squat tracked bots that trundle round the ring sweeping, with the odd trip back to the dock to charge
-const bots = []; let botSeq = 0, nextBot = 0;
-function quietRing() { return !meeting.on && cats.filter(c => !asleep(c) && Math.hypot(c.x - CRY.x, c.y - CRY.y) < 6.5).length < 3; }
+const bots = []; let botSeq = 0;
+function makeBot(i) { return { id: 'B' + (++botSeq), bot: true, bay: i, x: DOCK_SLOTS[i][0], y: DOCK_SLOTS[i][1], tx: DOCK_SLOTS[i][0], ty: DOCK_SLOTS[i][1], state: 'docked', born: T, leaveAt: T + rand(20, 90) + i * 60, face: i ? -1 : 1, slide: 0, pauseT: 0, ph: Math.random() * 6, brush: 0 }; }
 function stepBots(dt) {
-  if (!nextBot) nextBot = T + rand(60, 120);
-  if (T >= nextBot) { nextBot = T + rand(30, 70); if (bots.length < 2) { const sp = wanderSpot(); bots.push({ id: 'B' + (++botSeq), bot: true, x: DOCK.x, y: DOCK.y, tx: sp[0], ty: sp[1], state: 'roam', born: T, leaveAt: T + rand(600, 1200), face: 1, slide: 0, pauseT: 0, ph: Math.random() * 6, brush: 0 }); } }
-  for (let i = bots.length - 1; i >= 0; i--) {
-    const b = bots[i];
-    if (b.state === 'roam' && T > b.leaveAt) { b.state = 'home'; b.tx = DOCK.x; b.ty = DOCK.y; b.slide = 0; b.pauseT = 0; }
+  while (bots.length < 2) bots.push(makeBot(bots.length));
+  for (const b of bots) {
+    if (b.state === 'docked') { if (T > b.leaveAt) { const sp = wanderSpot(); b.state = 'roam'; b.tx = sp[0]; b.ty = sp[1]; b.slide = 0; b.leaveAt = T + rand(600, 1200); } continue; }
+    if (b.state === 'roam' && T > b.leaveAt) { b.state = 'home'; b.tx = DOCK_SLOTS[b.bay][0]; b.ty = DOCK_SLOTS[b.bay][1]; b.slide = 0; b.pauseT = 0; }
     if (b.pauseT > 0) { b.pauseT -= dt; b.brush += dt * 7; continue; }
     const dist = Math.hypot(b.tx - b.x, b.ty - b.y);
-    if (dist < 0.1) { if (b.state === 'home') { bots.splice(i, 1); continue; } const sp = wanderSpot(); b.tx = sp[0]; b.ty = sp[1]; b.pauseT = rand(2, 6); b.slide = 0; continue; }
+    if (dist < 0.08) { if (b.state === 'home') { b.state = 'docked'; b.x = b.tx; b.y = b.ty; b.face = b.bay ? -1 : 1; b.leaveAt = T + rand(120, 240); continue; } const sp = wanderSpot(); b.tx = sp[0]; b.ty = sp[1]; b.pauseT = rand(2, 6); b.slide = 0; continue; }
     const [nx, ny, vx, vy] = steerStep(b.x, b.y, b.tx, b.ty, 0.5, dt, b); const sdx = vx - vy; if (Math.abs(sdx) > 0.05) b.face = sdx > 0 ? 1 : -1; b.x = nx; b.y = ny; b.brush += dt * 10;
-    if (!b.stuckP || T - b.stuckP[2] > 3) { // wedged: turn round, then give up and go home (or vanish into the dock)
+    if (!b.stuckP || T - b.stuckP[2] > 3) { // wedged: turn round, then give the trip up
       if (b.stuckP && Math.hypot(b.x - b.stuckP[0], b.y - b.stuckP[1]) < 0.3) { b.slide = -(b.slide || 1); b.stuckN = (b.stuckN || 0) + 1; } else b.stuckN = 0;
       b.stuckP = [b.x, b.y, T];
-      if (b.stuckN >= 3) { if (b.state === 'home') { bots.splice(i, 1); continue; } b.state = 'home'; b.tx = DOCK.x; b.ty = DOCK.y; b.slide = 0; b.stuckN = 0; }
+      if (b.stuckN >= 3) { b.stuckN = 0; if (b.state === 'home') { b.state = 'docked'; b.x = b.tx; b.y = b.ty; b.leaveAt = T + rand(120, 240); } else { b.state = 'home'; b.tx = DOCK_SLOTS[b.bay][0]; b.ty = DOCK_SLOTS[b.bay][1]; b.slide = 0; } }
     }
   }
 }
@@ -2826,13 +2829,14 @@ function drawDelivery(d, t) {
   glowDot(p[0], p[1] + u * 0.1, Math.max(1.2, K * 0.05), d.state === 'drop' ? '92,255,170' : '255,138,92', Math.sin(t * 6 + d.ph) > 0 ? 0.9 : 0.4);
 }
 function drawDock(t) {
-  const busy = bots.length > 0; drawBox(DOCK.x - 0.45, DOCK.y - 0.45, 0.9, 0.9, 0.08, { t: '#1C2250', l: '#141A40', r: '#0E1230', e: 'rgba(92,242,255,.55)' });
-  const c0 = P(DOCK.x, DOCK.y, 0.09); ctx.strokeStyle = `rgba(92,242,255,${busy ? 0.35 : 0.6})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(c0[0], c0[1], K * 0.3, K * 0.15, 0, 0, TAU); ctx.stroke();
-  drawBox(DOCK.x + 0.3, DOCK.y - 0.45, 0.12, 0.12, 0.7, STEEL, 0.08); const l = P(DOCK.x + 0.36, DOCK.y - 0.39, 0.82); glowDot(l[0], l[1], Math.max(1.5, K * 0.07), busy ? '255,138,92' : '92,255,170', Math.sin(t * 2) > 0 ? 0.9 : 0.35);
+  drawBox(DOCK.x - 0.6, DOCK.y - 0.5, 1.2, 1.0, 0.08, { t: '#1C2250', l: '#141A40', r: '#0E1230', e: 'rgba(92,242,255,.55)' });
+  DOCK_SLOTS.forEach(([sx, sy], i) => { const home = bots.some(b => b.bay === i && b.state === 'docked'); const c0 = P(sx, sy, 0.09); ctx.strokeStyle = `rgba(92,242,255,${home ? 0.25 : 0.6})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(c0[0], c0[1], K * 0.26, K * 0.13, 0, 0, TAU); ctx.stroke(); });
+  drawBox(DOCK.x - 0.06, DOCK.y - 0.5, 0.12, 0.12, 0.75, STEEL, 0.08);
+  DOCK_SLOTS.forEach(([sx, sy], i) => { const home = bots.some(b => b.bay === i && b.state === 'docked'); const l = P(DOCK.x + (i ? 0.08 : -0.08), DOCK.y - 0.44, 0.78 + i * 0.12); glowDot(l[0], l[1], Math.max(1.5, K * 0.06), home ? '92,255,170' : '255,138,92', home ? 0.6 + 0.35 * Math.sin(t * 3 + i) : 0.9); });
 }
 function drawBot(b, t) {
   // a sweeper bot: tracks, a squat body, a spinning brush out front, a light bar for a face
-  const [px, py] = P(b.x, b.y, 0), u = K * 0.46, moving = b.pauseT <= 0;
+  const [px, py] = P(b.x, b.y, 0), u = K * 0.46, docked = b.state === 'docked', moving = !docked && b.pauseT <= 0;
   if (px < -80 || px > W + 80 || py < -80 || py > H + 80) return;
   ctx.save(); ctx.translate(px, py); ctx.scale(b.face || 1, 1);
   ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(0, 0, u * 0.55, u * 0.2, 0, 0, TAU); ctx.fill();
@@ -2840,12 +2844,18 @@ function drawBot(b, t) {
   ctx.fillStyle = '#2E3568'; for (const wx_ of [-0.3, 0, 0.3]) { ctx.beginPath(); ctx.arc(u * wx_, -u * 0.16, u * 0.09, 0, TAU); ctx.fill(); }
   ctx.fillStyle = '#6E78AA'; rrect(-u * 0.4, -u * 0.78, u * 0.8, u * 0.5, u * 0.12); ctx.fill();
   ctx.fillStyle = '#0A0C1A'; ctx.fillRect(-u * 0.3, -u * 0.7, u * 0.6, u * 0.12);
-  for (let k = 0; k < 4; k++) { const on = Math.sin(t * 5 + k * 1.3 + b.ph) > -0.2; ctx.fillStyle = on ? '#5CFFAA' : 'rgba(92,255,170,.25)'; ctx.fillRect(-u * 0.26 + k * u * 0.14, -u * 0.67, u * 0.1, u * 0.06); }
+  for (let k = 0; k < 4; k++) { const on = docked ? ((t * 1.5 + b.ph) % 4) >= k : Math.sin(t * 5 + k * 1.3 + b.ph) > -0.2; ctx.fillStyle = on ? '#5CFFAA' : 'rgba(92,255,170,.25)'; ctx.fillRect(-u * 0.26 + k * u * 0.14, -u * 0.67, u * 0.1, u * 0.06); } // charging: the bar fills up and starts again
   // the brush, spinning when it is moving or sweeping
-  ctx.save(); ctx.translate(u * 0.58, -u * 0.12); ctx.rotate(b.brush || 0); ctx.strokeStyle = '#C3CBEE'; ctx.lineWidth = Math.max(1, u * 0.05); ctx.beginPath(); for (let k = 0; k < 6; k++) { const a = k / 6 * TAU; ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * u * 0.2, Math.sin(a) * u * 0.1); } ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.translate(u * 0.56, -u * 0.14); ctx.fillStyle = '#C3CBEE'; ctx.beginPath(); ctx.ellipse(0, 0, u * 0.22, u * 0.13, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(60,70,120,.8)'; ctx.lineWidth = 1; for (let k = 0; k < 3; k++) { const a = (b.brush || 0) + k * TAU / 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * u * 0.22, Math.sin(a) * u * 0.13); ctx.stroke(); } ctx.strokeStyle = '#3A3F6A'; ctx.lineWidth = Math.max(1, u * 0.05); ctx.beginPath(); ctx.ellipse(0, 0, u * 0.22, u * 0.13, 0, 0, TAU); ctx.stroke(); ctx.restore(); // the roller brush
   if (!reduce && moving) for (let k = 0; k < 2; k++) { const a = t * 9 + k * 2 + b.ph; ctx.fillStyle = 'rgba(200,205,230,.5)'; ctx.beginPath(); ctx.arc(u * 0.55 + Math.cos(a) * u * 0.25, -u * 0.05 + Math.sin(a) * u * 0.08, 1.2, 0, TAU); ctx.fill(); }
-  ctx.strokeStyle = 'rgba(160,175,230,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-u * 0.2, -u * 0.78); ctx.lineTo(-u * 0.2, -u * 1.0); ctx.stroke(); glowDot(-u * 0.2, -u * 1.02, Math.max(1.5, u * 0.08), '255,138,92', Math.sin(t * 4 + b.ph) > 0.2 ? 0.95 : 0.3);
+  ctx.strokeStyle = 'rgba(160,175,230,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-u * 0.2, -u * 0.78); ctx.lineTo(-u * 0.2, -u * 1.0); ctx.stroke(); glowDot(-u * 0.2, -u * 1.02, Math.max(1.5, u * 0.08), docked ? '92,255,170' : '255,138,92', docked ? 0.5 + 0.4 * Math.sin(t * 2) : Math.sin(t * 4 + b.ph) > 0.2 ? 0.95 : 0.3);
   ctx.restore();
+  if (docked) { // the charging lead from the post to the bot's back, and a bolt over it so you can tell at a glance
+    const post = P(DOCK.x, DOCK.y - 0.44, 0.42), sx = px - (b.face || 1) * u * 0.44, sy = py - u * 0.5;
+    ctx.strokeStyle = 'rgba(92,242,255,.75)'; ctx.lineWidth = Math.max(1, u * 0.05); ctx.beginPath(); ctx.moveTo(post[0], post[1]); ctx.quadraticCurveTo((post[0] + sx) / 2, Math.max(post[1], sy) + u * 0.35, sx, sy); ctx.stroke();
+    const pulse = 0.55 + 0.45 * Math.sin(t * 4 + b.ph), bs = u * 0.26, bx = px, by = py - u * 1.25 - Math.sin(t * 2 + b.ph) * u * 0.05;
+    ctx.fillStyle = `rgba(92,255,170,${pulse})`; ctx.beginPath(); ctx.moveTo(bx + bs * 0.15, by - bs); ctx.lineTo(bx - bs * 0.3, by + bs * 0.1); ctx.lineTo(bx + bs * 0.02, by + bs * 0.1); ctx.lineTo(bx - bs * 0.15, by + bs); ctx.lineTo(bx + bs * 0.3, by - bs * 0.1); ctx.lineTo(bx - bs * 0.02, by - bs * 0.1); ctx.closePath(); ctx.fill();
+  }
 }
 // the harbor: a ferry on the left water, buoys, a lighthouse on the point// the harbor: a ferry on the left water, buoys, a lighthouse on the point
 const ferry = { x: -10, y: QUAY + 6.2, v: 0.28 };
