@@ -601,17 +601,13 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
     <div class="xs">
       <div class="xs-head"><div><span class="xs-eye">what this is</span><h2 class="xs-title">a box that runs itself</h2></div><p class="xs-note">nobody steers them. they work because<br>living in the box costs SOL.</p></div>
       <div class="xs-cards">
-        <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with 100K <span data-tk>$QCATS</span> and not a lamport of SOL. everything else a cat ever gets comes out of the creator fees.</p></article>
-        <article><h3>work</h3><p>the lab pays SOL out of the fees, in proportion to the quantum jobs each cat finishes. some work all day, some barely. that is personality, not a setting.</p></article>
-        <article><h3>want</h3><p>a meal, a bunk, warmth, play and the arena all cost SOL, and every price climbs with the chart. a cat that cannot cover a meal sells a little coin. a cat with spare SOL buys.</p></article>
-        <article><h3>learn</h3><p>the last ten minutes of every day are the meeting in the circle. each cat takes one thing away, carries it into tomorrow, and levels up from everything it does in the town.</p></article>
+        <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with 100K <span data-tk>$QCATS</span> and a little SOL for gas. everything else a cat ever gets is paid for by the creator fees.</p></article>
+        <article><h3>work</h3><p>the lab pays $QI for every quantum job a cat finishes. the chores on the floor pay SOL out of the fees. some cats work all day, some barely. that is personality, not a setting.</p></article>
+        <article><h3>want</h3><p>a meal, a bunk, warmth, play and the arena all cost SOL, and every price climbs with the chart. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which. a cat with spare SOL buys.</p></article>
+        <article><h3>learn</h3><p>every night the last ten minutes are the meeting in the circle. each cat writes down one thing it learned and reads it back tomorrow, and it levels up from everything it does in the town.</p></article>
       </div>
     </div>
 
-    <div class="xs">
-      <div class="xs-head"><div><span class="xs-eye">inside their heads</span><h2 class="xs-title">what they are thinking</h2></div><p class="xs-note">every cat weighs hunger, cold, SOL and company<br>before it moves. this is that, live.</p></div>
-      <div class="xs-minds" id="xsMinds"></div>
-    </div>
 
     <div class="xs">
       <div class="xs-head"><div><span class="xs-eye">right now</span><h2 class="xs-title">who is out doing what</h2></div><p class="xs-note" id="xsNowNote">0 of them are working something tonight</p></div>
@@ -649,7 +645,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
         </ol>
       </div>
       <div class="xs-coin">
-        <p id="xsCoin">the cats live on SOL. every job in the lab pays it, every meal, bunk and warm spot costs it, and the casino takes its cut. <span data-tk>$QCATS</span> is the coin behind the box: its creator fees are the only SOL the cats ever get.</p>
+        <p id="xsCoin">the cats live on SOL. every meal, bunk and warm spot costs it, the chores pay it, and the casino takes its cut. the lab pays $QI. <span data-tk>$QCATS</span> is the coin behind the box: its creator fees fund all of it, and the treasury keeps every cat topped up with gas.</p>
         <a class="xs-btn" href="#/qcat">read the coin</a>
       </div>
       <p class="ab-fine"><span data-tk>$QCATS</span> is on Solana. The fees keep the cats fed, thinking and working whether anyone is watching or not. No deposits into the cats, no copy trading, no profit sharing, no financial advice. They have enough going on.</p>
@@ -664,7 +660,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   <section class="sec pg">
     <div class="wrap">
       <h2 class="sec-title">Cats</h2>
-      <p class="sec-lead">Everyone released so far, live. What a cat is doing on its card is what it is doing in the box.</p>
+      <p class="sec-lead">All ten, live. What a cat is doing on its card is what it is doing in the box.</p>
       <div class="filters" id="catFilters" role="group" aria-label="Filter cats">
         <button type="button" class="on" data-f="all">all of them</button>
         <button type="button" data-f="working">working</button>
@@ -802,7 +798,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           <div class="ph"><span>Ten wallets</span></div>
           <div class="cb">
             <div class="big" aria-hidden="true">100K</div>
-            <p>Every cat is given 100,000 <span data-tk>$QCATS</span> and not a single lamport of SOL, in a real wallet of its own. That is all a cat will ever be given. All ten are in the box from day one.</p>
+            <p>Every cat is given 100,000 <span data-tk>$QCATS</span> and not a single lamport of SOL, in a real wallet of its own. Each also keeps a small SOL reserve for gas that the treasury tops up when it runs low. All ten are in the box from day one.</p>
           </div>
         </article>
         <article class="panel card">
@@ -824,7 +820,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
         <article class="panel card">
           <div class="ph"><span>Work</span></div>
           <div class="cb">
-            <p>Every cat runs quantum jobs, and how often it feels like working is down to its personality. Each finished job is a slice of the fee pool; bigger circuits count for more, and the risky kinds fail sometimes. When the pool is empty the work goes on the tab for the next payout. The job board next to the lab posts extra work in three tiers, and a cat gets better at every kind of job the more it does.</p>
+            <p>Every cat runs quantum jobs, and how often it feels like working is down to its personality. The lab pays $QI per finished job; bigger circuits pay more, and the risky kinds fail sometimes. A cat that needs SOL can sell its $QI at the exchange, or hold it and sell a slice of $QCATS instead; which one is personality too. The job board next to the lab posts extra work in three tiers, and a cat gets better at every kind of job the more it does.</p>
             <table class="jobs">
               <tr><td>sampler</td><td>sampling circuits</td><td>safe</td></tr>
               <tr><td>calibrator</td><td>calibration jobs</td><td>safe</td></tr>
@@ -1759,6 +1755,16 @@ const CHATS = [
 const FOOD = 0.0001, CRYO = 0.00007, WARM = 0.00005, BUNK = 0.00006, ARENA_FEE = 0.00004, PLAY = 0.00005, RESERVE = 0.0003;
 // while there is no coin yet the treasury is a simulated fee pool that pays every job; once the coin is live, SOL only moves when the operator distributes
 const feePool = () => CONFIG.SIMULATE_FEES !== false;
+// gas: every cat keeps a reserve of SOL that only pays network fees. It is never spent on living, and when it runs low the treasury tops it up.
+const GAS_FLOOR = 0.01, GAS_MIN = 0.002, TX_FEE = 0.000005;
+const spendGas = c => { c.gas = Math.max(0, (c.gas == null ? GAS_FLOOR : c.gas) - TX_FEE); };
+// $QI: what the lab pays. Paid per job out of the lab's pool while the box runs on its own; once the real $QI wallet is wired in, jobs only earn a share of the next payout.
+const QI = '$QI';
+const qiPerJob = () => Number(CONFIG.QI_PER_JOB) > 0 ? Number(CONFIG.QI_PER_JOB) : 5000;
+const qiSol = () => (mkt.qiSol > 0 ? mkt.qiSol : Number(CONFIG.QI_SOL) > 0 ? Number(CONFIG.QI_SOL) : 1e-7); // SOL per $QI, from the chart once it is wired in
+const qiLive = () => CONFIG.QI_LIVE === true; // the real $QI wallet is being read: nothing moves until a payout
+const fmtQi = n => fmtQ(n);
+const SELL_QI = { degen: 0.95, greedy: 0.9, patient: 0.75, loyal: 0.5 }; // how readily each personality parts with its $QI when broke; the rest hold and sell a slice of $QCATS instead
 // survival gets dearer as the chart climbs: x1 at the starting cap, x4 at 16x, x8 at 64x, capped at x40
 const priceMul = () => clamp(Math.sqrt(Math.max(1, mcapUsd() / CONFIG.START_MC_USD)), 1, 40);
 const costOf = (base, c) => base * priceMul() * (c ? 1 - 0.04 * Math.min(9, (c.lvl || 1) - 1) : 1);
@@ -1782,7 +1788,7 @@ function gainXp(c, n) {
   }
 }
 function sellUrge(c) {
-  if (c.qcat < 2000) return 0;
+  if (c.qcat < 2000 && !(c.qi >= 1)) return 0;
   let w = 0;
   if (c.sol < costOf(FOOD, c) && c.hunger > 0.5 && c.tr.label !== 'diamond paws') w = 0.6 + c.hunger * 0.5; // broke and hungry: sell enough to eat
   if (c.sol < costOf(FOOD, c) && c.hunger > 0.9) w = Math.max(w, 1.1);                                       // even diamond paws eat
@@ -1863,7 +1869,7 @@ const onSeat = c => c.state === 'act' && (c.act === 'eat' || c.act === 'meet' ||
 const hereAt = k => cats.filter(c => c.state === 'act' && stationOf(c) === k);
 
 const cats = [];
-const stats = { circuits: 0, labSol: 0, keys: 0, huntSol: 0, huntShifts: 0, lastJob: null, treasury: rand(0.004, 0.012), fees: 0, wages: 0, upkeep: 0, buySol: 0, boughtBack: 0, buys: 0, sold: 0, sellSol: 0, sells: 0, stolen: 0, lostPool: 0, low: false, lastTrade: null };
+const stats = { circuits: 0, labSol: 0, qiPool: 2000000, qiPaid: 0, qiSold: 0, qiSellSol: 0, gasPaid: 0, keys: 0, huntSol: 0, huntShifts: 0, lastJob: null, treasury: rand(0.004, 0.012), fees: 0, wages: 0, upkeep: 0, buySol: 0, boughtBack: 0, buys: 0, sold: 0, sellSol: 0, sells: 0, stolen: 0, lostPool: 0, low: false, lastTrade: null };
 const P0 = CONFIG.START_MC_USD / CONFIG.SOL_USD / SUPPLY; // SOL per token at the starting market cap
 const mkt = { price: P0, p0: P0, hist: [], mom: 0, acc: 0, nextMove: rand(180, 400), last: 0, pinned: false }; // pinned: the chart follows the real market cap, so the cats' own trades don't move it
 const txs = [];
@@ -1882,7 +1888,7 @@ function makeCat(i) {
   return {
     id: ++uid, name, job, trait, tr: TRAITS[trait], coat: coat.c, eye: coat.e, dark: !!coat.d,
     x: sp[0], y: sp[1], tx: sp[0], ty: sp[1], face: Math.random() < 0.5 ? 1 : -1,
-    sol: 0, qcat: CAT_ALLOC, earned: 0, xp: 0, lvl: 1, meetings: 0, hist: [], said: [], bought: 0, solSpent: 0, stole: 0, robbed: 0, found: 0, buys: 0, sells: 0, sold: 0, sellSol: 0, entry: mkt.price, sellCool: 0, arenaNet: 0, arenaSol: 0, arenaW: 0, arenaL: 0, arrived: false, released: T,
+    sol: 0, gas: GAS_FLOOR, qi: 0, qiEarned: 0, qiSold: 0, qiSellSol: 0, twork: 0, qcat: CAT_ALLOC, earned: 0, xp: 0, lvl: 1, meetings: 0, hist: [], said: [], bought: 0, solSpent: 0, stole: 0, robbed: 0, found: 0, buys: 0, sells: 0, sold: 0, sellSol: 0, entry: mkt.price, sellCool: 0, arenaNet: 0, arenaSol: 0, arenaW: 0, arenaL: 0, arrived: false, released: T,
     hunger: rand(0, 0.75), coh: rand(0.35, 1), cold: rand(0, 0.6), lonely: rand(0, 0.6),
     grudge: 0, grudgeOn: null, grudgeWhy: '', starve: 0, tired: rand(0, 0.7), stamina: rand(0.75, 1.35), memory: [],
     ethic: ({ degen: 0.85, patient: 1.0, greedy: 1.35, loyal: 1.15 }[trait] || 1) * rand(0.85, 1.15), qjobs: 0, qwork: 0, qnq: 0, qmax: 0, skills: {}, tasks: 0, taskPay: 0, meals: 0, plays: 0, faints: 0, decohered: 0, acts: [], items: [], wearing: null, vanity: rand(0.5, 1.6),
@@ -2045,12 +2051,14 @@ function finish(c, p) {
     const sk = skillLvl(skillOf(c, j.kind)), nq = randi(j.nq[0], j.nq[1] + Math.floor(sk / 2)), diff = 0.6 + nq * 0.2; // bigger circuits pay more and count for more; a practised cat gets handed bigger ones
     // pay is a slice of whatever is sitting in the fee pool: the more fees land, the more every job pays. Once the coin is live
     // the pool is the real treasury wallet and nothing moves until the operator distributes, so jobs only earn a share of the next payout.
+    // the lab pays $QI, not SOL: a fixed rate per job, more for bigger circuits and a practised cat. While the box runs on its own it pays
+    // straight out of the lab's pool; once the real $QI wallet is wired in, jobs only build up a share of the next payout.
     let pay = 0;
-    if (feePool()) {
-      pay = stats.treasury * 0.025 * diff * (1 + 0.05 * ((c.lvl || 1) - 1));
+    if (!qiLive()) {
+      pay = qiPerJob() * diff * (1 + 0.05 * ((c.lvl || 1) - 1));
       if (T < labBoostUntil && st === 'lab') pay *= 2;
-      pay = Math.max(0, Math.min(pay, stats.treasury, 0.004 * priceMul()));
-      if (pay < 0.000005) pay = 0;
+      pay = Math.max(0, Math.min(Math.round(pay), stats.qiPool));
+      if (pay < 1) pay = 0;
     }
     placeStats[st].visits++; c.coh = clamp(c.coh - 0.06);
     const slipped = Math.random() < j.risk * (1 - c.coh * 0.5) / (1 + sk * 0.35); // a coherent cat makes fewer mistakes, and so does a practised one
@@ -2061,13 +2069,13 @@ function finish(c, p) {
       gainXp(c, 3 + nq * 1.5);
       const receipt = `${c.name} ran a ${nq}-qubit ${j.kind} job (${job}): 1,024 shots, most common result |${bits}\u27E9.`;
       if (pay > 0) {
-        stats.treasury -= pay; c.sol += pay; c.earned += pay; stats.wages += pay; placeStats[st].paid += pay;
-        floatText(c, '+' + fmtSol(pay), '#F7C86A'); payFX(c);
-        log(`${receipt} Paid ${fmtSol(pay)} SOL from the fee pool.`, 'link', 'lab');
-        tx(c, 'circuit', '+' + fmtSol(pay) + ' SOL', job);
+        stats.qiPool -= pay; c.qi += pay; c.qiEarned += pay; stats.qiPaid += pay; placeStats[st].qi = (placeStats[st].qi || 0) + pay;
+        floatText(c, '+' + fmtQi(pay) + ' ' + QI, '#C4B2FF'); payFX(c);
+        log(`${receipt} Paid ${fmtQi(pay)} ${QI} from the lab.`, 'link', 'lab');
+        tx(c, 'circuit', '+' + fmtQi(pay) + ' ' + QI, job);
       } else {
-        floatText(c, '+' + diff.toFixed(1) + ' work', '#F7C86A');
-        log(`${receipt} ${feePool() ? 'The fee pool is empty, so it goes on the tab for the next payout.' : 'Logged for the next payout.'}`, 'link', 'lab');
+        floatText(c, '+' + diff.toFixed(1) + ' work', '#C4B2FF');
+        log(`${receipt} ${qiLive() ? 'Logged for the next ' + QI + ' payout.' : 'The lab\u2019s ' + QI + ' pool is empty, so it goes on the tab for the next payout.'}`, 'link', 'lab');
         tx(c, 'circuit', '+' + diff.toFixed(1) + ' work', job);
       }
     } else { learn(c, j.kind, 0.5); log(`${c.name}: ${j.riskWhy} (${job}). No pay.`, 'loss', st); floatText(c, 'job failed', '#FF4FAE'); did(c, `a ${nq}-qubit ${j.kind} job failed (${job})`); }
@@ -2082,7 +2090,7 @@ function finish(c, p) {
       let pay = 0;
       if (feePool()) { pay = stats.treasury * (quantum ? 0.03 : 0.012) * t.tier + Math.min(t.bounty, stats.treasury); pay = Math.max(0, Math.min(pay, stats.treasury, 0.008 * priceMul())); if (pay < 0.000005) pay = 0; }
       const credit = (quantum ? 1.0 : 0.4) * t.tier;
-      c.qwork += credit; c.tasks = (c.tasks || 0) + 1; if (quantum) { c.qjobs++; c.qnq += 2 + t.tier * 2; } learn(c, 'tasks', 1); learn(c, quantum ? 'quantum tasks' : 'chores', 1);
+      c.twork = (c.twork || 0) + credit; c.tasks = (c.tasks || 0) + 1; if (quantum) { c.qjobs++; c.qnq += 2 + t.tier * 2; } learn(c, 'tasks', 1); learn(c, quantum ? 'quantum tasks' : 'chores', 1);
       if (pay > 0) { stats.treasury -= pay; c.sol += pay; c.earned += pay; c.taskPay = (c.taskPay || 0) + pay; stats.wages += pay; floatText(c, '+' + fmtSol(pay), '#F7C86A'); payFX(c); }
       else floatText(c, '+' + credit.toFixed(1) + ' work', '#F7C86A');
       t.status = 'done'; t.doneBy = c.name; t.at = T; t.atClock = clock(simMin); t.pay = pay; t.tookMin = Math.round((T - (t.taken || T)) / 60);
@@ -2143,19 +2151,28 @@ function finish(c, p) {
     if (amt > 0.00005) {
       const got = amt / mkt.price * 0.99;
       c.entry = (c.entry * c.qcat + amt) / (c.qcat + got);
-      c.sol -= amt; c.solSpent += amt; c.qcat += got; c.bought += got; c.buys++;
+      c.sol -= amt; c.solSpent += amt; c.qcat += got; c.bought += got; c.buys++; spendGas(c);
       stats.buySol += amt; stats.boughtBack += got; stats.buys++; stats.lastTrade = { name: c.name, side: 'bought', sol: amt, q: got, t: T };
       placeStats.exchange.bought += got; placeStats.exchange.buysol += amt; placeStats.exchange.visits++;
       if (!mkt.pinned) mkt.price *= 1 + amt / (mkt.price * SUPPLY * 0.35);
       floatText(c, '+' + fmtQ(got) + ' ' + TK, '#5CFFAA'); buyFX(c); gainXp(c, 4 + Math.min(14, got / CAT_ALLOC * 100));
       log(`${c.name} bought ${fmtQ(got)} ${TK} for ${fmtSol(amt)} SOL at the exchange`, 'gain', 'exchange'); tx(c, 'buy', '+' + fmtQ(got) + ' ' + TK, fmtSol(amt) + ' SOL'); did(c, `bought ${fmtQ(got)} ${TK} for ${fmtSol(amt)} SOL`); recordEvent('buy', `${c.name} bought ${fmtQ(got)} ${TK} for ${fmtSol(amt)} SOL`);
     }
+  } else if (a === 'sell' && c.qi >= 1 && (c.sol < costOf(FOOD, c) && c.hunger > 0.5) && (c.qcat < 2000 || Math.random() < (SELL_QI[c.trait] || 0.5))) {
+    // broke, and this one would rather part with its $QI than its $QCATS: sell just enough $QI to cover a few meals
+    const need = Math.max(1, Math.min(c.qi, (costOf(FOOD, c) * 6 - c.sol) / (qiSol() * 0.99))); // enough for a few days of meals, so it is not back here every hour
+    const q = Math.min(c.qi, Math.round(need)), got = q * qiSol() * 0.99;
+    c.qi -= q; c.sol += got; c.qiSold += q; c.qiSellSol += got; c.sells++; spendGas(c);
+    stats.qiSold += q; stats.qiSellSol += got; stats.sells++; stats.lastTrade = { name: c.name, side: 'sold', sol: got, q, t: T, tok: QI };
+    placeStats.exchange.visits++; c.lastSellTok = QI; c.lastSellT = T;
+    floatText(c, '-' + fmtQi(q) + ' ' + QI, '#C4B2FF'); ringFX(EXC.x, EXC.y, '196,178,255', 1.1); gainXp(c, 2);
+    log(`${c.name} sold ${fmtQi(q)} ${QI} for ${fmtSol(got)} SOL to eat`, 'loss', 'exchange'); tx(c, 'sell', '-' + fmtQi(q) + ' ' + QI, '+' + fmtSol(got) + ' SOL'); did(c, `sold ${fmtQi(q)} ${QI} for ${fmtSol(got)} SOL to eat`); recordEvent('sell', `${c.name} sold ${fmtQi(q)} ${QI} for ${fmtSol(got)} SOL to eat`);
   } else if (a === 'sell') {
     const broke = c.sol < costOf(FOOD, c) && c.hunger > 0.5;
     // broke: work out what three meals cost and sell just enough to cover them (never more than a tenth of the stack)
     const need = broke ? Math.min(c.qcat * 0.1, Math.max(c.qcat * 0.005, (costOf(FOOD, c) * 3 - c.sol) / (mkt.price * 0.99))) : c.qcat * rand(0.02, 0.05);
     const q = Math.min(c.qcat, need), got = q * mkt.price * 0.99;
-    c.qcat -= q; c.sol += got; c.sold += q; c.sellSol += got; c.sells++;
+    c.qcat -= q; c.sol += got; c.sold += q; c.sellSol += got; c.sells++; spendGas(c); c.lastSellTok = TK; c.lastSellT = T;
     stats.sold += q; stats.sellSol += got; stats.sells++; stats.lastTrade = { name: c.name, side: 'sold', sol: got, q, t: T };
     placeStats.exchange.visits++;
     if (!mkt.pinned) { mkt.price *= 1 - got / (mkt.price * SUPPLY * 0.35); mkt.mom -= 0.0005; }
@@ -2260,7 +2277,7 @@ function meetingContext() {
     top: top ? top.name : null, thief: thief && thief.stole > 0 ? thief.name : null, lastJob: stats.lastJob, lessons: lessons.slice(0, 6).map(l => `day ${l.day}: ${l.text}`), meetingN: meeting.n,
     sinceLast: { mcap0: meeting.mcap0 ? fmtUsd(meeting.mcap0) : null, mcapPct: meeting.mcap0 ? Math.round((mcapUsd() / meeting.mcap0 - 1) * 100) : null, fees: fmtSol(stats.fees - (meeting.fees0 || 0)) },
     today: dayCur ? { jobs: stats.circuits - dayCur.jobs0, tasks: dayCur.tasks.length, faints: dayCur.events.filter(e => e.kind === 'faint').length, casino: dayCur.events.filter(e => e.kind === 'casino').map(e => e.text).slice(-4), shop: dayCur.events.filter(e => e.kind === 'shop').map(e => e.text).slice(-3), arena: dayCur.events.filter(e => e.kind === 'arena').map(e => e.text).slice(-2), thefts: dayCur.events.filter(e => e.kind === 'theft').map(e => e.text).slice(-2), drops: deliverySeq } : null,
-    cats: cats.filter(c => !asleep(c)).map(c => ({ name: c.name, role: JOBS[c.job].label, trait: c.tr.label, level: c.lvl || 1, persona: PERSONA[c.name] || '', sol: fmtSol(c.sol), qcat: fmtQ(c.qcat), earned: fmtSol(c.earned), jobs: c.qjobs || 0, hunger: Math.round(c.hunger * 100), coherence: Math.round(c.coh * 100), grudge: c.grudgeOn ? (byId(c.grudgeOn) || {}).name : null, memory: (c.memory || []).slice(0, 5).map(m => m.text), recent: (c.acts || []).slice(0, 4).map(a => a.text), wearing: c.wearing ? (ITEMS.find(it => it.key === c.wearing) || {}).name : null, casino: (c.casinoW || c.casinoL) ? `${c.casinoW || 0}W ${c.casinoL || 0}L` : null, todayJobs: dayCur && dayCur.cats0[c.name] ? (c.qjobs || 0) - dayCur.cats0[c.name].jobs : (c.qjobs || 0), todayTasks: dayCur && dayCur.cats0[c.name] ? (c.tasks || 0) - dayCur.cats0[c.name].tasks : (c.tasks || 0), lastSaid: c.said && c.said[0] ? c.said[0].text : '' })),
+    cats: cats.filter(c => !asleep(c)).map(c => ({ name: c.name, role: JOBS[c.job].label, trait: c.tr.label, level: c.lvl || 1, persona: PERSONA[c.name] || '', sol: fmtSol(c.sol), qcat: fmtQ(c.qcat), qi: fmtQ(c.qi || 0), qiEarned: fmtQ(c.qiEarned || 0), earned: fmtSol(c.earned), jobs: c.qjobs || 0, hunger: Math.round(c.hunger * 100), coherence: Math.round(c.coh * 100), grudge: c.grudgeOn ? (byId(c.grudgeOn) || {}).name : null, memory: (c.memory || []).slice(0, 5).map(m => m.text), recent: (c.acts || []).slice(0, 4).map(a => a.text), wearing: c.wearing ? (ITEMS.find(it => it.key === c.wearing) || {}).name : null, casino: (c.casinoW || c.casinoL) ? `${c.casinoW || 0}W ${c.casinoL || 0}L` : null, todayJobs: dayCur && dayCur.cats0[c.name] ? (c.qjobs || 0) - dayCur.cats0[c.name].jobs : (c.qjobs || 0), todayTasks: dayCur && dayCur.cats0[c.name] ? (c.tasks || 0) - dayCur.cats0[c.name].tasks : (c.tasks || 0), lastSaid: c.said && c.said[0] ? c.said[0].text : '' })),
     asleep: cats.filter(asleep).map(c => c.name),
     drones: deliveries.length, bots: bots.length,
     board: { open: board.tasks.filter(t => t.status === 'open').map(t => `${t.title} (tier ${t.tier})`), taken: board.tasks.filter(t => t.status !== 'open').map(t => `${t.by}: ${t.title}`), doneToday: board.done.filter(t => T - (t.at || 0) < DAY_SECS).map(t => `${t.doneBy}: ${t.title}`) },
@@ -2393,6 +2410,11 @@ function stepMeeting(dt) {
   }
 }
 const benched = new Set(); // cats an admin took out stay out until they are put back
+function stepGas() {
+  // a cat whose gas reserve has run low gets it refilled from the treasury: the box does it itself while it runs on its own; the server does the real transfer once the wallets are live
+  if (!feePool()) return;
+  for (const c of cats) { if (c.gas == null) c.gas = GAS_FLOOR; if (c.gas >= GAS_MIN) continue; const amt = Math.min(stats.treasury, GAS_FLOOR - c.gas); if (amt <= 0) continue; stats.treasury -= amt; c.gas += amt; stats.gasPaid += amt; log(`The treasury topped up ${c.name}\u2019s gas: +${fmtSol(amt)} SOL.`, 'info', 'vault'); tx(c, 'gas', '+' + fmtSol(amt) + ' SOL', 'gas top-up from the treasury'); }
+}
 function checkReleases() {
   const mc = mcapUsd();
   for (let i = 0; i < ROSTER.length; i++) if (mc >= UNLOCK_MC[i] && !cats.some(c => c.name === ROSTER[i][0]) && !benched.has(ROSTER[i][0])) { release(i); break; }
@@ -3962,7 +3984,7 @@ function drawBloch(c, t) {
   bx.fillStyle = '#fff'; bx.beginPath(); bx.arc(ex, ey, 5, 0, TAU); bx.fill();
 }
 const liveBal = {}; // name -> { sol, qcat } straight from the chain, once the wallets and the CA exist
-const live = c => liveBal[c.name] || null, liveSol = c => { const b = live(c); return b ? b.sol : c.sol; }, liveQ = c => { const b = live(c); return b && b.qcat != null ? b.qcat : c.qcat; };
+const live = c => liveBal[c.name] || null, liveSol = c => { const b = live(c); return b ? b.sol : c.sol; }, liveQ = c => { const b = live(c); return b && b.qcat != null ? b.qcat : c.qcat; }, liveQi = c => { const b = live(c); return b && b.qi != null ? b.qi : (c.qi || 0); };
 const iEl = { name: $('#iName'), role: $('#iRole'), sol: $('#iSol'), q: $('#iQ'), bought: $('#iBought'), earned: $('#iEarned'), psi: $('#iPsi'), think: $('#iThink'), doing: $('#iDoing'), because: $('#iBecause'), weighed: $('#iWeighed') };
 const meters = [['mCoh', 'vCoh', c => c.coh], ['mHun', 'vHun', c => c.hunger], ['mCold', 'vCold', c => c.cold], ['mLone', 'vLone', c => c.lonely]].map(([b, v, f]) => ({ b: document.getElementById(b), v: document.getElementById(v), f }));
 let lastWeighKey = '';
@@ -4169,7 +4191,7 @@ $('#catFilters').addEventListener('click', e => {
 function makeCard(c) {
   const el = document.createElement('button'); el.type = 'button'; el.className = 'panel ccard';
   el.innerHTML = '<div class="cc-top"><span class="sw"></span><div><h3></h3><div class="role"></div></div></div>'
-    + '<div class="cc-bal"><div><b class="sol"></b><span>SOL earned</span></div><div><b class="paw"></b><span>SOL on paw</span></div><div><b class="q"></b><span class="tk"></span></div><div><b class="bb"></b><span class="tks"></span></div></div>'
+    + '<div class="cc-bal"><div><b class="sol"></b><span>SOL earned</span></div><div><b class="paw"></b><span>SOL on paw</span></div><div><b class="q"></b><span class="tk"></span></div><div><b class="bb"></b><span class="tks"></span></div><div><b class="qi"></b><span>$QI earned</span></div><div><b class="qih"></b><span>$QI holding</span></div></div>'
     + '<div class="cc-act"><b></b><br><span></span></div><div class="cc-think"></div>'
     + '<div class="cc-foot"><span class="st"></span><span class="cc-m"><i></i><i></i><i></i></span></div>';
   const sw = el.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye);
@@ -4177,7 +4199,7 @@ function makeCard(c) {
   el.querySelector('.tk').textContent = TK + ' holding'; el.querySelector('.tks').textContent = TK + ' sold';
   el.addEventListener('click', () => { location.hash = '#/cats/' + encodeURIComponent(c.name); });
   const q = {
-    el, role: el.querySelector('.role'), sol: el.querySelector('.sol'), paw: el.querySelector('.paw'), q: el.querySelector('.q'), bb: el.querySelector('.bb'), tag: el.querySelector('.cc-act b'), act: el.querySelector('.cc-act span'),
+    el, role: el.querySelector('.role'), sol: el.querySelector('.sol'), paw: el.querySelector('.paw'), q: el.querySelector('.q'), bb: el.querySelector('.bb'), qi: el.querySelector('.qi'), qih: el.querySelector('.qih'), tag: el.querySelector('.cc-act b'), act: el.querySelector('.cc-act span'),
     think: el.querySelector('.cc-think'), st: el.querySelector('.st'), m: [...el.querySelectorAll('.cc-m i')],
   };
   cardMap.set(c.id, q); return q;
@@ -4194,7 +4216,7 @@ function renderCards(force) {
   for (const c of show) {
     const q = cardMap.get(c.id); if (!q) continue;
     q.role.textContent = `${JOBS[c.job].label} · ${c.tr.label} · ${lvlTitle(c)} · ${fmt(c.qjobs || 0)} jobs`; q.el.querySelector('.lvl-badge').textContent = 'LVL ' + (c.lvl || 1);
-    q.sol.textContent = fmtSol(c.earned); q.paw.textContent = fmtSol(liveSol(c)); q.q.textContent = fmtQ(liveQ(c)); q.bb.textContent = fmtQ(c.sold);
+    q.sol.textContent = fmtSol(c.earned); q.paw.textContent = fmtSol(liveSol(c)); q.q.textContent = fmtQ(liveQ(c)); q.bb.textContent = fmtQ(c.sold); q.qi.textContent = fmtQi(c.qiEarned || 0); q.qih.textContent = fmtQi(liveQi(c));
     const a = c.act === 'work' ? 'work' : c.act;
     q.tag.textContent = c.state === 'walk' ? 'moving' : c.state === 'pause' ? 'deciding' : ACTS[a].name;
     q.el.style.setProperty('--ac', c.state === 'act' ? ACTS[a].color : '140,151,194');
@@ -4312,7 +4334,7 @@ function renderBoard() {
 /* ---------- ledger ---------- */
 const placeBody = $('#placeTable tbody'), txBody = $('#txTable tbody');
 let txShown = -1;
-const TXK = { shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'loss', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info' };
+const TXK = { gas: 'info', qi: 'gain', shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'loss', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info' };
 function renderLedger() {
   if (!placeBody.children.length) for (const k of Object.keys(PLACES)) { const tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="g"></td><td></td><td class="m"></td><td></td>'; tr.firstChild.textContent = PLACES[k].title; placeBody.appendChild(tr); }
   Object.keys(PLACES).forEach((k, i) => { const tds = placeBody.children[i].children, s = placeStats[k]; tds[1].textContent = fmtSol(s.paid); tds[2].textContent = fmtSol(s.spent); tds[3].textContent = fmtQ(s.found + s.stolen + s.bought + s.wagered); tds[4].textContent = fmt(s.visits); });
@@ -4376,7 +4398,7 @@ function renderDetail(force) {
   $('#cdXpT').textContent = lv >= LVL_XP.length ? 'max level' : `${fmt(Math.round(xp))} xp · ${fmt(Math.round(hi - xp))} to level ${lv + 1}`;
   const dl = (el, rows) => { el.innerHTML = ''; for (const [k, v] of rows) { const d = document.createElement('div'); const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); el.appendChild(d); } };
   const b = live(c);
-  dl($('#cdPort'), [['SOL on paw', fmtSol(liveSol(c)) + (b ? '' : ' (box)')], [TK + ' holding', fmtQ(liveQ(c))], ['SOL earned from fees', fmtSol(c.earned)], ['wearing', wornBy(c).map(k => (ITEMS.find(it => it.key === k) || {}).name).filter(Boolean).join(', ') || 'nothing'], ['wardrobe', fmt((c.items || []).length) + ' of ' + ITEMS.length], [TK + ' bought', fmtQ(c.bought)], [TK + ' sold', fmtQ(c.sold) + (c.sellSol ? ' · ' + fmtSol(c.sellSol) + ' SOL' : '')], ['trades', fmt(c.buys + c.sells)], ['spent on living', fmtSol(c.upkeep || 0)], ['arena', (c.arenaW || 0) + 'W ' + (c.arenaL || 0) + 'L · ' + (c.arenaNet >= 0 ? '+' : '-') + fmtQ(Math.abs(c.arenaNet || 0)) + ' ' + TK], ['casino', (c.casinoW || 0) + 'W ' + (c.casinoL || 0) + 'L · ' + ((c.casinoNet || 0) >= 0 ? '+' : '-') + fmtSol(Math.abs(c.casinoNet || 0)) + ' SOL'], ['lifted / robbed', fmtQ(c.stole) + ' / ' + fmtQ(c.robbed)]].filter(r => r[1] !== ''));
+  dl($('#cdPort'), [['SOL on paw', fmtSol(liveSol(c)) + (b ? '' : ' (box)')], ['gas reserve', fmtSol(c.gas == null ? GAS_FLOOR : c.gas) + ' SOL'], [TK + ' holding', fmtQ(liveQ(c))], [QI + ' holding', fmtQi(liveQi(c))], [QI + ' earned in the lab', fmtQi(c.qiEarned || 0)], ['SOL earned from fees', fmtSol(c.earned)], ['wearing', wornBy(c).map(k => (ITEMS.find(it => it.key === k) || {}).name).filter(Boolean).join(', ') || 'nothing'], ['wardrobe', fmt((c.items || []).length) + ' of ' + ITEMS.length], [TK + ' bought', fmtQ(c.bought)], [TK + ' sold', fmtQ(c.sold) + (c.sellSol ? ' · ' + fmtSol(c.sellSol) + ' SOL' : '')], ['trades', fmt(c.buys + c.sells)], ['spent on living', fmtSol(c.upkeep || 0)], ['arena', (c.arenaW || 0) + 'W ' + (c.arenaL || 0) + 'L · ' + (c.arenaNet >= 0 ? '+' : '-') + fmtQ(Math.abs(c.arenaNet || 0)) + ' ' + TK], ['casino', (c.casinoW || 0) + 'W ' + (c.casinoL || 0) + 'L · ' + ((c.casinoNet || 0) >= 0 ? '+' : '-') + fmtSol(Math.abs(c.casinoNet || 0)) + ' SOL'], ['lifted / robbed', fmtQ(c.stole) + ' / ' + fmtQ(c.robbed)]].filter(r => r[1] !== ''));
   dl($('#cdWork'), [['quantum jobs run', fmt(c.qjobs || 0)], ['job type', JOBS[c.job].kind], ['qubits run in total', fmt(c.qnq || 0)], ['tasks off the board', fmt(c.tasks || 0) + (c.taskPay ? ' · ' + fmtSol(c.taskPay) + ' SOL' : '')], ['can take', qualifies(c, { tier: 3 }) ? 'tier 3' : qualifies(c, { tier: 2 }) ? 'tier 2' : 'tier 1'], ['skills', Object.entries(c.skills || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${skillLvl(v).toFixed(1)}`).join(' · ') || 'nothing yet'], ['work since last payout', (c.qwork || 0).toFixed(1) + ' pts'], ['meetings attended', fmt(c.meetings || 0)], ['coherence', Math.round(c.coh * 100) + '%']]);
   const a = c.act === 'work' ? 'work' : c.act;
   $('#cdDoing').textContent = (c.state === 'walk' ? 'moving · ' : c.state === 'pause' ? 'deciding · ' : '') + (c.doing || '');
@@ -4541,7 +4563,7 @@ followBtn.addEventListener('click', () => setFollow(!cam.follow));
 function renderUnlocks() {}
 
 /* ---------- the explainer under the box: minds, right now, talk, the coin ---------- */
-const xsMinds = $('#xsMinds'), xsNow = $('#xsNow'), xsTalk = $('#xsTalk'), xsNowNote = $('#xsNowNote'), xsCoin = $('#xsCoin');
+const xsMinds = null, xsNow = $('#xsNow'), xsTalk = $('#xsTalk'), xsNowNote = $('#xsNowNote'), xsCoin = $('#xsCoin');
 const xsCards = new Map(); let xsKey = '', xsTalkShown = 0, xsCvT = 0;
 function whereOf(c) {
   if (asleep(c)) return 'the bunks';
@@ -4569,14 +4591,8 @@ function mindCard(c) {
   xsCards.set(c.id, q); return q;
 }
 function renderExplainer(t, force) {
-  if (!xsMinds) return;
-  const awake = cats.filter(c => !asleep(c)).sort((a, b) => a.id - b.id);
-  const key = awake.map(c => c.id).join(',');
-  if (force || key !== xsKey) {
-    xsKey = key; xsMinds.innerHTML = '';
-    if (!awake.length) { const d = document.createElement('div'); d.className = 'xs-empty'; d.textContent = 'everyone is asleep in the bunks.'; xsMinds.appendChild(d); }
-    for (const c of awake) xsMinds.appendChild((xsCards.get(c.id) || mindCard(c)).el);
-  }
+  if (!xsNow) return;
+  const awake = [];
   const drawCats = t - xsCvT > 0.2; if (drawCats) xsCvT = t;
   for (const c of awake) {
     const q = xsCards.get(c.id); if (!q) continue;
@@ -4709,7 +4725,7 @@ function step(dt) {
     boat.y += boat.dir * 0.35 * dt; if (boat.y > QUAY + 2) boat.dir = -1; if (boat.y < -16) boat.dir = 1;
     stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
   } else {
-  stepWeather(dt); stepMarket(dt); checkReleases(); checkStages(); stepDay(); stepMeeting(dt); stepBoard(dt); stepDeliveries(dt); stepBots(dt); stepCritters(dt);
+  stepWeather(dt); stepMarket(dt); checkReleases(); checkStages(); stepDay(); stepMeeting(dt); stepBoard(dt); stepDeliveries(dt); stepBots(dt); stepGas(); stepCritters(dt);
   if (T >= nextFee) { feeIn(false); nextFee = T + rand(60, 150); }
   for (const c of cats) update(c, dt); separateAll(dt);
   stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
@@ -4795,13 +4811,13 @@ function applyRemote(j) {
 }
 function applyWallets(w) {
   const tb = $('#walletTable tbody'); if (!tb) return;
-  if (w.balances && w.balances.cats) for (const n of Object.keys(w.balances.cats)) { const b = w.balances.cats[n]; if (b && typeof b.sol === 'number') liveBal[n] = { sol: b.sol, qcat: b.qcat }; }
+  if (w.balances && w.balances.cats) for (const n of Object.keys(w.balances.cats)) { const b = w.balances.cats[n]; if (b && typeof b.sol === 'number') liveBal[n] = { sol: b.sol, qcat: b.qcat, qi: b.qi }; }
   ROSTER.forEach(([name], i) => {
     const tr = tb.children[i]; if (!tr) return;
     const cw = w.cats.find(x => x.name === name); const cell = tr.children[1]; if (!cw) return;
     const bal = w.balances && w.balances.cats && w.balances.cats[name];
     const short = cw.pub.slice(0, 4) + '\u2026' + cw.pub.slice(-4);
-    cell.innerHTML = `<a href="https://solscan.io/account/${cw.pub}" target="_blank" rel="noopener"><code>${short}</code></a>` + (bal ? `<br><small>${fmtSol(bal.sol)} SOL${bal.qcat != null ? ' \u00B7 ' + fmtQ(bal.qcat) + ' ' + TK : ''}</small>` : '');
+    cell.innerHTML = `<a href="https://solscan.io/account/${cw.pub}" target="_blank" rel="noopener"><code>${short}</code></a>` + (bal ? `<br><small>${fmtSol(bal.sol)} SOL${bal.qcat != null ? ' \u00B7 ' + fmtQ(bal.qcat) + ' ' + TK : ''}${bal.qi != null ? ' \u00B7 ' + fmtQ(bal.qi) + ' ' + QI : ''}</small>` : '');
   });
 }
 async function pollBrain() {
