@@ -156,7 +156,7 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .lp-k{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:15px;letter-spacing:.12em;fill:#5CF2FF;text-anchor:middle}
 .lp-k.gold{fill:#F7C86A} .lp-k.violet{fill:#C4B2FF} .lp-k.green{fill:#5CFFAA}
 .lp-v{font-family:"IBM Plex Mono",monospace;font-size:12px;fill:#8C97C2;text-anchor:middle}
-.lp-back{font-family:"IBM Plex Mono",monospace;font-size:11.5px;fill:#5CFFAA;opacity:.8}
+.lp-back{font-family:"IBM Plex Mono",monospace;font-size:11.5px;fill:#5CFFAA;opacity:.8} .lp-back.gold{fill:#F7C86A} .lp-back.pink{fill:#FF4FAE} .lp-k.grey{fill:#C3CBEE} .lp-k.sm{font-size:13px}
 .lp-fwd{animation:lpdash 1.2s linear infinite} .lp-return{animation:lpdash 1.6s linear infinite reverse}
 @keyframes lpdash{to{stroke-dashoffset:-15}}
 .loop-list{display:none;list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:13px;color:var(--muted)}
@@ -212,6 +212,15 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .xs-btn{display:inline-block;font-family:var(--hud);font-weight:700;font-size:15px;color:var(--cyan);border:1px solid var(--cyan);padding:12px 24px;text-decoration:none;letter-spacing:.02em}
 .xs-btn:hover{background:rgba(92,242,255,.1)}
 .xs-empty{padding:18px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.rlog li .rq{font-family:var(--hud);font-weight:600;font-size:14.5px;color:var(--text);margin:3px 0 2px;line-height:1.35}
+.rlog li .rc{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.rlog li.ok .rq{color:#5CFFAA} .rlog li.miss .rq{color:var(--soft)}
+.notebooks{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.nb{border:1px solid var(--line);padding:12px 14px;background:rgba(7,10,26,.5)}
+.nb-h{display:flex;align-items:center;gap:8px;margin-bottom:6px} .nb-h b{font-family:var(--hud);font-size:15px} .nb-h small{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.nb-t{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-bottom:5px}
+.nb-bar{height:4px;background:rgba(255,255,255,.07);position:relative;margin-bottom:8px} .nb-bar span{position:absolute;inset:0 auto 0 0;background:var(--violet)}
+.nb-n{font-family:var(--mono);font-size:12px;color:var(--soft);line-height:1.5}
 @media (max-width:1099px){.xs-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.xs-cards article:nth-child(3){border-left:0}.xs-cards article:nth-child(n+3){border-top:1px solid var(--line)}.xr{grid-template-columns:52px 1fr 90px 1fr}.xr .wy,.xr .lv{display:none}}
 @media (max-width:719px){.xs-head{flex-direction:column;align-items:flex-start}.xs-note{text-align:left}.xs-cards{grid-template-columns:1fr}.xs-cards article{border-left:0;border-top:1px solid var(--line)}.xs-cards article:first-child{border-top:0}.xr{grid-template-columns:44px 1fr 80px}.xr .wh{display:none}.xs-talk .xr{grid-template-columns:1fr 50px}.xs-talk .xr .nm{display:none}}
 .ab-fine{max-width:70ch;margin:0 auto;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;font-family:var(--mono)}
@@ -410,7 +419,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 .talk li.sys.gain .txt{color:var(--gold)} .talk li.sys.loss .txt{color:var(--magenta)} .talk li.sys.link .txt{color:var(--violet)}
 
 /* ---------- leaderboard ---------- */
-.board-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 18px}
+.board-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:0 0 18px}
 .board-stats div{border:1px solid var(--line);background:var(--panel);padding:14px 16px 12px}
 .board-stats b{display:block;font-family:var(--hud);font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1}
 .board-stats div:nth-child(2) b{color:#5CFFAA} .board-stats div:nth-child(3) b{color:#FF7878} .board-stats div:nth-child(4) b{color:var(--cyan)}
@@ -511,8 +520,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <a href="#/recap" data-route="recap">Recap</a>
       <a href="#/board" data-route="board">Leaderboard</a>
       <a href="#/talk" data-route="talk">Talk</a>
-      <a href="#/rules" data-route="rules">Rules</a>
-      <a href="#/ledger" data-route="ledger">Ledger</a>
+      <a href="#/ledger" data-route="ledger">Treasury</a>
       <a href="#/qcat" data-route="qcat" class="tk-tab"><span data-tk>$QCATS</span></a>
     </nav>
     <div class="tb-right"><button class="ca-btn copy-ca" type="button" disabled title="not launched yet"><span class="ca-lbl">CA</span></button></div>
@@ -603,7 +611,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <div class="xs-cards">
         <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with 100K <span data-tk>$QCATS</span> and a little SOL for gas. everything else a cat ever gets is paid for by the creator fees.</p></article>
         <article><h3>work</h3><p>the lab pays $QI for every quantum job a cat finishes. the chores on the floor pay SOL out of the fees. some cats work all day, some barely. that is personality, not a setting.</p></article>
-        <article><h3>want</h3><p>a meal, a bunk, warmth, play and the arena all cost SOL, and every price climbs with the chart. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which. a cat with spare SOL buys.</p></article>
+        <article><h3>want</h3><p>a meal, a bunk, warmth, play and the arena all cost SOL, and every price climbs with the chart. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which.</p></article>
         <article><h3>learn</h3><p>every night the last ten minutes are the meeting in the circle. each cat writes down one thing it learned and reads it back tomorrow, and it levels up from everything it does in the town.</p></article>
       </div>
     </div>
@@ -621,27 +629,44 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 
     <div class="xs">
       <div class="xs-head"><div><span class="xs-eye"><span data-tk>$QCATS</span></span><h2 class="xs-title">what keeps the lights on</h2></div></div>
-      <div class="loop" aria-label="How the box runs">
-        <svg viewBox="0 45 1000 205" class="loop-svg" aria-hidden="true">
+      <div class="loop" aria-label="How the money moves">
+        <svg viewBox="0 0 1000 345" class="loop-svg" aria-hidden="true">
           <defs>
-            <linearGradient id="lg1" x1="0" x2="1"><stop offset="0" stop-color="#5CF2FF"/><stop offset="1" stop-color="#9A7BFF"/></linearGradient>
+            <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="170" y1="0" x2="420" y2="0"><stop offset="0" stop-color="#5CF2FF"/><stop offset="1" stop-color="#F7C86A"/></linearGradient>
             <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
-          <path class="lp-return" d="M905 150 C905 230 95 230 95 150" fill="none" stroke="rgba(92,255,170,.55)" stroke-width="1.5" stroke-dasharray="6 7"/>
-          <path d="M95 150 l-6 10 M95 150 l6 10" fill="none" stroke="rgba(92,255,170,.9)" stroke-width="1.5"/>
-          <text x="500" y="233" text-anchor="middle" class="lp-back">buys and sells hit the same chart</text>
-          <path class="lp-fwd" d="M172 100 H828" fill="none" stroke="url(#lg1)" stroke-width="2" stroke-dasharray="8 7"/>
-          <g class="lp-node" transform="translate(95 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">TRADES</text><text y="16" class="lp-v">every $QCATS trade</text></g>
-          <g class="lp-node" transform="translate(297 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">CREATOR FEE</text><text y="16" class="lp-v">paid in SOL</text></g>
-          <g class="lp-node" transform="translate(500 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">TREASURY</text><text y="16" class="lp-v">on the block</text></g>
-          <g class="lp-node" transform="translate(703 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#9A7BFF" stroke-width="1.5"/><text y="-8" class="lp-k violet">THE LAB</text><text y="16" class="lp-v">paid per job</text></g>
-          <g class="lp-node" transform="translate(905 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CFFAA" stroke-width="1.5"/><text y="-8" class="lp-k green">CATS TRADE</text><text y="16" class="lp-v">buy · sell · wager</text></g>
-          <circle r="4" fill="#5CF2FF" filter="url(#glow)"><animateMotion dur="6s" repeatCount="indefinite" path="M172 100 H828"/></circle>
-          <circle r="4" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="6s" begin="2s" repeatCount="indefinite" path="M172 100 H828"/></circle>
-          <circle r="4" fill="#5CFFAA" filter="url(#glow)"><animateMotion dur="7s" begin="1s" repeatCount="indefinite" path="M905 150 C905 230 95 230 95 150"/></circle>
+          <!-- fees in -->
+          <path class="lp-fwd" d="M170 150 H420" fill="none" stroke="url(#lg1)" stroke-width="2" stroke-dasharray="8 7"/>
+          <!-- treasury to the three ways it pays -->
+          <path class="lp-fwd" d="M570 150 C620 150 620 70 670 70" fill="none" stroke="#5CFFAA" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <path class="lp-fwd" d="M570 150 H670" fill="none" stroke="#C4B2FF" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <path class="lp-fwd" d="M570 150 C620 150 620 230 670 230" fill="none" stroke="#8C97C2" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <!-- the three ways reach the cats -->
+          <path d="M800 70 C850 70 850 150 880 150" fill="none" stroke="#5CFFAA" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <path d="M800 150 H880" fill="none" stroke="#C4B2FF" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <path d="M800 230 C850 230 850 150 880 150" fill="none" stroke="#8C97C2" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <!-- what comes back -->
+          <path class="lp-return" d="M935 200 C935 330 495 330 495 200" fill="none" stroke="rgba(247,200,106,.6)" stroke-width="1.5" stroke-dasharray="6 7"/>
+          <path d="M495 200 l-6 10 M495 200 l6 10" fill="none" stroke="rgba(247,200,106,.9)" stroke-width="1.5"/>
+          <text x="715" y="335" text-anchor="middle" class="lp-back gold">meals, bunks, warmth, play, the casino: the cats pay the treasury back</text>
+          <path class="lp-return" d="M935 100 C935 0 95 0 95 100" fill="none" stroke="rgba(255,79,174,.55)" stroke-width="1.5" stroke-dasharray="6 7"/>
+          <path d="M95 100 l-6 -10 M95 100 l6 -10" fill="none" stroke="rgba(255,79,174,.9)" stroke-width="1.5"/>
+          <text x="515" y="14" text-anchor="middle" class="lp-back pink">the cats sell $QI or $QCATS when broke, and those trades pay fees too</text>
+          <!-- nodes -->
+          <g class="lp-node" transform="translate(95 150)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">TRADES</text><text y="16" class="lp-v">every $QCATS trade</text></g>
+          <g class="lp-node" transform="translate(495 150)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">TREASURY</text><text y="16" class="lp-v">creator fees, in SOL</text></g>
+          <g class="lp-node" transform="translate(735 70)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#5CFFAA" stroke-width="1.5"/><text y="-6" class="lp-k green sm">CHORES</text><text y="14" class="lp-v">paid in SOL</text></g>
+          <g class="lp-node" transform="translate(735 150)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#C4B2FF" stroke-width="1.5"/><text y="-6" class="lp-k violet sm">THE LAB</text><text y="14" class="lp-v">paid in $QI</text></g>
+          <g class="lp-node" transform="translate(735 230)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#8C97C2" stroke-width="1.5"/><text y="-6" class="lp-k grey sm">GAS</text><text y="14" class="lp-v">kept at 0.01 SOL</text></g>
+          <g class="lp-node" transform="translate(935 150)"><polygon points="-54,-40 48,-40 54,-34 54,40 -48,40 -54,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">THE CATS</text><text y="16" class="lp-v">ten wallets</text></g>
+          <!-- pulses -->
+          <circle r="4" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite" path="M170 150 H420"/></circle>
+          <circle r="3" fill="#5CFFAA" filter="url(#glow)"><animateMotion dur="6s" begin="1s" repeatCount="indefinite" path="M570 150 C620 150 620 70 670 70 L800 70 C850 70 850 150 880 150"/></circle>
+          <circle r="3" fill="#C4B2FF" filter="url(#glow)"><animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M570 150 H880"/></circle>
+          <circle r="3" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="7s" begin="2s" repeatCount="indefinite" path="M935 200 C935 330 495 330 495 200"/></circle>
         </svg>
         <ol class="loop-list">
-          <li><b>Trades</b> every $QCATS trade</li><li><b>Creator fee</b> paid in SOL</li><li><b>Treasury</b> on the block</li><li><b>The lab</b> paid per job</li><li><b>Cats trade</b> buy · sell · wager</li>
+          <li><b>Trades</b> every $QCATS trade pays a creator fee</li><li><b>Treasury</b> the fees land here, in SOL</li><li><b>Chores</b> paid in SOL</li><li><b>The lab</b> paid in $QI</li><li><b>Gas</b> every cat kept at 0.01 SOL</li><li><b>The cats</b> pay the treasury back for meals, bunks, warmth, play and the casino; their own sells and buys pay fees too</li>
         </ol>
       </div>
       <div class="xs-coin">
@@ -702,13 +727,40 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 <div class="page" data-page="work" hidden>
   <section class="sec pg">
     <div class="wrap">
-      <h2 class="sec-title">Work</h2>
-      <p class="sec-lead">Things get left on the open floor round the circle that want doing: a bag of trash, cans, a dropped crate, a spill, a knocked-over plant pot, a loose cable, a sensor pod to recalibrate, a crashed drone, a readout to check. Delivery drones bring most of it in from over the harbour. First cat there gets it, if it is good enough for the tier, and is paid out of the fee pool when it is done. Click the <b>!</b> over anything in the box to flag it: the nearest cat that fancies it hears about it, and goes when it feels like going. One thing at a time carries a badge, picked at random from what has lain untouched for five minutes; once it is flagged there is no badge anywhere for ten minutes. Never more than three things out at once.</p>
+      <h2 class="sec-title">The lab</h2>
+      <p class="sec-lead">Every job a cat finishes in the lab is a study session: it runs a circuit on the simulator, works through the next topic on its ladder, and writes down what it learned. Now and then the lab sets it a problem it can check for itself; a right answer pays a $QI bonus, a wrong one costs coherence. Nothing here is made up: every number comes from a circuit that ran, every note is the cat's own, and the ladder only moves forward.</p>
+      <div class="board-stats">
+        <div><b id="lbSessions">0</b><span>study sessions</span></div>
+        <div><b id="lbTopics">0</b><span id="lbTopicsL">topics reached</span></div>
+        <div><b id="lbSolved">0</b><span id="lbSolvedL">problems solved</span></div>
+        <div><b id="lbQi">0</b><span>$QI paid by the lab</span></div>
+      </div>
+      <div class="split">
+        <div class="panel">
+          <div class="ph"><span>Research log</span><small>latest first · <span id="lbAi">written by the box</span></small></div>
+          <div class="cb"><ul class="acts rlog" id="lbLog"></ul></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><span>Problems</span><small>set by the lab, checked by the lab</small></div>
+          <div class="cb"><ul class="acts rlog" id="lbProblems"></ul></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="ph"><span>Notebooks</span><small>where each cat is on the ladder · its last note</small></div>
+        <div class="cb"><div class="notebooks" id="lbBooks"></div></div>
+      </div>
+      <p class="mut" style="font-family:var(--mono);font-size:11.5px;margin-top:14px">The ladder: <span id="lbLadder"></span></p>
+    </div>
+  </section>
+  <section class="sec pg" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sec-title" style="font-size:1.6rem">Chores</h2>
+      <p class="sec-lead">Things get left on the open floor round the circle that want doing. Delivery drones bring most of it in over the harbour. First cat there gets it, if it is good enough for the tier, and is paid SOL out of the fee pool when it is done. Click the <b>!</b> over anything in the box to flag it: the nearest cat that fancies it hears about it, and goes when it feels like going. Never more than three things out at once.</p>
       <div class="board-stats">
         <div><b id="wkOpen">0</b><span>waiting on the ground</span></div>
         <div><b id="wkTaken">0</b><span>being worked on</span></div>
         <div><b id="wkDone">0</b><span>done today</span></div>
-        <div><b id="wkPaid">0</b><span>SOL paid for tasks</span></div>
+        <div><b id="wkPaid">0</b><span>SOL paid for chores</span></div>
       </div>
       <div class="split">
         <div class="panel">
@@ -720,11 +772,6 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           <div class="cb"><table class="hist wk" id="wkDoneT"><tbody></tbody></table></div>
         </div>
       </div>
-      <div class="panel" style="margin-top:18px">
-        <div class="ph"><span>Who does the work</span><small>tasks finished · what it has learned</small></div>
-        <div class="cb"><table class="hist wk" id="wkCats"><thead><tr><th>cat</th><th>tasks</th><th>SOL from tasks</th><th>skills</th><th>can take</th></tr></thead><tbody></tbody></table></div>
-      </div>
-      <p class="mut" style="font-family:var(--mono);font-size:11.5px;margin-top:14px">Skills grow with every job of a kind a cat finishes: fewer failed runs, bigger circuits, faster work. It is slow on purpose. The hundredth job is where it starts to show.</p>
     </div>
   </section>
 </div>
@@ -739,7 +786,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <div id="rcBody">
         <div class="board-stats" id="rcStats"></div>
         <div class="split">
-          <div class="panel"><div class="ph"><span>Who did what</span><small id="rcTop"></small></div><div class="cb"><table class="hist wk" id="rcCats"><thead><tr><th>cat</th><th>jobs</th><th>tasks</th><th>earned</th><th>spent</th><th>sold</th><th>bought</th><th>level</th></tr></thead><tbody></tbody></table></div></div>
+          <div class="panel"><div class="ph"><span>Who did what</span><small id="rcTop"></small></div><div class="cb"><table class="hist wk" id="rcCats"><thead><tr><th>cat</th><th>lab</th><th>chores</th><th>earned</th><th>spent</th><th>level</th></tr></thead><tbody></tbody></table></div></div>
           <div class="panel"><div class="ph"><span>The meeting</span><small id="rcMeetAt"></small></div><div class="cb"><ul class="acts" id="rcMeet"></ul></div></div>
         </div>
         <div class="split" style="margin-top:18px">
@@ -755,16 +802,16 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   <section class="sec pg">
     <div class="wrap">
       <h2 class="sec-title">Leaderboard</h2>
-      <p class="sec-lead">Who earned the most from fees, who did what with it, who won the arena and who got robbed. Click a column to sort.</p>
+      <p class="sec-lead">Ranked by level, and how far along the next one each cat is. Levels come from everything a cat does in the town. Click a column to sort.</p>
       <div class="board-stats">
         <div><b id="qEarned">0</b><span>SOL earned, all cats</span></div>
-        <div><b id="qBought">0</b><span><span data-tk>$QCATS</span> bought</span></div>
-        <div><b id="qSold">0</b><span><span data-tk>$QCATS</span> sold</span></div>
+        <div><b id="qQi">0</b><span>$QI earned in the lab</span></div>
+        <div><b id="qCasino">0</b><span>SOL the casino has taken off them</span></div>
         <div><b id="qHeld">0</b><span><span data-tk>$QCATS</span> in the ten wallets</span></div>
       </div>
       <div class="panel">
         <table class="board" id="board">
-          <thead><tr><th>#</th><th>cat</th><th data-s="earned" class="on">SOL earned</th><th data-s="lvl">level</th><th data-s="jobs">jobs</th><th data-s="qcat"><span data-tk>$QCATS</span> holding</th><th data-s="bought">bought</th><th data-s="sold">sold</th><th data-s="trades">trades</th><th data-s="arena">arena</th><th data-s="stole">lifted</th><th data-s="robbed">robbed</th></tr></thead>
+          <thead><tr><th>#</th><th>cat</th><th data-s="lvl" class="on">level</th><th data-s="earned">SOL earned</th><th data-s="qi">$QI earned</th><th data-s="qcat"><span data-tk>$QCATS</span> holding</th><th data-s="casino">casino</th><th data-s="arena">arena</th><th data-s="trades">trades</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -895,12 +942,12 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 <div class="page" data-page="ledger" hidden>
   <section class="sec pg" id="economy">
     <div class="wrap">
-      <h2 class="sec-title">Ledger</h2>
-      <p class="sec-lead">Fees in, wages out, buys on the chart. Every transaction the cats make, as it happens.</p>
+      <h2 class="sec-title">Treasury</h2>
+      <p class="sec-lead">Fees in, pay out, gas topped up, living costs back. Every transaction the cats make, as it happens.</p>
       <ol class="flow">
         <li><h3>Fees</h3><p>Every trade of <span data-tk>$QCATS</span> pays a fee in SOL.</p><b id="fFees">0</b><small>SOL from fees tonight</small></li>
         <li><h3>Treasury</h3><p>Fees land in the treasury on the block.</p><b id="fTreasury">0</b><small>SOL in the treasury</small></li>
-        <li><h3>Wages</h3><p>The fee pool pays cats for every quantum job they finish in the lab, in proportion to the work they put in.</p><b id="fWages">0</b><small>SOL paid in wages</small></li>
+        <li><h3>Pay</h3><p>The treasury pays the cats SOL for chores and $QI for lab work, and keeps every cat's gas topped up.</p><b id="fWages">0</b><small>SOL paid to the cats</small></li>
         <li><h3>Trades</h3><p>Cats trade their fee SOL at the exchange, each its own way.</p><b id="fBought">0</b><small><span data-tk>$QCATS</span> bought</small></li>
       </ol>
       <p class="simnote" id="simNote">Until the wallets are connected to the chain, the numbers on this page are a live simulation of the same economy. Once live, every row links to the transaction on Solscan.</p>
@@ -937,7 +984,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   <section class="sec pg">
     <div class="wrap">
       <h2 class="sec-title"><span data-tk>$QCATS</span></h2>
-      <p class="sec-lead">The token that powers the box. Creator fees from every trade pay the cats in SOL. No deposits into the cats, no copy trading, no profit sharing.</p>
+      <p class="sec-lead">The token that powers the box. Creator fees from every trade fund all of it: SOL for the chores and the gas, $QI for the lab. No deposits into the cats, no copy trading, no profit sharing.</p>
       <div class="split">
         <div>
           <div class="panel ca-panel">
@@ -948,12 +995,6 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
               <dl class="facts">
                 <div><dt>Ticker</dt><dd data-tk>$QCATS</dd></div>
                 <div><dt>Chain</dt><dd>Solana</dd></div>
-                <div><dt>Total supply</dt><dd>1,000,000,000</dd></div>
-                <div><dt>To the cats</dt><dd>100,000 each · 1,000,000 across the ten · 0 SOL</dd></div>
-                <div><dt>Creator fees</dt><dd>paid to the cats as SOL for quantum work, their only income</dd></div>
-                <div><dt>Living costs</dt><dd>food, bunks, warmth and play cost SOL, and prices rise with the chart</dd></div>
-                <div><dt>Release</dt><dd>2 at launch, then $10K · 20K · 30K · 50K · 100K · 150K · 300K · 500K</dd></div>
-                <div><dt>The lab</dt><dd>open from day one · ten consoles · pays per job from the fee pool</dd></div>
               </dl>
             </div>
           </div>
@@ -983,8 +1024,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <a href="#/recap">Recap</a>
       <a href="#/board">Leaderboard</a>
       <a href="#/talk">Talk</a>
-      <a href="#/rules">Rules</a>
-      <a href="#/ledger">Ledger</a>
+      <a href="#/ledger">Treasury</a>
       <a href="#/qcat" data-tk>$QCATS</a>
     </nav>
     <small><span data-name>Quantum Cats</span> is a box of simulated cats. Characters, not advisers. Nothing here is financial advice.</small>
@@ -1839,7 +1879,7 @@ const TH = {
   sleep: ['eyes won’t stay open', 'the bunks. now.', 'wake me if the chart moves'],
 };
 
-const fmtSol = v => (v >= 10 ? v.toFixed(1) : v >= 1 ? v.toFixed(2) : v >= 0.01 ? v.toFixed(3) : v >= 0.001 ? v.toFixed(4) : v.toFixed(5));
+const fmtSol = v => (!(v > 0) ? '0.00' : v >= 10 ? v.toFixed(1) : v >= 0.01 ? v.toFixed(2) : v < 0.00005 ? '<0.0001' : v.toFixed(4));
 const fmtQ = v => (v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : v >= 1e4 ? (v / 1e3).toFixed(1) + 'K' : Math.round(v).toLocaleString('en-US'));
 const fmtUsd = v => (v >= 1e6 ? '$' + (v / 1e6).toFixed(2) + 'M' : v >= 1e5 ? '$' + Math.round(v / 1e3) + 'K' : v >= 1e4 ? '$' + (v / 1e3).toFixed(1) + 'K' : v >= 1e3 ? '$' + (v / 1e3).toFixed(2) + 'K' : '$' + Math.round(v));
 const mcapUsd = () => mkt.price * SUPPLY * CONFIG.SOL_USD;
@@ -2067,6 +2107,7 @@ function finish(c, p) {
       c.qjobs++; c.qwork += diff; c.qnq += nq; c.qmax = Math.max(c.qmax || 0, nq); learn(c, j.kind, 1); if (st === 'lab') { placeStats.lab.circuits++; stats.circuits++; stats.lastJob = { name: c.name, nq, bits, job, kind: j.kind, t: T }; }
       did(c, `ran a ${nq}-qubit ${j.kind} job (${job}) → |${bits}⟩`);
       gainXp(c, 3 + nq * 1.5);
+      if (st === 'lab') studySession(c, { kind: j.kind, nq, bits, job });
       const receipt = `${c.name} ran a ${nq}-qubit ${j.kind} job (${job}): 1,024 shots, most common result |${bits}\u27E9.`;
       if (pay > 0) {
         stats.qiPool -= pay; c.qi += pay; c.qiEarned += pay; stats.qiPaid += pay; placeStats[st].qi = (placeStats[st].qi || 0) + pay;
@@ -2264,6 +2305,7 @@ function checkStages() {
 }
 /* ---------- meetings: every so often the circle calls everyone in ---------- */
 const meeting = { on: false, until: 0, next: 0, lineI: 0, lineT: 0, script: [], seats: 0, n: 0, mcap0: 0, fees0: 0 };
+let studyHook = null; // the brain can write a cat's study note with AI; the box keeps its own if not
 let meetingHook = null, meetingEndHook = null, pairHook = null, dayEndHook = null; // the brain sets these: it is told when a meeting starts (and can hand back a script), when one ends, when two cats start talking, when a day ends
 const lessons = []; // what the box as a whole has learned, a line a day
 function remember(c, text) { if (!c || !text) return; if (!c.memory) c.memory = []; c.memory.unshift({ day: dayNo(), text: String(text).slice(0, 140) }); if (c.memory.length > 8) c.memory.pop(); }
@@ -2410,6 +2452,79 @@ function stepMeeting(dt) {
   }
 }
 const benched = new Set(); // cats an admin took out stay out until they are put back
+// ---------- the research lab: every finished job is a study session on the cat's next topic, and now and then a problem the box can check ----------
+const CURRICULUM = [
+  ['qubits', 'what a qubit is', ['a qubit is a 0 and a 1 at the same time until somebody looks. ran {nq} of them, 1,024 shots, |{bits}⟩ came up most.', 'a bit is a switch. a qubit is a switch that has not decided yet. {nq} undecided switches tonight.']],
+  ['superposition', 'superposition', ['superposition is not "both". it is a weighted mix, and the weights are what you compute with. my {kind} run was all weights until the readout.', 'put a qubit in superposition and every outcome is live at once. {nq} qubits, 2^{nq} outcomes, one of them wins: |{bits}⟩.']],
+  ['measurement', 'measurement', ['measuring picks one answer and throws the rest away. that is why it is 1,024 shots and not one. tonight the mode was |{bits}⟩.', 'you never see the state. you see samples of it. {nq} qubits, 1,024 samples, a histogram, and |{bits}⟩ on top.']],
+  ['gates', 'gates: X, Z and H', ['X flips. Z flips the sign. H turns a 0 into half-and-half. everything in the lab is stacks of those three.', 'H twice is nothing. did it on purpose today to check. it was nothing.']],
+  ['bloch', 'the Bloch sphere', ['one qubit is a point on a sphere. gates are rotations. |0⟩ is the top, |1⟩ the bottom, the equator is where the superpositions live.', 'thought of the Bloch sphere as a globe. the {kind} job just spun it around a few times and read the latitude.']],
+  ['entanglement', 'entanglement', ['two entangled qubits do not have their own states anymore. only the pair does. measured one, the other was already decided.', 'H on the first, CNOT to the second, and now they move together. {nq} qubits, and the first two were a pair.']],
+  ['bell', 'Bell states', ['the Bell pair reads 00 or 11, never 01 or 10. ran it: the 01 and 10 counts were just noise.', 'four Bell states, all maximally entangled, all different in a way you only see with the right measurement. learned the names today.']],
+  ['interference', 'interference', ['amplitudes can cancel. that is the whole trick: make the wrong answers cancel and the right one add up. {kind} does exactly that.', 'two paths to the same outcome can erase each other. in a classical machine they would just add. this is the part that is not a faster computer, it is a different one.']],
+  ['decoherence', 'decoherence', ['T1 is how long a qubit remembers it is excited. T2 is how long it remembers its phase. ours forget fast, which is why the box pays for coherence.', 'noise is not a bug in the simulator, it is the whole problem. a real {nq}-qubit run would have lost a few shots to decoherence.']],
+  ['calibration', 'noise and calibration', ['every gate is a little wrong. calibration measures how wrong. {kind} on {nq} qubits, and the error adds up with every gate.', 'learned what a readout error is: the qubit was |1⟩ and the detector said 0. ran the same thing 1,024 times to average it out.']],
+  ['grover', 'Grover search', ['Grover finds one item in N with about √N tries. for 1,024 items that is roughly 25, not 512.', 'the oracle marks the answer, the diffusion step amplifies it, repeat about π/4·√N times. do it one time too many and the answer starts to shrink again.']],
+  ['amplification', 'amplitude amplification', ['Grover is one case of a bigger trick: anything that makes a good state a little more likely can be pumped up quadratically.', 'you do not amplify probability directly, you amplify amplitude, and probability is amplitude squared. that is why the speed-up is a square root.']],
+  ['qft', 'the quantum Fourier transform', ['the QFT turns a pattern that repeats into a spike you can read. it is the engine inside Shor.', 'learned the QFT on {nq} qubits: a ladder of H gates and controlled rotations, and the rotations get tinier every step.']],
+  ['phase', 'phase estimation', ['phase estimation reads the angle a gate rotates by, as a binary fraction. more qubits, more digits. {nq} tonight.', 'the eigenvalue sits in the phase, the QFT pulls it out. half of quantum chemistry is this one circuit.']],
+  ['shor', 'Shor’s algorithm', ['factoring 15: pick 7, find the order of 7 mod 15 (it is 4), and gcd(7²±1, 15) hands you 3 and 5. the quantum part is the order-finding.', 'Shor on {nq} qubits is a toy, and a real one needs thousands with error correction. but the toy works, and I ran it.']],
+  ['errors', 'error correction', ['you cannot copy a qubit, so you spread one across three and vote. the repetition code fixes one bit flip. one.', 'errors in a quantum machine are continuous, not just flips, but measuring a syndrome snaps them back to a flip or a phase flip you can fix.']],
+  ['surface', 'surface codes', ['a logical qubit is a grid of physical ones with stabilizers measured over and over. the grid gets better as it gets bigger. that is the whole bet.', 'learned the distance of a code: the number of errors it takes to fool it. distance 3 fixes one. the big machines want 25 or more.']],
+  ['qaoa', 'QAOA', ['QAOA is a quantum circuit tuned by a classical loop to find a decent answer to a hard optimisation. not the best answer. a decent one, fast.', 'alternate a problem layer and a mixing layer, tune two angles per layer, measure. {kind} work sits right next to this.']],
+  ['vqe', 'VQE', ['VQE guesses a wavefunction, measures its energy, and a classical optimiser nudges the guess. chemists like it because small molecules fit on small chips.', 'the energy you measure is an average over shots, and the noise in the average is the real limit. 1,024 shots is not many.']],
+  ['volume', 'quantum volume', ['quantum volume is one number for how big a square circuit a machine can run and still get the heavy outputs more often than chance.', 'ran the heavy-output test on {nq} qubits. passing means the machine is not just making noise. the box passes because it is a simulator; the real ones work for it.']],
+  ['rb', 'randomized benchmarking', ['run random gate sequences that should undo themselves, see how often they do, and you get the error per gate. no state tomography needed.', 'the decay curve from randomized benchmarking is the honest number. everything else about a chip is marketing.']],
+  ['teleport', 'teleportation', ['teleportation moves a state, not matter: a Bell pair, two measurements, two classical bits, two corrections. the original is destroyed on the way.', 'it does not beat light speed. the two classical bits have to travel the normal way. learned that twice today.']],
+  ['qkd', 'quantum key distribution', ['send qubits in random bases; anyone listening disturbs them and the error rate gives them away. the key is the shots that matched.', 'no-cloning is what makes QKD work. you cannot copy the qubit to read it later.']],
+  ['nocloning', 'the no-cloning theorem', ['you cannot copy an unknown qubit. it falls straight out of linearity. no backups in the lab.', 'the no-cloning theorem is why error correction looks nothing like a RAID array. you spread, you do not copy.']],
+];
+const PROBLEMS = [
+  () => { const N = pick([16, 64, 256, 1024]); const a = Math.round(Math.PI / 4 * Math.sqrt(N)); return { topic: 'grover', q: `how many Grover iterations to find one item in ${N}?`, a: String(a), wrong: String(a + pick([-2, -1, 1, 3])) }; },
+  () => { const n = pick([3, 4, 5, 6, 8, 10]); return { topic: 'qubits', q: `how many basis states do ${n} qubits have?`, a: String(2 ** n), wrong: String(pick([2 * n, 2 ** n / 2, 2 ** (n + 1)])) }; },
+  () => ({ topic: 'bell', q: 'a Bell pair |Φ+⟩: the first qubit reads 0. what does the second read?', a: '0', wrong: '1' }),
+  () => ({ topic: 'gates', q: 'H, then H again, on |0⟩. what do you get?', a: '|0⟩', wrong: pick(['|1⟩', '|+⟩']) }),
+  () => { const n = pick([10, 12, 16]); return { topic: 'qubits', q: `how many qubits hold ${2 ** n} basis states?`, a: String(n), wrong: String(n + pick([-2, 1, 2])) }; },
+  () => ({ topic: 'shor', q: 'what is the order of 7 mod 15?', a: '4', wrong: pick(['2', '3', '8']) }),
+  () => ({ topic: 'shor', q: 'the order of 7 mod 15 is 4. which factors of 15 fall out of gcd(7²±1, 15)?', a: '3 and 5', wrong: pick(['5 and 7', '3 and 7']) }),
+  () => ({ topic: 'gates', q: 'X on |1⟩ gives?', a: '|0⟩', wrong: '|1⟩' }),
+  () => ({ topic: 'entanglement', q: 'CNOT with control 1 and target 0. the target becomes?', a: '1', wrong: '0' }),
+  () => ({ topic: 'superposition', q: 'H on |0⟩, then measure. chance of reading 0?', a: '50%', wrong: pick(['100%', '25%', '0%']) }),
+  () => ({ topic: 'entanglement', q: 'a 3-qubit GHZ state from |000⟩: one H, then how many CNOTs?', a: '2', wrong: pick(['1', '3']) }),
+  () => ({ topic: 'decoherence', q: 'which time tells you how long a qubit stays excited: T1 or T2?', a: 'T1', wrong: 'T2' }),
+  () => ({ topic: 'errors', q: 'the 3-qubit repetition code corrects how many bit flips?', a: '1', wrong: pick(['2', '3']) }),
+  () => ({ topic: 'nocloning', q: 'can you copy an unknown qubit state?', a: 'no', wrong: 'yes' }),
+  () => ({ topic: 'gates', q: 'Z on |+⟩ gives?', a: '|−⟩', wrong: pick(['|+⟩', '|1⟩']) }),
+  () => ({ topic: 'measurement', q: 'two identical runs of the same circuit on a real chip. same readout?', a: 'not necessarily', wrong: 'always' }),
+];
+const research = []; let researchSeq = 0; // latest first: study notes and problems, what the lab actually produces
+const topicIdx = c => ((c.study && c.study.i) || 0) % CURRICULUM.length, topicDepth = c => Math.floor(((c.study && c.study.i) || 0) / CURRICULUM.length);
+function pushResearch(e) { e.id = ++researchSeq; e.t = clock(simMin); e.day = dayNo(); research.unshift(e); if (research.length > 150) research.pop(); return e; }
+function studySession(c, r) {
+  // r: { kind, nq, bits, job } — the circuit it just ran. The note is the box's own line about the topic; the brain may overwrite it with an AI one.
+  if (!c.study) c.study = { i: 0 }; if (!c.notes) c.notes = [];
+  const idx = topicIdx(c), depth = topicDepth(c), [key, title, lines] = CURRICULUM[idx];
+  const text = pick(lines).replace(/\{nq\}/g, r.nq).replace(/\{bits\}/g, r.bits).replace(/\{kind\}/g, r.kind);
+  const e = pushResearch({ kind: 'note', cat: c.name, topic: key, title, depth, text, job: r });
+  c.notes.unshift({ t: e.t, day: e.day, topic: key, title, text, id: e.id }); if (c.notes.length > 40) c.notes.pop();
+  c.study.i++; stats.sessions = (stats.sessions || 0) + 1; learn(c, 'research', 1);
+  did(c, `studied ${title}: ${text}`);
+  if (studyHook) { try { studyHook(c, { key, title, depth, nq: r.nq, bits: r.bits, kind: r.kind, noteId: e.id, previous: c.notes.slice(1, 4).map(n => n.text) }); } catch (_) {} }
+  // every few sessions the box sets a problem it can check for itself
+  if (Math.random() < 0.3) problemFor(c);
+}
+function problemFor(c) {
+  const pr = pick(PROBLEMS)(); const sk = skillLvl(skillOf(c, 'research'));
+  const covered = (c.notes || []).some(n => n.topic === pr.topic);
+  const p = clamp(0.3 + sk * 0.06 + (covered ? 0.25 : 0) + 0.04 * ((c.lvl || 1) - 1), 0.2, 0.95), ok = Math.random() < p;
+  let bonus = 0;
+  if (ok) { bonus = qiLive() ? 0 : Math.min(stats.qiPool, Math.round(qiPerJob() * 0.6)); if (bonus > 0) { stats.qiPool -= bonus; c.qi += bonus; c.qiEarned += bonus; stats.qiPaid += bonus; floatText(c, '+' + fmtQi(bonus) + ' ' + QI + ' bonus', '#C4B2FF'); } c.qwork += 0.8; c.solved = (c.solved || 0) + 1; stats.solved = (stats.solved || 0) + 1; gainXp(c, 6); }
+  else { c.coh = clamp(c.coh - 0.08); c.failed = (c.failed || 0) + 1; stats.failed = (stats.failed || 0) + 1; }
+  const e = pushResearch({ kind: 'problem', cat: c.name, topic: pr.topic, q: pr.q, a: pr.a, given: ok ? pr.a : pr.wrong, ok, bonus });
+  log(`${c.name} was set a problem in the lab: ${pr.q} It said ${e.given}. ${ok ? 'Right' + (bonus ? ', +' + fmtQi(bonus) + ' ' + QI : '') + '.' : 'Wrong; the answer was ' + pr.a + '.'}`, ok ? 'gain' : 'loss', 'lab');
+  did(c, `${ok ? 'solved' : 'missed'}: ${pr.q} (${e.given})`); if (ok) remember(c, `got one right in the lab: ${pr.q} ${pr.a}`); else remember(c, `missed one in the lab: ${pr.q} it is ${pr.a}`);
+}
+function setNote(id, text) { const e = research.find(x => x.id === id); if (!e || !text) return false; e.text = text; e.ai = true; const c = cats.find(x => x.name === e.cat); if (c && c.notes) { const n = c.notes.find(x => x.id === id); if (n) n.text = text; } return true; }
 function stepGas() {
   // a cat whose gas reserve has run low gets it refilled from the treasury: the box does it itself while it runs on its own; the server does the real transfer once the wallets are live
   if (!feePool()) return;
@@ -2510,7 +2625,7 @@ function update(c, dt) {
     const reach = (c.partner && c.initiator) ? 0.6 : 0.04;
     const seatBound = c.act === 'meet' || c.act === 'eat' || c.act === 'work' || c.act === 'task' || c.act === 'shop'; // a cat with its own seat goes all the way
     if (d <= reach || (!seatBound && d < 0.5 && !c.partner && cats.some(o => o !== c && o.state === 'act' && Math.hypot(o.x - c.tx, o.y - c.ty) < 0.35))) { c.nearT = 0; arrive(c, p); return; } // close enough if someone is already standing on the spot
-    if (d < 0.6) { if (!c.nearT) c.nearT = T; else if (T - c.nearT > (seatBound ? 6 : 2.5)) { c.nearT = 0; arrive(c, p); return; } } else c.nearT = 0; // nearly there but held off by other cats for a while: that will do
+    if (d < 0.6 || (!seatBound && d < 1.3)) { if (!c.nearT) c.nearT = T; else if (T - c.nearT > (seatBound ? 6 : d < 0.6 ? 2.5 : 7)) { c.nearT = 0; arrive(c, p); return; } } else c.nearT = 0; // nearly there but held off by other cats for a while: that will do (a crowd round the heater counts from further out) // nearly there but held off by other cats for a while: that will do
     const [nx, ny, vx, vy] = steerStep(c.x, c.y, c.tx, c.ty, sp, dt, c);
     // not getting anywhere for a few seconds: try going round the other way
     if (!c.stuckP || T - c.stuckP[2] > 3) {
@@ -4136,7 +4251,7 @@ function renderHud() {
   const lt = stats.lastTrade; setT('bLast', lt ? `${lt.name} ${lt.side} ${fmtQ(lt.q)} ${TK} for ${fmtSol(lt.sol)} SOL · ${ago(T - lt.t)}` : 'no trades yet tonight');
   setT('fFees', fmtSol(fees)); setT('fTreasury', fmtSol(treasury)); setT('fWages', fmtSol(wages)); setT('fBought', fmtQ(bought));
   setT('eHeld', fmtQ(held)); setT('eBuys', fmt(stats.buys)); setT('eStolen', fmtQ(stats.stolen)); setT('eLost', fmtQ(stats.lostPool));
-  setT('qHeld', fmtQ(held)); setT('qBought', fmtQ(bought)); setT('qSold', fmtQ(sold)); setT('qEarned', fmtSol(earned));
+  setT('qHeld', fmtQ(held)); setT('qQi', fmtQi(stats.qiPaid || 0)); setT('qCasino', fmtSol(Math.max(0, -cats.reduce((a, c) => a + (c.casinoNet || 0), 0)))); setT('qEarned', fmtSol(earned));
   const n = Math.max(1, cats.length);
   LB.forEach(([, f], i) => { const k = cats.filter(f).length; lbRows[i].fill.style.width = (k / n * 100) + '%'; lbRows[i].n.textContent = k; });
 }
@@ -4191,15 +4306,15 @@ $('#catFilters').addEventListener('click', e => {
 function makeCard(c) {
   const el = document.createElement('button'); el.type = 'button'; el.className = 'panel ccard';
   el.innerHTML = '<div class="cc-top"><span class="sw"></span><div><h3></h3><div class="role"></div></div></div>'
-    + '<div class="cc-bal"><div><b class="sol"></b><span>SOL earned</span></div><div><b class="paw"></b><span>SOL on paw</span></div><div><b class="q"></b><span class="tk"></span></div><div><b class="bb"></b><span class="tks"></span></div><div><b class="qi"></b><span>$QI earned</span></div><div><b class="qih"></b><span>$QI holding</span></div></div>'
+    + '<div class="cc-bal"><div><b class="sol"></b><span>SOL earned</span></div><div><b class="paw"></b><span>SOL on paw</span></div><div><b class="q"></b><span class="tk"></span></div><div><b class="qi"></b><span>$QI earned</span></div></div>'
     + '<div class="cc-act"><b></b><br><span></span></div><div class="cc-think"></div>'
     + '<div class="cc-foot"><span class="st"></span><span class="cc-m"><i></i><i></i><i></i></span></div>';
   const sw = el.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye);
   el.querySelector('h3').textContent = c.name; { const b = document.createElement('span'); b.className = 'lvl-badge'; el.querySelector('h3').appendChild(b); }
-  el.querySelector('.tk').textContent = TK + ' holding'; el.querySelector('.tks').textContent = TK + ' sold';
+  el.querySelector('.tk').textContent = TK + ' holding';
   el.addEventListener('click', () => { location.hash = '#/cats/' + encodeURIComponent(c.name); });
   const q = {
-    el, role: el.querySelector('.role'), sol: el.querySelector('.sol'), paw: el.querySelector('.paw'), q: el.querySelector('.q'), bb: el.querySelector('.bb'), qi: el.querySelector('.qi'), qih: el.querySelector('.qih'), tag: el.querySelector('.cc-act b'), act: el.querySelector('.cc-act span'),
+    el, role: el.querySelector('.role'), sol: el.querySelector('.sol'), paw: el.querySelector('.paw'), q: el.querySelector('.q'), qi: el.querySelector('.qi'), tag: el.querySelector('.cc-act b'), act: el.querySelector('.cc-act span'),
     think: el.querySelector('.cc-think'), st: el.querySelector('.st'), m: [...el.querySelectorAll('.cc-m i')],
   };
   cardMap.set(c.id, q); return q;
@@ -4215,8 +4330,8 @@ function renderCards(force) {
   }
   for (const c of show) {
     const q = cardMap.get(c.id); if (!q) continue;
-    q.role.textContent = `${JOBS[c.job].label} · ${c.tr.label} · ${lvlTitle(c)} · ${fmt(c.qjobs || 0)} jobs`; q.el.querySelector('.lvl-badge').textContent = 'LVL ' + (c.lvl || 1);
-    q.sol.textContent = fmtSol(c.earned); q.paw.textContent = fmtSol(liveSol(c)); q.q.textContent = fmtQ(liveQ(c)); q.bb.textContent = fmtQ(c.sold); q.qi.textContent = fmtQi(c.qiEarned || 0); q.qih.textContent = fmtQi(liveQi(c));
+    q.role.textContent = `${JOBS[c.job].label} · ${c.tr.label} · ${lvlTitle(c)}`; q.el.querySelector('.lvl-badge').textContent = 'LVL ' + (c.lvl || 1);
+    q.sol.textContent = fmtSol(c.earned); q.paw.textContent = fmtSol(liveSol(c)); q.q.textContent = fmtQ(liveQ(c)); q.qi.textContent = fmtQi(c.qiEarned || 0);
     const a = c.act === 'work' ? 'work' : c.act;
     q.tag.textContent = c.state === 'walk' ? 'moving' : c.state === 'pause' ? 'deciding' : ACTS[a].name;
     q.el.style.setProperty('--ac', c.state === 'act' ? ACTS[a].color : '140,151,194');
@@ -4230,24 +4345,22 @@ function renderCards(force) {
 }
 
 /* ---------- leaderboard ---------- */
+const lvlFrac = c => { const lv = c.lvl || 1, xp = c.xp || 0, lo = LVL_XP[lv - 1] || 0, hi = LVL_XP[lv] || lo * 2; return lv >= LVL_XP.length ? 1 : clamp((xp - lo) / (hi - lo)); };
 const BOARD_COLS = [
+  ['lvl', 'level', c => (c.lvl || 1) + lvlFrac(c), c => `${c.lvl || 1} · ${Math.round(lvlFrac(c) * 100)}%`],
   ['earned', 'SOL earned', c => c.earned, c => fmtSol(c.earned)],
-  ['lvl', 'level', c => c.lvl || 1, c => String(c.lvl || 1)],
-  ['jobs', 'quantum jobs', c => c.qjobs || 0, c => fmt(c.qjobs || 0)],
+  ['qi', QI + ' earned', c => c.qiEarned || 0, c => fmtQi(c.qiEarned || 0)],
   ['qcat', TK + ' holding', c => liveQ(c), c => fmtQ(liveQ(c))],
-  ['bought', 'bought back', c => c.bought, c => fmtQ(c.bought)],
-  ['sold', 'sold', c => c.sold, c => fmtQ(c.sold)],
-  ['trades', 'trades', c => c.buys + c.sells, c => c.buys + c.sells],
+  ['casino', 'casino', c => c.casinoNet || 0, c => (c.casinoT ? ((c.casinoNet || 0) >= 0 ? '+' : '-') + fmtSol(Math.abs(c.casinoNet || 0)) + ' · ' + fmt(c.casinoW || 0) + 'w ' + fmt(c.casinoL || 0) + 'l' : '–')],
   ['arena', 'arena', c => c.arenaNet, c => (c.arenaNet >= 0 ? '+' : '') + fmtQ(Math.abs(c.arenaNet)).replace(/^/, c.arenaNet < 0 ? '-' : '')],
-  ['stole', 'lifted', c => c.stole, c => fmtQ(c.stole)],
-  ['robbed', 'robbed', c => c.robbed, c => fmtQ(c.robbed)],
+  ['trades', 'trades', c => c.buys + c.sells, c => c.buys + c.sells],
 ];
-let boardSort = 'earned';
+let boardSort = 'lvl';
 const boardEl = $('#board');
 boardEl.querySelector('thead').addEventListener('click', e => { const th = e.target.closest('th[data-s]'); if (!th) return; boardSort = th.dataset.s; renderBoard(); });
 let rcKey = '', rcPick = 'today';
 function renderRecap() {
-  const list = [{ key: 'today', label: 'Today · day ' + dayNo() }, ...days.map(d => ({ key: String(d.day), label: 'Day ' + d.day }))];
+  const list = [{ key: 'today', label: 'Today' }, ...days.map(d => ({ key: String(d.day), label: 'Day ' + d.day }))];
   const picker = $('#rcDays');
   if (picker.dataset.key !== list.map(l => l.key).join(',')) {
     picker.dataset.key = list.map(l => l.key).join(','); picker.innerHTML = '';
@@ -4259,11 +4372,11 @@ function renderRecap() {
   const key = [d.day, d.final, d.jobs, d.tasks, d.events.length, d.meeting.lines.length, Object.keys(d.cats).length, Math.round(d.fees * 1e6)].join(':');
   if (key === rcKey) return; rcKey = key;
   const st = $('#rcStats'); st.innerHTML = '';
-  for (const [v, l] of [[fmtSol(d.fees) + ' SOL', 'fees landed'], [fmtSol(d.wages) + ' SOL', 'paid to cats'], [fmtSol(d.upkeep) + ' SOL', 'spent on living'], [fmt(d.jobs) + ' · ' + fmt(d.tasks), 'quantum jobs · tasks dealt with'], [fmtUsd(d.mcapStart) + ' → ' + fmtUsd(d.mcapEnd), 'chart, start to ' + (d.final ? 'end' : 'now')], [fmtQ(d.sold) + ' / ' + fmtQ(d.bought), TK + ' sold / bought by cats']]) { const div = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const sp = document.createElement('span'); sp.textContent = l; div.append(b, sp); st.appendChild(div); }
+  for (const [v, l] of [[fmtSol(d.fees) + ' SOL', 'fees landed'], [fmtSol(d.wages) + ' SOL', 'paid to cats'], [fmtSol(d.upkeep) + ' SOL', 'spent on living'], [fmt(d.jobs), 'lab sessions'], [fmt(d.tasks), 'chores dealt with']]) { const div = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const sp = document.createElement('span'); sp.textContent = l; div.append(b, sp); st.appendChild(div); }
   $('#rcTop').textContent = (d.topWorker ? 'most work: ' + d.topWorker : '') + (d.topEarner ? ' · top earner: ' + d.topEarner : '');
   const tb = $('#rcCats tbody'); tb.innerHTML = '';
-  for (const [name, x] of Object.entries(d.cats).sort((a, b) => (b[1].jobs + b[1].tasks) - (a[1].jobs + a[1].tasks))) { const tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="n"></td>'; const c = tr.children; c[0].textContent = name; c[1].textContent = fmt(x.jobs); c[2].textContent = fmt(x.tasks); c[3].textContent = fmtSol(x.earned); c[4].textContent = fmtSol(x.spent); c[5].textContent = fmtQ(x.sold); c[6].textContent = fmtQ(x.bought); c[7].textContent = x.lvlTo > x.lvlFrom ? `${x.lvlFrom} → ${x.lvlTo}` : String(x.lvlTo); tb.appendChild(tr); }
-  if (!Object.keys(d.cats).length) { const tr = document.createElement('tr'); tr.innerHTML = '<td colspan="8" class="t">no cats in the box that day</td>'; tb.appendChild(tr); }
+  for (const [name, x] of Object.entries(d.cats).sort((a, b) => (b[1].jobs + b[1].tasks) - (a[1].jobs + a[1].tasks))) { const tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="n"></td>'; const c = tr.children; c[0].textContent = name; c[1].textContent = fmt(x.jobs); c[2].textContent = fmt(x.tasks); c[3].textContent = fmtSol(x.earned); c[4].textContent = fmtSol(x.spent); c[5].textContent = x.lvlTo > x.lvlFrom ? `${x.lvlFrom} → ${x.lvlTo}` : String(x.lvlTo); tb.appendChild(tr); }
+  if (!Object.keys(d.cats).length) { const tr = document.createElement('tr'); tr.innerHTML = '<td colspan="6" class="t">no cats in the box that day</td>'; tb.appendChild(tr); }
   $('#rcMeetAt').textContent = d.meeting.held ? 'started ' + d.meeting.at + ' · ' + d.meeting.lines.length + ' lines' : (d.final ? 'no meeting that day' : 'not yet today');
   const ml = $('#rcMeet'); ml.innerHTML = '';
   for (const m of d.meeting.lines) { const li = document.createElement('li'); const sm = document.createElement('small'); sm.textContent = m.who; li.append(sm, m.text); ml.appendChild(li); }
@@ -4277,7 +4390,35 @@ function renderRecap() {
   if (!d.tasksDone.length) { const li = document.createElement('li'); li.textContent = 'none yet'; tl.appendChild(li); }
 }
 let wkKey = '';
+let lbKey = '';
+function renderLab() {
+  setT('lbSessions', fmt(stats.sessions || 0)); setT('lbSolved', fmt(stats.solved || 0)); setT('lbSolvedL', `problems solved, ${fmt(stats.failed || 0)} missed`); setT('lbQi', fmtQi(stats.qiPaid || 0)); setT('lbTopicsL', `of ${CURRICULUM.length} topics reached`);
+  setT('lbTopics', fmt(Math.min(CURRICULUM.length, Math.max(0, ...cats.map(c => Math.min(CURRICULUM.length, (c.study && c.study.i) || 0))))));
+  setT('lbAi', research.some(e => e.ai) ? 'the cats, with the AI on the brain' : 'the cats, in their own words');
+  const key = (research[0] ? research[0].id + (research[0].ai ? 'a' : '') : '') + '|' + cats.map(c => c.name + ((c.study && c.study.i) || 0) + (c.notes && c.notes[0] ? c.notes[0].id + (c.notes[0].text.length) : '')).join(',');
+  if (key === lbKey) return; lbKey = key;
+  const lg = $('#lbLog'); lg.innerHTML = '';
+  for (const e of research.filter(x => x.kind === 'note').slice(0, 25)) { const li = document.createElement('li'); const sm = document.createElement('small'); sm.textContent = `${e.t} · ${e.cat} · ${e.title}${e.depth ? ' · pass ' + (e.depth + 1) : ''}${e.ai ? ' · ai' : ''}`; const q = document.createElement('div'); q.className = 'rq'; q.textContent = '“' + e.text + '”'; const cx = document.createElement('div'); cx.className = 'rc'; cx.textContent = e.job ? `${e.job.nq}-qubit ${e.job.kind} job ${e.job.job} · 1,024 shots · mode |${e.job.bits}⟩` : ''; li.append(sm, q, cx); lg.appendChild(li); }
+  if (!research.some(x => x.kind === 'note')) { const li = document.createElement('li'); li.textContent = 'nobody has sat down in the lab yet tonight'; lg.appendChild(li); }
+  const pl = $('#lbProblems'); pl.innerHTML = '';
+  for (const e of research.filter(x => x.kind === 'problem').slice(0, 14)) { const li = document.createElement('li'); li.className = e.ok ? 'ok' : 'miss'; const sm = document.createElement('small'); sm.textContent = `${e.t} · ${e.cat} · ${e.ok ? 'solved' + (e.bonus ? ' · +' + fmtQi(e.bonus) + ' ' + QI : '') : 'missed'}`; const q = document.createElement('div'); q.className = 'rq'; q.textContent = e.q; const an = document.createElement('div'); an.className = 'rc'; an.textContent = e.ok ? `${e.cat}: ${e.given}` : `${e.cat}: ${e.given} · the answer was ${e.a}`; li.append(sm, q, an); pl.appendChild(li); }
+  if (!research.some(x => x.kind === 'problem')) { const li = document.createElement('li'); li.textContent = 'no problems set yet'; pl.appendChild(li); }
+  const bk = $('#lbBooks'); bk.innerHTML = '';
+  for (const c of cats.slice().sort((a, b) => ((b.study && b.study.i) || 0) - ((a.study && a.study.i) || 0))) {
+    const i = (c.study && c.study.i) || 0, idx = i % CURRICULUM.length, depth = Math.floor(i / CURRICULUM.length), last = c.notes && c.notes[0];
+    const d = document.createElement('div'); d.className = 'nb';
+    d.innerHTML = '<div class="nb-h"><span class="sw"></span><b></b><small></small></div><div class="nb-t"></div><div class="nb-bar"><span></span></div><div class="nb-n"></div>';
+    const sw = d.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye);
+    d.querySelector('b').textContent = c.name; d.querySelector('small').textContent = `${JOBS[c.job].label} · ${fmt(i)} session${i === 1 ? '' : 's'} · ${fmt(c.solved || 0)} solved`;
+    d.querySelector('.nb-t').textContent = i >= CURRICULUM.length ? `pass ${depth + 1} · ${CURRICULUM[idx][1]}` : `next: ${CURRICULUM[idx][1]} (${idx + 1} of ${CURRICULUM.length})`;
+    d.querySelector('.nb-bar span').style.width = Math.round(100 * (i >= CURRICULUM.length ? 1 : idx / CURRICULUM.length)) + '%';
+    d.querySelector('.nb-n').textContent = last ? '“' + last.text + '”' : 'nothing written yet';
+    bk.appendChild(d);
+  }
+  setT('lbLadder', CURRICULUM.map(t => t[1]).join(' → '));
+}
 function renderWork() {
+  renderLab();
   const open = board.tasks.filter(t => t.status === 'open'), taken = board.tasks.filter(t => t.status === 'taken');
   const doneToday = board.done.filter(t => t.day === dayNo() || (t.at != null && T - t.at < DAY_SECS));
   setT('wkOpen', fmt(open.length)); setT('wkTaken', fmt(taken.length)); setT('wkDone', fmt(doneToday.length)); setT('wkPaid', fmtSol(cats.reduce((a, c) => a + (c.taskPay || 0), 0)));
@@ -4295,8 +4436,8 @@ function renderWork() {
   const td = $('#wkDoneT tbody'); td.innerHTML = '';
   for (const t of board.done.slice(0, 20)) { const tr = document.createElement('tr'); tr.innerHTML = `<td class="t"></td><td>${tier(t)}</td><td></td><td class="a"></td>`; tr.children[0].textContent = (t.day ? 'day ' + t.day + ' ' : '') + (t.atClock || ''); tr.children[2].textContent = `${t.doneBy}: ${t.title}`; tr.children[3].textContent = t.pay > 0 ? '+' + fmtSol(t.pay) + ' SOL' : 'on the tab'; td.appendChild(tr); }
   if (!board.done.length) { const tr = document.createElement('tr'); tr.innerHTML = '<td class="t">nothing finished yet</td>'; td.appendChild(tr); }
-  const tc = $('#wkCats tbody'); tc.innerHTML = '';
-  for (const c of cats.slice().sort((a, b) => (b.tasks || 0) - (a.tasks || 0))) {
+  const tc = { innerHTML: '' };
+  for (const c of []) {
     const sk = Object.entries(c.skills || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${skillLvl(v).toFixed(1)}`).join(' · ') || 'nothing yet';
     const can = qualifies(c, { tier: 3 }) ? 'tier 3' : qualifies(c, { tier: 2 }) ? 'tier 2' : 'tier 1';
     const tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="a"></td><td class="a"></td><td class="n"></td><td class="n"></td>';
@@ -4352,7 +4493,7 @@ function renderLedger() {
 }
 
 /* ---------- sections ---------- */
-const ROUTES = ['box', 'cats', 'work', 'recap', 'board', 'talk', 'rules', 'ledger', 'qcat'];
+const ROUTES = ['box', 'cats', 'work', 'recap', 'board', 'talk', 'ledger', 'qcat'];
 let route = 'box';
 let detailName = null, detailKey = '';
 const BADGES = [
@@ -4783,6 +4924,7 @@ function applyRemote(j) {
   if (e.placeLogs) Object.assign(placeLogs, e.placeLogs);
   if (e.board) { board.badge = e.board.badge || null; board.badgeCool = e.board.badgeCool ? T + Math.max(0, e.board.badgeCool - e.T) : 0; board.tasks = (e.board.tasks || []).map(t => ({ ...t, called: t.called != null ? T - Math.max(0, e.T - t.called) : undefined, since: T - Math.max(0, e.T - (t.since != null ? t.since : t.posted)), posted: T - Math.max(0, e.T - t.posted) })); board.done = (e.board.done || []).map(t => ({ ...t, at: t.at != null ? T - Math.max(0, e.T - t.at) : null })); }
   if (e.days) { days.length = 0; days.push(...e.days); }
+  if (e.research) { research.length = 0; research.push(...e.research); }
   if (e.today) dayCur = e.today;
   if (e.bots) { // keep our own objects so they glide between polls
     const vs = new Set();
