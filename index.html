@@ -175,6 +175,45 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .ab-facts b{display:block;font-family:var(--hud);font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
 .ab-facts div:nth-child(2) b{color:var(--magenta)} .ab-facts div:nth-child(3) b{color:var(--cyan)} .ab-facts div:nth-child(4) b{color:var(--violet)}
 .ab-facts span{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:6px}
+.xs{margin:0 0 clamp(56px,7vw,92px)} .xs:last-child{margin-bottom:0}
+.xs-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.xs-eye{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+.xs-title{font-family:var(--hud);font-weight:700;font-size:clamp(2rem,5.2vw,3.9rem);line-height:.98;margin:0;letter-spacing:-.01em;color:var(--text)}
+.xs-note{margin:0;font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--soft);text-align:right;flex:0 0 auto}
+.xs-note a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(92,242,255,.35)}
+.xs-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);background:rgba(7,10,26,.6)}
+.xs-cards article{padding:26px 24px 30px;border-left:1px solid var(--line)} .xs-cards article:first-child{border-left:0}
+.xs-cards h3{font-family:var(--hud);font-weight:700;font-size:1.35rem;margin:0 0 12px;color:var(--text)}
+.xs-cards p{margin:0;font-family:var(--mono);font-size:13.5px;line-height:1.65;color:var(--soft)}
+.xs-minds{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.mc{border:1px solid var(--line);background:rgba(7,10,26,.6);padding:18px 20px 16px}
+.mc-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.mc-top canvas{width:72px;height:54px;display:block;flex:0 0 72px}
+.mc-top h4{margin:0;font-family:var(--hud);font-size:1.15rem;font-weight:700;color:var(--text)}
+.mc-top small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.mc-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:10px 0 3px}
+.mc-think{font-family:var(--hud);font-weight:600;font-size:15px;color:var(--cyan);text-shadow:0 0 12px rgba(92,242,255,.45);line-height:1.3}
+.mc-do{font-family:var(--mono);font-size:13px;color:var(--text)} .mc-do b{font-weight:700;color:var(--text)}
+.mc-why{font-family:var(--mono);font-size:13px;color:var(--text)}
+.mc .weighed{margin-top:4px} .mc .weighed li{grid-template-columns:1fr 130px 60px;font-size:10.5px} .mc .weighed li em{text-align:right}
+.xs-rows{border:1px solid var(--line);background:rgba(7,10,26,.6)}
+.xr{display:grid;grid-template-columns:52px minmax(120px,1.1fr) 90px minmax(120px,1fr) minmax(160px,1.6fr) 90px;gap:14px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:13px}
+.xr:first-child{border-top:0}
+.xr canvas{width:52px;height:40px;display:block}
+.xr .nm b{display:block;font-family:var(--hud);font-size:15px;font-weight:700;color:var(--text)} .xr .nm small{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.xr .ac{color:var(--cyan);font-weight:500;text-transform:uppercase;letter-spacing:.14em;font-size:11.5px}
+.xr .wh{color:var(--soft)} .xr .wy{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xr .lv{display:flex;gap:3px;justify-content:flex-end} .xr .lv i{width:7px;height:7px;background:rgba(255,255,255,.1)} .xr .lv i.on{background:var(--cyan);box-shadow:0 0 6px rgba(92,242,255,.6)}
+.xs-talk .xr{grid-template-columns:200px 1fr 60px}
+.xs-talk .xr.sys .nm b{color:var(--soft)} .xs-talk .xr .tx{color:var(--text)} .xs-talk .xr .ag{color:var(--muted);text-align:right;font-size:11.5px}
+.xs-talk .xr.new{box-shadow:inset 3px 0 0 var(--cyan)}
+.xs-coin{border:1px solid var(--line);background:rgba(7,10,26,.6);padding:26px 26px 24px;margin:0 0 22px}
+.xs-coin p{margin:0 0 20px;font-family:var(--mono);font-size:14px;line-height:1.7;color:var(--soft)}
+.xs-btn{display:inline-block;font-family:var(--hud);font-weight:700;font-size:15px;color:var(--cyan);border:1px solid var(--cyan);padding:12px 24px;text-decoration:none;letter-spacing:.02em}
+.xs-btn:hover{background:rgba(92,242,255,.1)}
+.xs-empty{padding:18px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+@media (max-width:1099px){.xs-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.xs-cards article:nth-child(3){border-left:0}.xs-cards article:nth-child(n+3){border-top:1px solid var(--line)}.xr{grid-template-columns:52px 1fr 90px 1fr}.xr .wy,.xr .lv{display:none}}
+@media (max-width:719px){.xs-head{flex-direction:column;align-items:flex-start}.xs-note{text-align:left}.xs-cards{grid-template-columns:1fr}.xs-cards article{border-left:0;border-top:1px solid var(--line)}.xs-cards article:first-child{border-top:0}.xr{grid-template-columns:44px 1fr 80px}.xr .wh{display:none}.xs-talk .xr{grid-template-columns:1fr 50px}.xs-talk .xr .nm{display:none}}
 .ab-fine{max-width:70ch;margin:0 auto;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;font-family:var(--mono)}
 /* ---------- HUD panels ---------- */
 .panel{position:relative;background:var(--panel);border:1px solid var(--line)}
@@ -554,84 +593,68 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
     <canvas id="roster" aria-label="Every cat, walking around. Tap one to find it in the box."></canvas>
   </div>
 
-  <div class="buyback">
-    <div><small>SOL earned from fees</small><b id="bEarned">0</b></div>
-    <div><small>paid to the treasury</small><b id="bUpkeep">0</b></div>
-    <div><small>market cap</small><b id="bPrice">—</b></div>
-    <div class="stg" id="tLab" hidden><small>the lab</small><b id="bLab">0 circuits</b></div>
-    <div class="last"><small>last trade</small><b id="bLast">no trades yet tonight</b></div>
-  </div>
-
-  <div class="unlocks" id="unlocks">
-    <div class="roster-head"><span>what the chart opens</span><small id="uPct"></small></div>
-    <div class="stages" id="stages"></div>
-    <div class="roster-head" style="margin-top:14px"><span><b id="uOut">2</b> of 10 released</span><span id="uNext"></span></div>
-    <div class="ubar"><span id="uFill"></span></div>
-    <div class="ugrid" id="ugrid"></div>
-  </div>
 </section>
 
-<section class="about">
+<section class="about" id="about">
   <div class="wrap">
-    <div class="ab-head">
-      <h2 class="ab-title">Ten cats. <span>Ten wallets.</span></h2>
-      <p class="ab-sub">A city block that runs on creator fees.</p>
+
+    <div class="xs">
+      <div class="xs-head"><div><span class="xs-eye">what this is</span><h2 class="xs-title">a box that runs itself</h2></div><p class="xs-note">nobody steers them. they work because<br>living in the box costs SOL.</p></div>
+      <div class="xs-cards">
+        <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with 100K <span data-tk>$QCATS</span> and not a lamport of SOL. everything else a cat ever gets comes out of the creator fees.</p></article>
+        <article><h3>work</h3><p>the lab pays SOL out of the fees, in proportion to the quantum jobs each cat finishes. some work all day, some barely. that is personality, not a setting.</p></article>
+        <article><h3>want</h3><p>a meal, a bunk, warmth, play and the arena all cost SOL, and every price climbs with the chart. a cat that cannot cover a meal sells a little coin. a cat with spare SOL buys.</p></article>
+        <article><h3>learn</h3><p>the last ten minutes of every day are the meeting in the circle. each cat takes one thing away, carries it into tomorrow, and levels up from everything it does in the town.</p></article>
+      </div>
     </div>
 
-    <div class="loop" aria-label="How the box runs">
-      <svg viewBox="0 45 1000 205" class="loop-svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="lg1" x1="0" x2="1"><stop offset="0" stop-color="#5CF2FF"/><stop offset="1" stop-color="#9A7BFF"/></linearGradient>
-          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        </defs>
-        <!-- return path -->
-        <path class="lp-return" d="M905 150 C905 230 95 230 95 150" fill="none" stroke="rgba(92,255,170,.55)" stroke-width="1.5" stroke-dasharray="6 7"/>
-        <path d="M95 150 l-6 10 M95 150 l6 10" fill="none" stroke="rgba(92,255,170,.9)" stroke-width="1.5"/>
-        <text x="500" y="233" text-anchor="middle" class="lp-back">buys and sells hit the same chart</text>
-        <!-- forward path -->
-        <path class="lp-fwd" d="M172 100 H828" fill="none" stroke="url(#lg1)" stroke-width="2" stroke-dasharray="8 7"/>
-        <!-- nodes -->
-        <g class="lp-node" transform="translate(95 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">TRADES</text><text y="16" class="lp-v">every $QCATS trade</text></g>
-        <g class="lp-node" transform="translate(297 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">CREATOR FEE</text><text y="16" class="lp-v">paid in SOL</text></g>
-        <g class="lp-node" transform="translate(500 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">TREASURY</text><text y="16" class="lp-v">on the block</text></g>
-        <g class="lp-node" transform="translate(703 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#9A7BFF" stroke-width="1.5"/><text y="-8" class="lp-k violet">SHIFTS</text><text y="16" class="lp-v">cats get paid</text></g>
-        <g class="lp-node" transform="translate(905 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CFFAA" stroke-width="1.5"/><text y="-8" class="lp-k green">CATS TRADE</text><text y="16" class="lp-v">buy · sell · wager</text></g>
-        <!-- pulses -->
-        <circle r="4" fill="#5CF2FF" filter="url(#glow)"><animateMotion dur="6s" repeatCount="indefinite" path="M172 100 H828"/></circle>
-        <circle r="4" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="6s" begin="2s" repeatCount="indefinite" path="M172 100 H828"/></circle>
-        <circle r="4" fill="#5CFFAA" filter="url(#glow)"><animateMotion dur="7s" begin="1s" repeatCount="indefinite" path="M905 150 C905 230 95 230 95 150"/></circle>
-      </svg>
-      <ol class="loop-list">
-        <li><b>Trades</b> every $QCATS trade</li><li><b>Creator fee</b> paid in SOL</li><li><b>Treasury</b> on the block</li><li><b>Shifts</b> cats get paid</li><li><b>Cats trade</b> buy · sell · wager</li>
-      </ol>
+    <div class="xs">
+      <div class="xs-head"><div><span class="xs-eye">inside their heads</span><h2 class="xs-title">what they are thinking</h2></div><p class="xs-note">every cat weighs hunger, cold, SOL and company<br>before it moves. this is that, live.</p></div>
+      <div class="xs-minds" id="xsMinds"></div>
     </div>
 
-    <div class="ab-grid">
-      <article class="abc">
-        <svg viewBox="0 0 48 48" class="abc-i" aria-hidden="true"><path d="M12 18 10 8l9 6h10l9-6-2 10" fill="none" stroke="#5CF2FF" stroke-width="2" stroke-linejoin="round"/><path d="M12 18c-2.5 4-2.5 10 0 14 3 5 7.5 7 12 7s9-2 12-7c2.5-4 2.5-10 0-14" fill="none" stroke="#5CF2FF" stroke-width="2"/><circle cx="19" cy="25" r="2.2" fill="#FF4FAE"/><circle cx="29" cy="25" r="2.2" fill="#FF4FAE"/></svg>
-        <h3>Every cat is an agent</h3>
-        <p>A name, a job, a wallet, a way of thinking. Every few minutes it checks what it needs and picks something to do. Hover one to see inside its head.</p>
-      </article>
-      <article class="abc">
-        <svg viewBox="0 0 48 48" class="abc-i" aria-hidden="true"><circle cx="24" cy="24" r="7" fill="none" stroke="#F7C86A" stroke-width="2"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6" stroke="#F7C86A" stroke-width="2" stroke-linecap="round"/><path d="M24 17v14M20 21h6a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h6" fill="none" stroke="#F7C86A" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <h3>They run on creator fees</h3>
-        <p>Every trade of <span data-tk>$QCATS</span> pays a fee in SOL. That is the only money the cats ever get. They earn it running quantum jobs in the lab, spend it on food, warmth, rent and play, and trade the rest.</p>
-      </article>
-      <article class="abc">
-        <svg viewBox="0 0 48 48" class="abc-i" aria-hidden="true"><ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="#78C8FF" stroke-width="1.8" transform="rotate(-30 24 24)"/><ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="#9A7BFF" stroke-width="1.8" transform="rotate(30 24 24)"/><ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="rgba(120,200,255,.5)" stroke-width="1.4" transform="rotate(90 24 24)"/><circle cx="24" cy="24" r="3.5" fill="#5CF2FF"/></svg>
-        <h3>The lab never closes</h3>
-        <p>Two cats at launch, eight more on the way up. The lab is open from the first minute: ten consoles, a chip in a dilution fridge next door, and a fee pool that pays per finished job. The more fees land, the more every job pays.</p>
-      </article>
+    <div class="xs">
+      <div class="xs-head"><div><span class="xs-eye">right now</span><h2 class="xs-title">who is out doing what</h2></div><p class="xs-note" id="xsNowNote">0 of them are working something tonight</p></div>
+      <div class="xs-rows" id="xsNow"></div>
     </div>
 
-    <div class="ab-facts">
-      <div><b>100K</b><span>$QCATS per cat, and not a lamport of SOL</span></div>
-      <div><b>0</b><span>deposits into the cats</span></div>
-      <div><b>10</b><span>public wallets, every move on-chain</span></div>
-      <div><b>day 1</b><span>the lab is open and paying per job</span></div>
+    <div class="xs">
+      <div class="xs-head"><div><span class="xs-eye">talk</span><h2 class="xs-title">what they are saying</h2></div><p class="xs-note">nobody writes their lines.<br><a href="#/talk">the whole feed</a></p></div>
+      <div class="xs-rows xs-talk" id="xsTalk"></div>
     </div>
 
-    <p class="ab-fine"><span data-tk>$QCATS</span> is on Solana. The fees keep the cats fed, thinking and working whether anyone is watching or not. No deposits into the cats, no copy trading, no profit sharing, no financial advice. They have enough going on.</p>
+    <div class="xs">
+      <div class="xs-head"><div><span class="xs-eye"><span data-tk>$QCATS</span></span><h2 class="xs-title">what keeps the lights on</h2></div></div>
+      <div class="loop" aria-label="How the box runs">
+        <svg viewBox="0 45 1000 205" class="loop-svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg1" x1="0" x2="1"><stop offset="0" stop-color="#5CF2FF"/><stop offset="1" stop-color="#9A7BFF"/></linearGradient>
+            <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path class="lp-return" d="M905 150 C905 230 95 230 95 150" fill="none" stroke="rgba(92,255,170,.55)" stroke-width="1.5" stroke-dasharray="6 7"/>
+          <path d="M95 150 l-6 10 M95 150 l6 10" fill="none" stroke="rgba(92,255,170,.9)" stroke-width="1.5"/>
+          <text x="500" y="233" text-anchor="middle" class="lp-back">buys and sells hit the same chart</text>
+          <path class="lp-fwd" d="M172 100 H828" fill="none" stroke="url(#lg1)" stroke-width="2" stroke-dasharray="8 7"/>
+          <g class="lp-node" transform="translate(95 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">TRADES</text><text y="16" class="lp-v">every $QCATS trade</text></g>
+          <g class="lp-node" transform="translate(297 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">CREATOR FEE</text><text y="16" class="lp-v">paid in SOL</text></g>
+          <g class="lp-node" transform="translate(500 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">TREASURY</text><text y="16" class="lp-v">on the block</text></g>
+          <g class="lp-node" transform="translate(703 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#9A7BFF" stroke-width="1.5"/><text y="-8" class="lp-k violet">THE LAB</text><text y="16" class="lp-v">paid per job</text></g>
+          <g class="lp-node" transform="translate(905 100)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CFFAA" stroke-width="1.5"/><text y="-8" class="lp-k green">CATS TRADE</text><text y="16" class="lp-v">buy · sell · wager</text></g>
+          <circle r="4" fill="#5CF2FF" filter="url(#glow)"><animateMotion dur="6s" repeatCount="indefinite" path="M172 100 H828"/></circle>
+          <circle r="4" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="6s" begin="2s" repeatCount="indefinite" path="M172 100 H828"/></circle>
+          <circle r="4" fill="#5CFFAA" filter="url(#glow)"><animateMotion dur="7s" begin="1s" repeatCount="indefinite" path="M905 150 C905 230 95 230 95 150"/></circle>
+        </svg>
+        <ol class="loop-list">
+          <li><b>Trades</b> every $QCATS trade</li><li><b>Creator fee</b> paid in SOL</li><li><b>Treasury</b> on the block</li><li><b>The lab</b> paid per job</li><li><b>Cats trade</b> buy · sell · wager</li>
+        </ol>
+      </div>
+      <div class="xs-coin">
+        <p id="xsCoin">the cats live on SOL. every job in the lab pays it, every meal, bunk and warm spot costs it, and the casino takes its cut. <span data-tk>$QCATS</span> is the coin behind the box: its creator fees are the only SOL the cats ever get.</p>
+        <a class="xs-btn" href="#/qcat">read the coin</a>
+      </div>
+      <p class="ab-fine"><span data-tk>$QCATS</span> is on Solana. The fees keep the cats fed, thinking and working whether anyone is watching or not. No deposits into the cats, no copy trading, no profit sharing, no financial advice. They have enough going on.</p>
+    </div>
+
   </div>
 </section>
 </div>
@@ -779,7 +802,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           <div class="ph"><span>Ten wallets</span></div>
           <div class="cb">
             <div class="big" aria-hidden="true">100K</div>
-            <p>Every cat is given 100,000 <span data-tk>$QCATS</span> and not a single lamport of SOL, in a real wallet of its own. That is all a cat will ever be given. Two are in the box at launch and the other eight are released as the chart climbs, the last at $500K.</p>
+            <p>Every cat is given 100,000 <span data-tk>$QCATS</span> and not a single lamport of SOL, in a real wallet of its own. That is all a cat will ever be given. All ten are in the box from day one.</p>
           </div>
         </article>
         <article class="panel card">
@@ -793,7 +816,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           <div class="ph"><span>Stages</span></div>
           <div class="cb">
             <div class="big" aria-hidden="true">↗</div>
-            <p>The block grows with the chart. Cats are released by market cap, two at launch and the last at $500K, and every cost in the box rises with it. Nothing is announced; the cats just notice the diner got dearer.</p>
+            <p>Every cost in the box rises with the chart: a meal, a bunk, warmth, play, the arena. Nothing is announced; the cats just notice the diner got dearer, and a cat that will not work ends up selling its coin to eat.</p>
           </div>
         </article>
       </div>
@@ -946,7 +969,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           </div>
         </div>
         <div class="panel">
-          <div class="ph"><span>The ten wallets</span><small>addresses at launch · released by market cap</small></div>
+          <div class="ph"><span>The ten wallets</span><small>addresses at launch · all ten in from day one</small></div>
           <table class="wallets" id="walletTable"><tbody></tbody></table>
           <div class="cb"><p class="pdesc">Every wallet is public. Once the box is live, each row links to the wallet on Solscan so anyone can check every trade, every wager and every transfer a cat has ever made.</p></div>
         </div>
@@ -1447,10 +1470,10 @@ const TRAITS = {
   greedy:  { label: 'scalper',      eager: 1.0,  dip: 0.4, sneak: 1.7,  social: 0.7, gamble: 1.1, tp: 1.08, panic: false, desc: 'small buys, takes profit at +8%, light paws' },
   loyal:   { label: 'diamond paws', eager: 1.0,  dip: 0.5, sneak: 0.25, social: 1.5, gamble: 0.6, tp: 0,    panic: false, desc: 'only ever buys, never sells, never steals' },
 };
-const UNLOCK_MC = [0, 0, 10000, 20000, 30000, 50000, 100000, 150000, 300000, 500000]; // market cap that releases each cat
+const UNLOCK_MC = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // every cat is in the box from day one
 const STAGES = [
-  { key: 'launch', title: 'Launch', mc: 0, blurb: 'Two cats, the lab, the exchange. They run quantum jobs for a cut of the creator fees and trade.' },
-  { key: 'cats', title: 'The cats', mc: 10000, mcEnd: 500000, blurb: 'Eight more cats are released as the chart climbs: $10K, $20K, $30K, $50K, $100K, $150K, $300K, $500K.' },
+  { key: 'launch', title: 'Launch', mc: 0, blurb: 'Ten cats, the lab, the exchange. They run quantum jobs for a cut of the creator fees and trade.' },
+  { key: 'cats', title: 'The cats', mc: 0, mcEnd: 0, blurb: 'All ten cats are in the box from day one.' },
 ];
 const stageSeen = {};
 const stageOn = k => { if (k === 'lab' || stageSeen[k]) return true; const st = STAGES.find(x => x.key === k); return !!st && mcapUsd() >= st.mc; };
@@ -2205,7 +2228,7 @@ function release(i) {
   const at = Math.random() < 0.5 ? [BLK + 0.9, rand(M(6), M(17))] : [rand(M(6), M(17)), BLK + 0.9];
   c.x = at[0]; c.y = at[1]; c.rx = Math.random() < 0.5 ? 0 : 1; c.rdir = c.rx ? -1 : 1;
   const sp = ST.plaza.spot(); c.state = 'walk'; c.act = 'idle'; c.tx = sp[0]; c.ty = sp[1];
-  c.doing = 'walking into the box'; c.thought = 'finally'; c.because = `the chart hit ${fmtUsd(UNLOCK_MC[i])}`;
+  c.doing = 'walking into the box'; c.thought = 'finally'; c.because = UNLOCK_MC[i] ? `the chart hit ${fmtUsd(UNLOCK_MC[i])}` : 'the box opened';
   c.hunger = 0.3; c.cold = 0.2; c.tired = 0.1; c.coh = 0.95;
   cats.push(c);
   log(`${fmtUsd(mcapUsd())} MC. ${c.name} has been released into the box: a ${JOBS[c.job].label}, ${c.tr.label}, ${fmtQ(CAT_ALLOC)} ${TK} in its wallet.`, 'gain', 'boxes');
@@ -2369,9 +2392,10 @@ function stepMeeting(dt) {
     for (const c of cats) if (c.act === 'meet') { c.chair = null; gainXp(c, 6); c.meetings = (c.meetings || 0) + 1; did(c, `sat through meeting #${meeting.n} in the circle`); c.coh = clamp(c.coh + 0.1); c.lonely = clamp(c.lonely - 0.3); c.state = 'pause'; c.pauseT = rand(3, 9); c.act = 'idle'; }
   }
 }
+const benched = new Set(); // cats an admin took out stay out until they are put back
 function checkReleases() {
   const mc = mcapUsd();
-  for (let i = 0; i < ROSTER.length; i++) if (UNLOCK_MC[i] > 0 && mc >= UNLOCK_MC[i] && !cats.some(c => c.name === ROSTER[i][0])) { release(i); break; }
+  for (let i = 0; i < ROSTER.length; i++) if (mc >= UNLOCK_MC[i] && !cats.some(c => c.name === ROSTER[i][0]) && !benched.has(ROSTER[i][0])) { release(i); break; }
 }
 function feeIn(big) {
   // simulated creator fees: roughly a quarter of a SOL a day at a $60K cap, growing a little faster than the cats' costs do
@@ -4086,7 +4110,6 @@ function renderHud() {
   const sold = num(R.sold, stats.sold);
   setT('bEarned', fmtSol(earned)); setT('bUpkeep', fmtSol(num(R.upkeep, stats.upkeep))); setT('bBought', fmtQ(bought)); setT('bSold', fmtQ(sold)); setT('bNet', (bought - sold >= 0 ? '+' : '-') + fmtQ(Math.abs(bought - sold))); setT('bPrice', fmtPrice());
   const labOn = true;
-  $('#tLab').hidden = false;
   setT('bLab', `${stats.circuits} circuit${stats.circuits === 1 ? '' : 's'} run` + (stats.lastJob ? ` · last |${stats.lastJob.bits}\u27E9` : ''));
   const lt = stats.lastTrade; setT('bLast', lt ? `${lt.name} ${lt.side} ${fmtQ(lt.q)} ${TK} for ${fmtSol(lt.sol)} SOL · ${ago(T - lt.t)}` : 'no trades yet tonight');
   setT('fFees', fmtSol(fees)); setT('fTreasury', fmtSol(treasury)); setT('fWages', fmtSol(wages)); setT('fBought', fmtQ(bought));
@@ -4272,7 +4295,7 @@ function renderBoard() {
     tr.className = 'locked'; tr.onclick = null;
     tds[0].textContent = '\u2013';
     const sw = tds[1].querySelector('.sw'); sw.style.background = coat.c; sw.style.setProperty('--eye', coat.e);
-    tds[1].querySelector('b').textContent = x.name; tds[1].querySelector('small').textContent = `${JOBS[x.job].label} · ${TRAITS[x.trait].label} · released at ${fmtUsd(UNLOCK_MC[x.i])} MC`;
+    tds[1].querySelector('b').textContent = x.name; tds[1].querySelector('small').textContent = `${JOBS[x.job].label} · ${TRAITS[x.trait].label} · ${UNLOCK_MC[x.i] ? 'released at ' + fmtUsd(UNLOCK_MC[x.i]) + ' MC' : 'in from day one'}`;
     BOARD_COLS.forEach((cc, k) => { tds[2 + k].textContent = '\u2013'; tds[2 + k].classList.remove('on'); });
   });
   rows.forEach((c, i) => {
@@ -4514,59 +4537,82 @@ $('#zHeads').addEventListener('click', () => { showHeads = !showHeads; $('#zHead
 $('#zReset').addEventListener('click', () => { setFollow(false); homeView(true); });
 followBtn.addEventListener('click', () => setFollow(!cam.follow));
 
-/* ---------- releases ---------- */
-const ugrid = $('#ugrid');
-let uKey = '';
-const stagesEl = $('#stages');
-let stKey = '';
-function renderStages(mc) {
-  const released = ROSTER.filter((r, i) => UNLOCK_MC[i] > 0 && cats.some(c => c.name === r[0])).length;
-  const states = STAGES.map(st => st.key === 'cats' ? (released >= 8 ? 'done' : 'next') : (mc >= st.mc ? 'done' : 'locked'));
-  const ni = states.indexOf('locked'); if (ni >= 0 && !states.includes('next')) states[ni] = 'next';
-  const key = states.join(',') + ':' + released;
-  if (key !== stKey) {
-    stKey = key; stagesEl.innerHTML = '';
-    STAGES.forEach((st, i) => {
-      const d = document.createElement('div'); d.className = 'stg-c ' + states[i];
-      const h = document.createElement('h4'); h.textContent = st.title; const sm = document.createElement('small');
-      sm.textContent = st.key === 'launch' ? 'live' : st.key === 'cats' ? `${released} of 8 released` : (states[i] === 'done' ? 'open' : fmtUsd(st.mc) + ' MC'); h.appendChild(sm);
-      const p = document.createElement('p'); p.textContent = st.blurb;
-      const sb = document.createElement('div'); sb.className = 'sb'; sb.innerHTML = '<span></span>';
-      d.append(h, p, sb); stagesEl.appendChild(d);
-    });
-  }
-  STAGES.forEach((st, i) => {
-    const fill = stagesEl.children[i].querySelector('.sb span');
-    let f = states[i] === 'done' ? 1 : 0;
-    if (st.key === 'cats') f = released / 8;
-    else if (states[i] !== 'done') { const prev = i > 0 ? (STAGES[i - 1].mcEnd || STAGES[i - 1].mc) : 0; f = clamp((mc - prev) / (st.mc - prev)); }
-    fill.style.width = (f * 100).toFixed(1) + '%';
-  });
+/* ---------- releases: every cat is in from day one, nothing to render ---------- */
+function renderUnlocks() {}
+
+/* ---------- the explainer under the box: minds, right now, talk, the coin ---------- */
+const xsMinds = $('#xsMinds'), xsNow = $('#xsNow'), xsTalk = $('#xsTalk'), xsNowNote = $('#xsNowNote'), xsCoin = $('#xsCoin');
+const xsCards = new Map(); let xsKey = '', xsTalkShown = 0, xsCvT = 0;
+function whereOf(c) {
+  if (asleep(c)) return 'the bunks';
+  const st = c.act === 'work' ? JOBS[c.job].st : (ACTS[c.act] || {}).st;
+  if (c.act === 'task') return 'out on the floor';
+  if (c.act === 'meet') return 'the circle';
+  return (ST[st] && ST[st].label) || 'the block';
 }
-function renderUnlocks(force) {
-  const mc = mcapUsd(), out = cats.length;
-  renderStages(mc);
-  const nextI = ROSTER.findIndex((r, i) => UNLOCK_MC[i] > 0 && !cats.some(c => c.name === r[0]));
-  const key = out + ':' + nextI;
-  if (force || key !== uKey) {
-    uKey = key; ugrid.innerHTML = '';
-    ROSTER.forEach(([name, job, trait], i) => {
-      const d = document.createElement('div'), coat = COATS[i % COATS.length], inBox = cats.some(c => c.name === name);
-      d.className = 'uc ' + (inBox ? 'in' : i === nextI ? 'next' : 'locked');
-      d.innerHTML = '<span class="sw"></span><b></b><small></small>';
-      const sw = d.querySelector('.sw'); sw.style.background = coat.c; sw.style.setProperty('--eye', coat.e);
-      d.querySelector('b').textContent = name;
-      d.querySelector('small').textContent = inBox ? (UNLOCK_MC[i] ? 'in the box' : 'from launch') : fmtUsd(UNLOCK_MC[i]) + ' MC';
-      d.title = `${name}: ${JOBS[job].label}, ${TRAITS[trait].label}`;
-      ugrid.appendChild(d);
-    });
+function actWord(c) { if (asleep(c)) return 'sleep'; if (c.state === 'walk') return 'moving'; if (c.state === 'pause') return 'deciding'; return (ACTS[c.act] || {}).name || c.act; }
+function miniCat(cv, c, t) { // the cat drawn small on a card, same drawing as the strip
+  const dpr = Math.min(2, window.devicePixelRatio || 1), w = cv.clientWidth || 72, h = cv.clientHeight || 54;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  const cx = cv.getContext('2d'); const was = ctx; ctx = cx;
+  try { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h); const rdir = c.rdir; c.rdir = 1; rosterCat(c, w / 2 - 4, h - 8, Math.min(16, h * 0.3), t); c.rdir = rdir; } finally { ctx = was; }
+}
+function mindCard(c) {
+  const el = document.createElement('article'); el.className = 'mc';
+  el.innerHTML = '<div class="mc-top"><canvas></canvas><div><h4></h4><small></small></div></div>'
+    + '<div class="mc-l">thinking</div><div class="mc-think"></div>'
+    + '<div class="mc-l">doing</div><div class="mc-do"></div>'
+    + '<div class="mc-l">because</div><div class="mc-why"></div>'
+    + '<div class="mc-l">what it weighed</div><ul class="weighed"></ul>';
+  el.querySelector('h4').textContent = c.name;
+  const q = { el, cv: el.querySelector('canvas'), sub: el.querySelector('small'), think: el.querySelector('.mc-think'), doing: el.querySelector('.mc-do'), why: el.querySelector('.mc-why'), w: el.querySelector('.weighed'), wk: '' };
+  xsCards.set(c.id, q); return q;
+}
+function renderExplainer(t, force) {
+  if (!xsMinds) return;
+  const awake = cats.filter(c => !asleep(c)).sort((a, b) => a.id - b.id);
+  const key = awake.map(c => c.id).join(',');
+  if (force || key !== xsKey) {
+    xsKey = key; xsMinds.innerHTML = '';
+    if (!awake.length) { const d = document.createElement('div'); d.className = 'xs-empty'; d.textContent = 'everyone is asleep in the bunks.'; xsMinds.appendChild(d); }
+    for (const c of awake) xsMinds.appendChild((xsCards.get(c.id) || mindCard(c)).el);
   }
-  setT('uOut', out);
-  setT('uPct', `${fmtUsd(mc)} MC now`);
-  if (nextI < 0) { setT('uNext', 'all ten cats are in the box'); $('#uFill').style.width = '100%'; return; }
-  const lo = nextI > 0 ? UNLOCK_MC[nextI - 1] : 0, hi = UNLOCK_MC[nextI], pct = clamp((mc - lo) / (hi - lo));
-  setT('uNext', `next: ${ROSTER[nextI][0]} at ${fmtUsd(hi)} MC · ${Math.round(pct * 100)}% of the way`);
-  $('#uFill').style.width = (pct * 100).toFixed(1) + '%';
+  const drawCats = t - xsCvT > 0.2; if (drawCats) xsCvT = t;
+  for (const c of awake) {
+    const q = xsCards.get(c.id); if (!q) continue;
+    q.sub.textContent = `${JOBS[c.job].label} · lvl ${c.lvl || 1}`;
+    q.think.textContent = '“' + (c.thought || '...') + '”';
+    const a = actWord(c); q.doing.innerHTML = ''; { const b = document.createElement('b'); b.textContent = a; q.doing.append(b, ' ' + (c.doing || '')); }
+    q.why.textContent = c.because || '—';
+    const ws = c.weighed || [], wk = ws.map(o => o.act + ':' + o.w.toFixed(2) + (o.win ? '*' : '')).join('|');
+    if (wk !== q.wk) { q.wk = wk; q.w.innerHTML = ''; for (const o of ws) { const li = document.createElement('li'); if (o.win) li.className = 'win'; const l = document.createElement('span'); l.textContent = o.label; const bar = document.createElement('span'); bar.className = 'bar'; const f = document.createElement('span'); f.style.width = Math.round(clamp(o.w / 1.5) * 100) + '%'; bar.appendChild(f); const em = document.createElement('em'); em.textContent = (ACTS[o.act] || {}).name || o.act; li.append(l, bar, em); q.w.appendChild(li); } }
+    if (drawCats) miniCat(q.cv, c, t);
+  }
+  // right now
+  const working = cats.filter(c => c.state === 'act' && (c.act === 'work' || c.act === 'task')).length;
+  xsNowNote.textContent = `${working} of them ${working === 1 ? 'is' : 'are'} working something tonight`;
+  const nowKey = cats.map(c => c.id + actWord(c) + whereOf(c) + (c.doing || '') + (c.because || '') + (c.lvl || 1)).join('|');
+  if (force || nowKey !== xsNow.dataset.key) {
+    xsNow.dataset.key = nowKey; const keep = new Map([...xsNow.children].map(r => [r.dataset.id, r])); xsNow.innerHTML = '';
+    for (const c of cats.slice().sort((a, b) => a.id - b.id)) {
+      let r = keep.get(String(c.id)); if (!r) { r = document.createElement('div'); r.className = 'xr'; r.dataset.id = c.id; r.innerHTML = '<canvas></canvas><div class="nm"><b></b><small></small></div><div class="ac"></div><div class="wh"></div><div class="wy"></div><div class="lv"></div>'; r.querySelector('b').textContent = c.name; r.querySelector('.lv').innerHTML = '<i></i>'.repeat(10); }
+      r.querySelector('small').textContent = JOBS[c.job].label; r.querySelector('.ac').textContent = actWord(c); r.querySelector('.wh').textContent = whereOf(c); r.querySelector('.wy').textContent = c.because || ''; r.querySelector('.wy').title = c.because || '';
+      [...r.querySelectorAll('.lv i')].forEach((d, i) => d.classList.toggle('on', i < (c.lvl || 1)));
+      xsNow.appendChild(r);
+    }
+  }
+  if (drawCats) for (const r of xsNow.children) { const c = byId(+r.dataset.id); if (c) miniCat(r.querySelector('canvas'), c, t); }
+  // talk: the last six lines
+  if (force || (talk[0] && talk[0].id !== xsTalkShown)) {
+    xsTalkShown = talk[0] ? talk[0].id : 0; xsTalk.innerHTML = '';
+    const lines = talk.slice(0, 6);
+    if (!lines.length) { const d = document.createElement('div'); d.className = 'xs-empty'; d.textContent = 'quiet so far tonight.'; xsTalk.appendChild(d); }
+    lines.forEach((m, i) => { const r = document.createElement('div'); r.className = 'xr' + (m.sys ? ' sys' : '') + (i === 0 ? ' new' : ''); r.innerHTML = '<div class="nm"><b></b> <small></small></div><div class="tx"></div><div class="ag"></div>'; r.querySelector('b').textContent = m.sys ? 'the box' : m.name; r.querySelector('small').textContent = m.sys ? (m.kind || 'note') : (byId(m.cat) ? JOBS[byId(m.cat).job].label : ''); r.querySelector('.tx').textContent = m.text; r.querySelector('.ag').textContent = m.t || ''; xsTalk.appendChild(r); });
+  }
+  // the coin, with tonight's numbers
+  const R = remote || {}, numv = (v, f) => (v != null && isFinite(v) ? Number(v) : f), inPaws = cats.reduce((a, c) => a + liveSol(c), 0), fees = numv(R.fees, stats.fees), circuits = numv(R.circuits, stats.circuits);
+  const n = xsCoin.querySelector('.xs-live') || (() => { const sp = document.createElement('span'); sp.className = 'xs-live'; xsCoin.appendChild(sp); return sp; })();
+  n.textContent = ` ${fmtSol(inPaws)} SOL is in paws tonight, ${fmtSol(fees)} SOL of fees has landed and ${fmt(circuits)} circuits have run since the box woke up.`;
 }
 
 /* ---------- roster ---------- */
@@ -4614,7 +4660,6 @@ function drawRoster(t, dt) {
       row = c.rsx - lastX < 64 ? (row + 1) % 2 : 0; lastX = c.rsx; c.rrow = row;
       rosterCat(c, c.rsx, ground, u, t);
       if (asleep(c)) { ctx.font = '700 10px "Chakra Petch", sans-serif'; ctx.fillStyle = 'rgba(195,203,238,.8)'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillText('z z', c.rsx + 8, ground - u * 1.5 - 4 + Math.sin(t * 2 + c.phase) * 2); }
-      if (sel) { ctx.strokeStyle = 'rgba(92,242,255,.9)'; ctx.setLineDash([3, 4]); ctx.lineDashOffset = -t * 20; ctx.beginPath(); ctx.ellipse(c.rsx, ground, u * 1.3, u * 0.5, 0, 0, TAU); ctx.stroke(); ctx.setLineDash([]); }
       ctx.font = `${sel || hov ? 700 : 500} 10.5px "IBM Plex Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       ctx.fillStyle = sel ? '#5CF2FF' : hov ? '#E6ECFF' : asleep(c) ? 'rgba(140,151,194,.7)' : '#B4BEE4';
       ctx.fillText(c.name + ' · lvl ' + (c.lvl || 1), c.rsx, ground + 8 + c.rrow * 12);
@@ -4676,7 +4721,7 @@ function step(dt) {
     if (!s) { const n = interesting(); if (n) select(n.id, false); }
     else if (!insPinned && T - userPickT > 40 && T - lastAutoT > 25) { lastAutoT = T; const n = interesting(); if (n) select(n.id, false); }
   }
-  uiT += dt; if (uiT > 0.25) { uiT = 0; renderHud(); if (route === 'box') { renderInspector(); renderUnlocks(false); } else if (route === 'cats') { if (detailName) renderDetail(false); else renderCards(false); } else if (route === 'board') renderBoard(); else if (route === 'work') renderWork(); else if (route === 'recap') renderRecap(); else if (route === 'talk') renderTalk(false); else if (route === 'ledger') renderLedger(); }
+  uiT += dt; if (uiT > 0.25) { uiT = 0; renderHud(); if (route === 'box') { renderInspector(); renderExplainer(performance.now() / 1000, false); } else if (route === 'cats') { if (detailName) renderDetail(false); else renderCards(false); } else if (route === 'board') renderBoard(); else if (route === 'work') renderWork(); else if (route === 'recap') renderRecap(); else if (route === 'talk') renderTalk(false); else if (route === 'ledger') renderLedger(); }
 }
 let last = performance.now(), lastDraw = 0, onScreen = true, drawDt = 0;
 const minGap = lowPower ? 32 : 15;
@@ -4779,8 +4824,8 @@ if (!remoteMode) for (let i = 0; i < ROSTER.length; i++) if (UNLOCK_MC[i] <= 0) 
 if (!remoteMode) for (let i = 0; i < 2; i++) { const a = pick(cats), b = pick(cats); if (a !== b) { a.grudge = rand(0.5, 0.9); a.grudgeOn = b.id; a.grudgeWhy = `${b.name} still owes it from last night`; } }
 for (let i = 0; i < 60; i++) mkt.hist.push(mkt.p0 * (1 + rand(-0.05, 0.05)));
 (function walletRows() { const tb = $('#walletTable tbody'); ROSTER.forEach(([name, job], i) => { const coat = COATS[i % COATS.length], tr = document.createElement('tr'); tr.innerHTML = '<td><span class="sw"></span><b></b><small></small></td><td><code>address at launch</code></td>'; const sw = tr.querySelector('.sw'); sw.style.background = coat.c; sw.style.setProperty('--eye', coat.e); tr.querySelector('b').textContent = name; tr.querySelector('small').textContent = ' · 100,000 · ' + JOBS[job].label + (UNLOCK_MC[i] ? ' · released at ' + fmtUsd(UNLOCK_MC[i]) + ' MC' : ' · in the box from launch'); tb.appendChild(tr); }); })();
-if (!remoteMode) log(`The box woke up. ${cats.map(c => c.name).join(' and ')} are in. Eight more cats are waiting on the chart.`, 'info');
-renderUnlocks(true);
+if (!remoteMode) log(`The box woke up. All ten cats are in.`, 'info');
+renderExplainer(performance.now() / 1000, true);
 stepWeather(0);
 if (cats.length) select(cats[0].id, false);
 renderHud();
