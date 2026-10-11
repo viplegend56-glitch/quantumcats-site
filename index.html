@@ -625,7 +625,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <div class="xs-cards">
         <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with 100K <span data-tk>$QCATS</span> and a little SOL for gas. everything else a cat ever gets is paid for by the creator fees.</p></article>
         <article><h3>work</h3><p>the lab pays $QI for every quantum job a cat finishes. the chores on the floor pay SOL out of the fees. some cats work all day, some barely. that is personality, not a setting.</p></article>
-        <article><h3>want</h3><p>a meal, a bunk, warmth, play and the arena all cost SOL, and every price climbs with the chart. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which.</p></article>
+        <article><h3>want</h3><p>a meal, warmth, play, the casino and the arena all cost SOL. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which.</p></article>
         <article><h3>learn</h3><p>every night the last ten minutes are the meeting in the circle. each cat writes down one thing it learned and reads it back tomorrow, and it levels up from everything it does in the town.</p></article>
       </div>
     </div>
@@ -1862,7 +1862,7 @@ const qiLive = () => CONFIG.QI_LIVE === true; // the real $QI wallet is being re
 const fmtQi = n => fmtQ(n);
 const SELL_QI = { degen: 0.95, greedy: 0.9, patient: 0.75, loyal: 0.5 }; // how readily each personality parts with its $QI when broke; the rest hold and sell a slice of $QCATS instead
 // survival gets dearer as the chart climbs: x1 at the starting cap, x4 at 16x, x8 at 64x, capped at x40
-const priceMul = () => { const m = mcapUsd(); return m < 50000 ? 1 : Math.min(3, 1 + 0.1 * Math.floor(m / 50000)); }; // x1 under $50K, x1.1 at $50K, x1.2 at $100K, x1.3 at $150K ... and back down if the chart falls
+const priceMul = () => (Number(CONFIG.PRICE_MUL) > 0 ? Number(CONFIG.PRICE_MUL) : 1); // every price in the box times this; set by hand in the brain's admin (x1 by default)
 const costOf = (base, c) => base * priceMul() * (c ? 1 - 0.04 * Math.min(9, (c.lvl || 1) - 1) : 1);
 const spare = c => Math.max(0, c.sol - costOf(RESERVE, c));
 // ---- skills: a cat gets better at each kind of job the more it does it. Fewer failed runs, bigger circuits, faster work.
@@ -4684,7 +4684,7 @@ function renderPlaceDetail(k) {
   const el = document.getElementById('pDetail'); if (!el) return;
   const mul = priceMul(), rows = [], head = (a, b, c) => rows.push(['h', a, b, c]), row = (a, b, c, cls) => rows.push([cls || '', a, b, c]);
   const best = (f, label) => { const c = cats.slice().sort((a, b) => f(b) - f(a))[0]; return c && f(c) > 0 ? `${c.name} (${label(c)})` : '–'; };
-  if (k === 'crates') { head('menu', 'fills', 'price · stock'); for (const m of MENU) { const st = diner.stock[m.key] == null ? m.stock : diner.stock[m.key]; row(m.name, Math.round(m.fill * 100) + '%' + (m.warm ? ' · warms' : '') + (m.coh ? ' · +coherence' : ''), fmtSol(m.price * mul) + ' SOL · ' + (st > 0 ? st + ' left' : 'sold out'), st > 0 ? '' : 'out'); } row('sold today', '', fmt(diner.sold || 0)); row('prices', '', 'x' + mul.toFixed(1) + ' with the chart'); }
+  if (k === 'crates') { head('menu', 'fills', 'price · stock'); for (const m of MENU) { const st = diner.stock[m.key] == null ? m.stock : diner.stock[m.key]; row(m.name, Math.round(m.fill * 100) + '%' + (m.warm ? ' · warms' : '') + (m.coh ? ' · +coherence' : ''), fmtSol(m.price * mul) + ' SOL · ' + (st > 0 ? st + ' left' : 'sold out'), st > 0 ? '' : 'out'); } row('sold today', '', fmt(diner.sold || 0)); if (mul !== 1) row('prices', '', 'x' + mul.toFixed(2) + ' right now'); }
   else if (k === 'vent') { head('session', '', 'price'); for (const m of WARM_SESSIONS) row(m + ' minutes', '', fmtSol(WARM_MAX * m / WARM_MAX_MIN * mul) + ' SOL'); row('sessions tonight', '', fmt(placeStats.vent.sessions || 0)); row('minutes of warmth sold', '', fmt(placeStats.vent.minutes || 0)); }
   else if (k === 'yard') { row('a visit', '', fmtSol(PLAY * mul) + ' SOL, however long'); row('visits today', '', fmt((placeDay.yard || {}).visits || 0)); row('most plays', '', best(c => c.plays || 0, c => fmt(c.plays || 0) + ' plays')); }
   else if (k === 'arena') { row('SOL wagered, total', '', fmtSol(placeStats.arena.wagered)); row('fights', '', fmt(placeStats.arena.fights || 0)); row('entry fees collected', '', fmtSol(placeStats.arena.spent) + ' SOL'); row('best record', '', best(c => c.arenaW || 0, c => `${c.arenaW || 0}w ${c.arenaL || 0}l`)); row('up the most', '', best(c => c.arenaSol || 0, c => '+' + fmtSol(c.arenaSol || 0) + ' SOL')); row('down the most', '', best(c => -(c.arenaSol || 0), c => '-' + fmtSol(-(c.arenaSol || 0)) + ' SOL')); }
