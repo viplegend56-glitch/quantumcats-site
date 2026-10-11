@@ -1599,6 +1599,23 @@ function stepBots(dt) {
     }
   }
 }
+// nobody walks into anybody: after everyone has moved, any two bodies closer than a cat's width are eased apart. A body that
+// is planted (asleep, on a seat, in the circle, a bot on its bay) stays put and the other one gives way; two planted ones are
+// left alone. Nobody gets pushed into a structure, and a cat is never moved off the thing it is standing over.
+const BODY_R = 0.38;
+function separateAll(dt, kx = 'x', ky = 'y') {
+  const all = cats.concat(bots), fixed = a => a.bot ? a.state === 'docked' : (asleep(a) || onSeat(a) || a.act === 'meet' || a.chair != null);
+  for (let i = 0; i < all.length; i++) for (let j = i + 1; j < all.length; j++) {
+    const a = all[i], b = all[j]; if (a[kx] == null || b[kx] == null) continue;
+    const dx = a[kx] - b[kx], dy = a[ky] - b[ky], d = Math.hypot(dx, dy); if (d >= BODY_R || d < 1e-4) continue;
+    const fa = fixed(a), fb = fixed(b); if (fa && fb) continue;
+    const seating = o => !o.bot && o.state === 'walk' && o.tx != null && Math.hypot(o.tx - o[kx], o.ty - o[ky]) < 1.0; if ((fa && seating(b)) || (fb && seating(a))) continue; // taking the next seat along: brushing past a planted neighbour is allowed, the steering still eases round it
+    const push = Math.min(BODY_R - d, 0.9 * dt), ux = dx / d, uy = dy / d, wa = fa ? 0 : fb ? 1 : 0.5, wb = 1 - wa;
+    const ax = a[kx] + ux * push * wa, ay = a[ky] + uy * push * wa, bx = b[kx] - ux * push * wb, by = b[ky] - uy * push * wb;
+    if (wa) { steerSelf = a; try { if (pushOut(ax, ay, 0.001)[2] < 1) { a[kx] = ax; a[ky] = ay; } } finally { steerSelf = null; } }
+    if (wb) { steerSelf = b; try { if (pushOut(bx, by, 0.001)[2] < 1) { b[kx] = bx; b[ky] = by; } } finally { steerSelf = null; } }
+  }
+}
 function callTask(id) {
   // a viewer flagged something: the cats hear about it. They still decide for themselves whether and when to go.
   const t = board.tasks.find(q => q.id === id); if (!t || t.status !== 'open' || board.badge !== id) return false;
@@ -4051,7 +4068,7 @@ function renderWeather() {
     wxEl.box.style.setProperty('--wxc', WXCOLOR[wxKey]);
     if (!firstShow && !reduce) { wxEl.box.classList.remove('changed'); void wxEl.box.offsetWidth; wxEl.box.classList.add('changed'); }
   }
-  setT('dayNo', remoteMode ? remoteDay : dayNo()); setT('dayClk', mmss(DAY_SECS - (T % DAY_SECS))); { const on = meetingOn(), m = document.getElementById('dayMeet'), n = document.getElementById('dayNext'); if (m) m.hidden = !on; if (n) { n.hidden = false; n.firstChild.textContent = on ? 'meeting ends in ' : 'meeting in '; n.querySelector('b').textContent = mmss(meetingLeft()); } }
+  setT('dayNo', remoteMode ? remoteDay : dayNo()); setT('dayClk', mmss(DAY_SECS - (dayT() % DAY_SECS))); { const on = meetingOn(), m = document.getElementById('dayMeet'), n = document.getElementById('dayNext'); if (m) m.hidden = !on; if (n) { n.hidden = false; n.firstChild.textContent = on ? 'meeting ends in ' : 'meeting in '; n.querySelector('b').textContent = mmss(meetingLeft()); } }
   const left = Math.max(0, wxUntil - T), secs = Math.ceil(left);
   wxEl.prog.style.strokeDashoffset = (106.81 * (1 - clamp(left / wxDur))).toFixed(2);
   const label = `${cap(WX[wxKey].name)}. ${WXEFF[wxKey]} ${cap(WX[wxNext].name)} in ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}.`;
@@ -4642,13 +4659,14 @@ function step(dt) {
     for (const d of deliveries) { if (d.rtx == null) continue;
       if ((d.state === 'in' || d.state === 'out') && d.tx != null) { const gx = d.tx - d.rtx, gy = d.ty - d.rty, gd = Math.hypot(gx, gy), sp = d.state === 'in' ? 1.7 : 1.9; if (gd > 0.03) { const mv = Math.min(gd, sp * dt); d.rtx += gx / gd * mv; d.rty += gy / gd * mv; } const tz = d.state === 'out' ? 6 : (gd < 3 ? 0.9 + (gd / 3) * 4.6 : 5.5); d.rtz += (tz - d.rtz) * Math.min(1, dt * 2.2); } // the ghost flies on between polls
       const dx = d.rtx - d.x, dy = d.rty - d.y, dz = d.rtz - d.z, dd = Math.hypot(dx, dy); if (dd > 4) { d.x = d.rtx; d.y = d.rty; d.z = d.rtz; continue; } const cap = 2.2 * 1.6 * dt; let mv = dd * k; if (mv > cap) mv = cap; if (dd > 0.002) { d.x += dx / dd * mv; d.y += dy / dd * mv; } d.z += dz * k; }
+    separateAll(dt, 'rtx', 'rty'); separateAll(dt); // the ghosts and what is drawn both keep a body's width apart between polls
     const tg = WX[wxKey], kk = 1 - Math.exp(-dt * 0.35); for (const f of ['rain', 'snow', 'fog', 'wind', 'cold', 'coh']) wx[f] += (tg[f] - wx[f]) * kk;
     boat.y += boat.dir * 0.35 * dt; if (boat.y > QUAY + 2) boat.dir = -1; if (boat.y < -16) boat.dir = 1;
     stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
   } else {
   stepWeather(dt); stepMarket(dt); checkReleases(); checkStages(); stepDay(); stepMeeting(dt); stepBoard(dt); stepDeliveries(dt); stepBots(dt); stepCritters(dt);
   if (T >= nextFee) { feeIn(false); nextFee = T + rand(60, 150); }
-  for (const c of cats) update(c, dt);
+  for (const c of cats) update(c, dt); separateAll(dt);
   stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
   }
   selT += dt;
@@ -4676,7 +4694,8 @@ cv.addEventListener('contextrestored', () => { W = 0; resize(); });
 
 /* ---------- the brain (remote mode) ---------- */
 const remoteMode = !!(CONFIG.BRAIN_URL || '').trim();
-let brainOk = false, brainFails = 0, remoteDay = 1, remoteMeeting = false, remoteMeetNext = 0, remoteMeetUntil = 0;
+let brainOk = false, brainFails = 0, remoteDay = 1, remoteMeeting = false, remoteMeetNext = 0, remoteMeetUntil = 0, remoteT0 = 0, remoteSyncT = 0;
+const dayT = () => remoteMode && remoteSyncT ? remoteT0 + (T - remoteSyncT) : T; // the brain's clock when we follow one, so the day readout does not restart on every reload
 function applyRemote(j) {
   const e = j.engine; if (!e) return;
   if (j.config) applyLinks(j.config);
@@ -4696,7 +4715,7 @@ function applyRemote(j) {
   if (e.mkt) { mkt.price = e.mkt.price; mkt.p0 = e.mkt.p0; mkt.mom = e.mkt.mom; mkt.hist = e.mkt.hist || mkt.hist; }
   if (e.weather) { wxKey = e.weather.key; wxNext = e.weather.next; wxDur = e.weather.dur; wxUntil = T + Math.max(0, e.weather.until - e.T); labBoostUntil = T + Math.max(0, (e.weather.labBoostUntil || 0) - e.T); }
   if (e.stages) for (const st of e.stages) if (st.open) stageSeen[st.key] = true;
-  simMin = e.simMin; if (e.day) remoteDay = e.day; remoteMeeting = !!(e.meeting && e.meeting.on); if (e.meeting) { remoteMeetNext = T + Math.max(0, (e.meeting.next || 0) - e.T); remoteMeetUntil = T + Math.max(0, (e.meeting.until || 0) - e.T); }
+  simMin = e.simMin; if (e.day) remoteDay = e.day; if (e.T != null) { remoteT0 = e.T; remoteSyncT = T; } remoteMeeting = !!(e.meeting && e.meeting.on); if (e.meeting) { remoteMeetNext = T + Math.max(0, (e.meeting.next || 0) - e.T); remoteMeetUntil = T + Math.max(0, (e.meeting.until || 0) - e.T); }
   if (e.txs) { txs.length = 0; txs.push(...e.txs); }
   if (e.talk) { talk.length = 0; talk.push(...e.talk); }
   if (e.placeStats) Object.assign(placeStats, e.placeStats);
