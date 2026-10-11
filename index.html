@@ -684,7 +684,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   <section class="sec pg">
     <div class="wrap">
       <h2 class="sec-title">Work</h2>
-      <p class="sec-lead">Things turn up around the block that want doing: trash behind the diner, a dropped crate, a spill, a loose cable, a console that needs recalibrating, a readout check on the fridge. Most of it is left by the people and bots that come out of the buildings. First cat there gets it, if it is good enough for the tier, and is paid out of the fee pool when it is done. Click the <b>!</b> over anything in the box to flag it: the nearest cat that fancies it hears about it, and goes when it feels like going.</p>
+      <p class="sec-lead">Things turn up around the block that want doing: trash behind the diner, a dropped crate, a spill, a loose cable, a console that needs recalibrating, a readout check on the fridge. Most of it is left by the people and bots that come out of the buildings. First cat there gets it, if it is good enough for the tier, and is paid out of the fee pool when it is done. Click the <b>!</b> over anything in the box to flag it: the nearest cat that fancies it hears about it, and goes when it feels like going. One flag per thing per ten minutes; the badge comes back after that if it is still lying there.</p>
       <div class="board-stats">
         <div><b id="wkOpen">0</b><span>waiting on the ground</span></div>
         <div><b id="wkTaken">0</b><span>being worked on</span></div>
@@ -1253,7 +1253,7 @@ const ST = {
   plaza:  { label: 'the plaza',       spot: () => wanderSpot() },
   bazaar: { label: 'the shop',        spot: me => { const taken = cats.filter(c => c !== me && c.act === 'shop').map(c => [c.tx, c.ty]); const free = BAZ_SPOTS.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); const q = pick(free.length ? free : BAZ_SPOTS); return [q[0], q[1]]; } },
   cryo:   { label: 'the circle',      spot: () => wanderSpot() },
-  fridge: { label: 'the fridge',      spot: () => { const a = rand(-0.2, 1.3), r = FRIDGE.r + 0.95; return [FRIDGE.x + Math.cos(a) * r, FRIDGE.y + Math.sin(a) * r]; } }, // the plaza side of the fridge
+  fridge: { label: 'the fridge',      spot: () => { const a = rand(1.0, 1.45), r = 1.5; return [FRIDGE.x + Math.cos(a) * r, FRIDGE.y + Math.sin(a) * r]; } }, // below the fridge, clear of the readout and the coolant drop on its lab side
   crates: { label: 'the diner',       spot: me => { const taken = cats.filter(c => c !== me && c.act === 'eat').map(c => [c.tx, c.ty]); const free = DINER_STOOLS.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); if (!free.length) return [rand(CRATES.x + 0.1, CRATES.x + 1.5), CRATES.y + 1.95]; const q = pick(free); return [q[0], q[1]]; } }, // no free stool: eat standing, behind the stools
   vent:   { label: 'the heater',      spot: () => [rand(VENT.x + 0.26, VENT.x + 1.4), rand(VENT.y + 0.26, VENT.y + 1.04)] },
   trays:  { label: 'the scrapyard',   spot: () => [rand(TRAYS.x - 1.3, TRAYS.x - 0.5), rand(TRAYS.y + 0.5, TRAYS.y + 2.9)] },
@@ -1469,25 +1469,40 @@ const ITEMS = [
 // ---- work on the ground: things turn up around the block and want doing. First cat there gets it. Mostly quantum, some chores.
 // carry: the cat picks the thing up and takes it somewhere; otherwise it stays on the spot and deals with it.
 const TASK_KINDS = {
-  trash:   { tier: 1, q: false, title: 'trash behind the diner',            carry: 'bin',    dur: 3,  w: 3,   spawn: () => [rand(CRATES.x + 0.1, CRATES.x + 1.5), CRATES.y + rand(1.9, 2.3)] },
-  litter:  { tier: 1, q: false, title: 'litter on the plaza',               carry: 'bin',    dur: 3,  w: 2,   spawn: () => wanderSpot() },
-  crate:   { tier: 1, q: false, title: 'a dropped crate',                   carry: 'trays',  dur: 3,  w: 2,   spawn: () => wanderSpot() },
-  spill:   { tier: 1, q: false, title: 'a spill to mop up',                 carry: null,     dur: 45, w: 2,   spawn: () => wanderSpot() },
-  leaves:  { tier: 1, q: false, title: 'leaves to sweep',                   carry: null,     dur: 40, w: 2,   spawn: () => wanderSpot() },
-  parcel:  { tier: 2, q: false, title: 'a parcel for the shop',             carry: 'bazaar', dur: 3,  w: 1,   spawn: () => { const b = pick(BINS); return b[0] > b[1] ? [b[0] - 0.9, b[1] + rand(-0.6, 0.6)] : [b[0] + rand(-0.6, 0.6), b[1] - 0.9]; } },
-  cable:   { tier: 2, q: true,  title: 'a loose cable outside the lab',     carry: null,     dur: 50, w: 1.5, spawn: () => [LAB.x + rand(-1.4, 1.4), LAB.y + LAB.d / 2 + rand(1.2, 1.8)] },
-  calib:   { tier: 2, q: true,  title: 'a console that needs recalibrating', carry: null,    dur: 60, w: 2,   spawn: () => pick(LAB_CONSOLES) },
-  readout: { tier: 3, q: true,  title: 'a readout check on the fridge',     carry: null,     dur: 70, w: 1,   spawn: () => [FRIDGE.x + rand(-0.3, 0.3), FRIDGE.y + FRIDGE.r + 0.75] },
-  coolant: { tier: 3, q: true,  title: 'a coolant can for the fridge',      carry: 'fridge', dur: 3,  w: 0.7, spawn: () => { const b = pick(BINS); return b[0] > b[1] ? [b[0] - 0.9, b[1] + rand(-0.6, 0.6)] : [b[0] + rand(-0.6, 0.6), b[1] - 0.9]; } },
+  trash:   { tier: 1, q: false, title: 'trash beside the diner',            carry: 'bin',    dur: 3,  w: 3,   spawn: () => [CRATES.x + CRATES.w + rand(0.55, 0.95), CRATES.y + rand(0.1, 0.9)] }, // the side of the counter, away from the stools
+  litter:  { tier: 1, q: false, title: 'litter on the plaza',               carry: 'bin',    dur: 3,  w: 2,   spawn: () => floorSpot() },
+  crate:   { tier: 1, q: false, title: 'a dropped crate',                   carry: 'trays',  dur: 3,  w: 2,   spawn: () => floorSpot() },
+  spill:   { tier: 1, q: false, title: 'a spill to mop up',                 carry: null,     dur: 45, w: 2,   spawn: () => floorSpot() },
+  leaves:  { tier: 1, q: false, title: 'leaves to sweep',                   carry: null,     dur: 40, w: 2,   spawn: () => floorSpot() },
+  parcel:  { tier: 2, q: false, title: 'a parcel for the shop',             carry: 'bazaar', dur: 3,  w: 1,   spawn: () => floorSpot() },
+  cable:   { tier: 2, q: true,  title: 'a loose cable outside the lab',     carry: null,     dur: 50, w: 1.5, spawn: () => [LAB.x + rand(-1.6, 1.6), LAB.y + LAB.d / 2 + rand(1.5, 2.0)] }, // a stride out from the console row
+  calib:   { tier: 2, q: true,  title: 'a console that needs recalibrating', carry: null,    dur: 60, w: 2,   spawn: () => { const q = pick(LAB_CONSOLES); return q[1] > LAB.y + LAB.d / 2 ? [q[0], q[1] + 0.95] : [q[0] + 0.95, q[1]]; } }, // the marker goes down in front of the console, not on its stool
+  readout: { tier: 3, q: true,  title: 'a readout check on the fridge',     carry: null,     dur: 70, w: 1,   spawn: () => { const a = rand(-0.25, 0.05); return [FRIDGE.x + Math.cos(a) * 1.55, FRIDGE.y + Math.sin(a) * 1.55]; } }, // the lab side of the fridge
+  coolant: { tier: 3, q: true,  title: 'a coolant can for the fridge',      carry: 'fridge', dur: 3,  w: 0.7, spawn: () => floorSpot() },
 };
 const DEST = {
   bin:    (x, y) => { const b = BINS.slice().sort((p, q) => Math.hypot(p[0] - x, p[1] - y) - Math.hypot(q[0] - x, q[1] - y))[0]; return b[0] > b[1] ? [b[0] - 0.55, b[1]] : [b[0], b[1] - 0.55]; },
   trays:  () => ST.trays.spot(),
   bazaar: () => [BAZ_SPOTS[1][0], BAZ_SPOTS[1][1]],
-  fridge: () => [FRIDGE.x, FRIDGE.y + FRIDGE.r + 0.75],
+  fridge: () => [FRIDGE.x + Math.cos(0.5) * 1.5, FRIDGE.y + Math.sin(0.5) * 1.5], // the plaza side of the fridge, clear of the cats recohering below it
 };
+// everywhere a cat stands or sits to do something. Nothing gets left lying on any of these, so a task never blocks a place.
+let placeSpots = null;
+function nearPlace(x, y) {
+  if (!placeSpots) placeSpots = [
+    ...MEET_ORDER.map(i => [...chairAt(i), 0.7]), ...LAB_CONSOLES.map(q => [q[0], q[1], 0.8]), ...DINER_STOOLS.map(q => [q[0], q[1], 0.8]), [CRATES.x + 0.8, CRATES.y + 1.95, 1.1],
+    ...BAZ_SPOTS.map(q => [q[0], q[1], 0.8]), ...BINS.map(b => { const d = DEST.bin(b[0], b[1]); return [d[0], d[1], 0.7]; }),
+    [ARENA.x, ARENA.y, ARENA.r + 0.6], [EXC.x + 1.5, EXC.y, 1.2], [VENT.x + 0.83, VENT.y + 0.65, 1.1], [TRAYS.x - 0.9, TRAYS.y + 1.7, 1.7], [LOFT.x + 1.05, LOFT.y + 0.65, 1.4],
+    [YARD.x + YARD.w / 2, YARD.y + YARD.d / 2, 1.9], [FRIDGE.x + 0.9, FRIDGE.y + 1.1, 1.4], [VAULT.x, VAULT.y, 1.0], [BAZ.x + BAZ.w + 0.45, BAZ.y + 0.3, 0.8],
+    [CRY.x - 3.6, CRY.y - 3.6, 1.4], // the bit of floor the countdown over the beacon hangs in front of on screen, so nothing hides behind the clock
+  ];
+  for (const [px, py, r] of placeSpots) if (Math.hypot(x - px, y - py) < r) return true;
+  return false;
+}
+function floorSpot() { for (let i = 0; i < 24; i++) { const q = wanderSpot(); if (!nearPlace(q[0], q[1])) return q; } return wanderSpot(); }
 const DEST_LABEL = { bin: 'the bin', trays: 'the scrapyard', bazaar: 'the shop', fridge: 'the fridge' };
 const board = { tasks: [], done: [], seq: 0, next: 0 };
+const FLAG_COOL = 600; // after a viewer flags something, the badge is gone and it cannot be flagged again for ten minutes
 // visitors: people and bots that come out of the buildings round the block, leave something that wants doing, and go back in
 const VISITOR_KINDS = {
   courier:  { robot: true,  name: 'a courier bot',     posts: ['parcel', 'coolant'],           line: 'drop for the box. someone sign for it.', waits: false, w: 2 },
@@ -1537,7 +1552,7 @@ function stepVisitors(dt) {
 }
 function callTask(id) {
   // a viewer flagged something: the cats hear about it. They still decide for themselves whether and when to go.
-  const t = board.tasks.find(q => q.id === id); if (!t || t.status !== 'open') return false;
+  const t = board.tasks.find(q => q.id === id); if (!t || t.status !== 'open' || (t.called != null && T - t.called < FLAG_COOL)) return false;
   t.called = T; log(`Somebody flagged ${t.title}.`, 'info');
   const c = cats.filter(x => !asleep(x) && x.act !== 'meet' && !x.task && qualifies(x, t) && (x.state === 'pause' || (x.state === 'act' && x.act === 'idle'))).sort((a, b) => Math.hypot(a.x - t.x, a.y - t.y) - Math.hypot(b.x - t.x, b.y - t.y))[0];
   if (c) { if (c.state === 'pause') c.pauseT = Math.min(c.pauseT, 0.4); else c.actT = c.actDur; say(c, pick(['heard that', 'on it, maybe', 'if nobody else wants it', 'let me finish this first'])); }
@@ -1548,8 +1563,9 @@ const qualifies = (c, t) => t.tier === 1 || (t.tier === 2 && ((c.lvl || 1) >= 2 
 const tasksFor = c => board.tasks.filter(t => t.status === 'open' && qualifies(c, t));
 function postTask(def, poster) {
   const kind = TASK_KINDS[def.kind] ? def.kind : pick(Object.keys(TASK_KINDS)), K0 = TASK_KINDS[kind];
-  let at = (def && def.at && pushOut(def.at[0], def.at[1], 0.3)[2] === 0) ? def.at : null;
-  for (let i = 0; !at && i < 12; i++) { const q = K0.spawn(); if (i === 11 || pushOut(q[0], q[1], 0.34)[2] === 0) at = q; } // never up against a structure
+  let at = (def && def.at && pushOut(def.at[0], def.at[1], 0.3)[2] === 0 && !nearPlace(def.at[0], def.at[1])) ? def.at : null;
+  for (let i = 0; !at && i < 12; i++) { const q = K0.spawn(); if (pushOut(q[0], q[1], 0.34)[2] === 0 && !nearPlace(q[0], q[1])) at = q; } // never up against a structure or on a place
+  if (!at) at = floorSpot();
   const t = { id: 'T' + String(++board.seq).padStart(3, '0'), kind, tier: K0.tier, q: K0.q, title: K0.title, x: at[0], y: at[1], carry: K0.carry, dest: K0.carry ? DEST[K0.carry](at[0], at[1]) : null, dur: K0.dur, bounty: Math.max(0, (def && def.bounty) || 0), posted: T, day: dayNo(), status: 'open', by: null, poster: poster || 'the box' };
   board.tasks.push(t);
   log(`${t.title[0].toUpperCase() + t.title.slice(1)} turned up${t.carry ? ', wants taking to ' + DEST_LABEL[t.carry] : ''} (tier ${t.tier}${t.bounty ? ', ' + fmtSol(t.bounty) + ' SOL on it' : ''}).`, 'info');
@@ -1558,7 +1574,7 @@ function postTask(def, poster) {
 function releaseTask(c) {
   if (!c || !c.task) return;
   const t = board.tasks.find(x => x.id === c.task);
-  if (t && t.by === c.name && (t.status === 'taken' || t.status === 'carried')) { if (t.status === 'carried') { t.x = c.x; t.y = c.y; } t.status = 'open'; t.by = null; } // dropped where it stood
+  if (t && t.by === c.name && (t.status === 'taken' || t.status === 'carried')) { if (t.status === 'carried') { if (nearPlace(c.x, c.y) || pushOut(c.x, c.y, 0.34)[2] > 0) { const q = floorSpot(); t.x = q[0]; t.y = q[1]; } else { t.x = c.x; t.y = c.y; } } t.status = 'open'; t.by = null; } // dropped where it stood (or the nearest bit of clear floor, so it never blocks a place)
   c.task = null;
 }
 function stepBoard(dt) {
@@ -1671,7 +1687,7 @@ const DRIVES = [
   { act: 'idle',     label: () => (wx.rain + wx.snow > 0.3 ? 'caught in the weather' : 'nothing urgent'), w: () => 0.2 + wx.rain * 0.4 + wx.snow * 0.35 },
   { act: 'sleep',    label: 'tired',                    w: c => Math.pow(c.tired, 2.2) * 1.1 },
   { act: 'play',     label: 'wants to play',            w: c => (0.32 + c.lonely * 0.4) * c.tr.social * (spare(c) > costOf(PLAY, c) ? 1 : 0.05) * (T - (c.playT || -1e9) > 900 ? 1 : 0.3) },
-  { act: 'task',     label: c => (tasksFor(c).some(t => t.called && T - t.called < 180) ? 'somebody flagged something' : 'something wants doing'), w: c => { const ts = tasksFor(c); return ts.length ? (c.coh < 0.4 ? 0.2 : 1) * (0.42 + 0.12 * Math.max(...ts.map(t => t.tier))) * c.ethic * (ts.some(t => t.called && T - t.called < 180) ? 1.8 : 1) : 0; } },
+  { act: 'task',     label: c => (tasksFor(c).some(t => t.called != null && T - t.called < 180) ? 'somebody flagged something' : 'something wants doing'), w: c => { const ts = tasksFor(c); return ts.length ? (c.coh < 0.4 ? 0.2 : 1) * (0.42 + 0.12 * Math.max(...ts.map(t => t.tier))) * c.ethic * (ts.some(t => t.called != null && T - t.called < 180) ? 1.8 : 1) : 0; } },
   { act: 'shop',     label: 'feeling flush',            w: c => itemsFor(c).length ? (0.3 + 0.25 * (c.vanity || 1)) * (1 - (c.items || []).length / ITEMS.length) * (T - (c.shopT || -1e9) > 2400 ? 1 : 0.08) : 0 },
 ];
 const TH = {
@@ -1831,8 +1847,8 @@ function decide(c) {
   }
   if (ch.act === 'task') {
     // first come first served: the nearest thing it qualifies for, the harder tiers first when they are close
-    const t = tasksFor(c).sort((a, b) => (Math.hypot(a.x - c.x, a.y - c.y) - a.tier * 2 - (a.called && T - a.called < 180 ? 6 : 0)) - (Math.hypot(b.x - c.x, b.y - c.y) - b.tier * 2 - (b.called && T - b.called < 180 ? 6 : 0)))[0];
-    t.status = 'taken'; t.by = c.name; t.taken = T; c.task = t.id; c.taskPlace = t.kind === 'calib' ? 'lab' : 'plaza';
+    const t = tasksFor(c).sort((a, b) => (Math.hypot(a.x - c.x, a.y - c.y) - a.tier * 2 - (a.called != null && T - a.called < 180 ? 6 : 0)) - (Math.hypot(b.x - c.x, b.y - c.y) - b.tier * 2 - (b.called != null && T - b.called < 180 ? 6 : 0)))[0];
+    t.status = 'taken'; t.by = c.name; t.taken = T; c.task = t.id; c.taskPlace = 'plaza';
     c.doing = `heading for ${t.title}`; c.because = `tier ${t.tier}, nobody else got there first${t.bounty ? ', ' + fmtSol(t.bounty) + ' SOL on it' : ''}`;
     c.tx = t.x; c.ty = t.y; c.state = 'walk'; c.slide = 0; c.stuckP = null; c.stuckN = 0; return;
   }
@@ -2897,9 +2913,10 @@ function drawBazaar(t) {
   }
 }
 // what a cat is wearing, drawn in the cat's own frame. Side view: head at (0.72u, -0.95u). Front / back: head at (0, -1.05u).
-function drawWear(c, u, view) {
+function drawWear(c, u, view, sat) {
   const w = c.wearing; if (!w) return;
-  const side = view === 'L' || view === 'R', back = view === 'B', hx = side ? u * 0.72 : 0, hy = side ? -u * 0.95 : -u * 1.05, nx = side ? u * 0.5 : 0, ny = side ? -u * 0.74 : -u * 0.78; // head centre, neck centre
+  const side = view === 'L' || view === 'R', back = view === 'B';
+  const hx = side ? (sat ? u * 0.44 : u * 0.72) : 0, hy = side ? (sat ? -u * 1.28 : -u * 0.95) : (sat ? -u * 1.35 : -u * 1.05), nx = side ? (sat ? u * 0.32 : u * 0.5) : 0, ny = side ? (sat ? -u * 1.04 : -u * 0.74) : (sat ? -u * 1.08 : -u * 0.78); // head centre, neck centre (higher when sitting up)
   ctx.save(); ctx.lineCap = 'round';
   if (w === 'collar') { ctx.strokeStyle = '#FF4F5E'; ctx.lineWidth = u * 0.09; ctx.beginPath(); ctx.arc(nx, ny, u * (side ? 0.2 : 0.27), side ? 0.2 : 0.1, side ? 2.9 : 3.04); ctx.stroke(); }
   else if (w === 'bow') { ctx.fillStyle = '#FF4FAE'; ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(nx - u * 0.18, ny - u * 0.12); ctx.lineTo(nx - u * 0.18, ny + u * 0.12); ctx.closePath(); ctx.moveTo(nx, ny); ctx.lineTo(nx + u * 0.18, ny - u * 0.12); ctx.lineTo(nx + u * 0.18, ny + u * 0.12); ctx.closePath(); ctx.fill(); }
@@ -2921,7 +2938,7 @@ function drawBin(bx, by, t) {
 }
 function drawTaskItem(q, t) {
   if (q.x == null) return;
-  const p = P(q.x, q.y, 0), r = Math.max(2.5, K * 0.11), open = q.status === 'open', flagged = open && q.called && T - q.called < 180;
+  const p = P(q.x, q.y, 0), r = Math.max(2.5, K * 0.11), open = q.status === 'open' && !(q.called != null && T - q.called < FLAG_COOL); // flagged: no badge for ten minutes
   if (p[0] < -80 || p[0] > W + 80 || p[1] < -80 || p[1] > H + 80) return;
   const flies = n => { if (reduce) return; for (let i = 0; i < n; i++) { const a = t * 4 + i * 2.2 + q.x, fp = [p[0] + Math.cos(a) * r * 2.4, p[1] - r * 3 + Math.sin(a * 1.3) * r * 1.1]; ctx.fillStyle = 'rgba(210,215,240,.8)'; ctx.beginPath(); ctx.arc(fp[0], fp[1], 1.3, 0, TAU); ctx.fill(); } };
   ctx.save();
@@ -2983,13 +3000,12 @@ function drawTaskItem(q, t) {
     glowDot(sc[0], sc[1] - sh, Math.max(2, K * 0.1), '92,242,255', 0.5 + 0.45 * Math.sin(t * 6));
     ctx.strokeStyle = 'rgba(92,242,255,.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 2.6 + Math.sin(t * 3) * r * 0.3, r * 1.3 + Math.sin(t * 3) * r * 0.15, 0, 0, TAU); ctx.stroke();
   }
-  // anything still open carries a badge, which is what a viewer clicks to flag it for the cats
+  // anything still open (and not flagged in the last ten minutes) carries a badge, which is what a viewer clicks to flag it for the cats
   if (open) {
     const m = P(q.x, q.y, 1.65 + 0.1 * Math.sin(t * 3 + q.x)), br = Math.max(7, K * 0.19), col = q.tier === 3 ? '247,200,106' : q.tier === 2 ? '92,242,255' : '230,236,255', hov = hoverTask === q.id;
     ctx.strokeStyle = `rgba(${col},.35)`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(m[0], m[1] + br); ctx.lineTo(p[0], p[1] - r * 2.6); ctx.stroke();
-    if (flagged) glowDot(m[0], m[1], br * 1.5, col, 0.45 + 0.3 * Math.sin(t * 8));
     ctx.fillStyle = hov ? `rgba(${col},.25)` : 'rgba(7,10,26,.92)'; ctx.beginPath(); ctx.arc(m[0], m[1], br, 0, TAU); ctx.fill();
-    ctx.strokeStyle = `rgba(${col},${hov || flagged ? 1 : .75})`; ctx.lineWidth = hov ? 2 : 1.2; ctx.stroke();
+    ctx.strokeStyle = `rgba(${col},${hov ? 1 : .75})`; ctx.lineWidth = hov ? 2 : 1.2; ctx.stroke();
     ctx.font = `700 ${Math.max(10, br * 1.45)}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = `rgb(${col})`; ctx.fillText('!', m[0], m[1] + 1);
     taskHits.push({ id: q.id, x0: m[0] - br - 5, y0: m[1] - br - 5, x1: m[0] + br + 5, y1: m[1] + br + 5 });
   }
@@ -3232,6 +3248,26 @@ function catShape(u, moving, t, c) {
   const s = moving ? Math.sin(t * 14 + c.phase) * u * 0.12 : 0;
   ctx.rect(-u * 0.42 + s, -u * 0.32, u * 0.13, u * 0.32); ctx.rect(u * 0.28 - s, -u * 0.32, u * 0.13, u * 0.32);
 }
+// sitting up, side view: haunches down, chest up to the head, front legs straight, a stride taller than standing
+function catSit(u, moving, t, c) {
+  ctx.beginPath();
+  ctx.ellipse(-u * 0.18, -u * 0.36, u * 0.46, u * 0.36, 0, 0, TAU);
+  ctx.moveTo(u * 0.5, -u * 0.72); ctx.ellipse(u * 0.18, -u * 0.72, u * 0.33, u * 0.5, 0.4, 0, TAU);
+  ctx.moveTo(u * 0.74, -u * 1.28); ctx.ellipse(u * 0.44, -u * 1.28, u * 0.3, u * 0.27, 0, 0, TAU);
+  ctx.moveTo(u * 0.22, -u * 1.43); ctx.lineTo(u * 0.27, -u * 1.75); ctx.lineTo(u * 0.42, -u * 1.51); ctx.closePath();
+  ctx.moveTo(u * 0.47, -u * 1.51); ctx.lineTo(u * 0.64, -u * 1.75); ctx.lineTo(u * 0.7, -u * 1.41); ctx.closePath();
+  ctx.rect(u * 0.2, -u * 0.5, u * 0.13, u * 0.5); ctx.rect(u * 0.4, -u * 0.5, u * 0.13, u * 0.5);
+}
+// sitting up, seen from the front or the back
+function catSitFB(u, moving, t, c) {
+  ctx.beginPath();
+  ctx.ellipse(0, -u * 0.4, u * 0.5, u * 0.4, 0, 0, TAU);
+  ctx.moveTo(u * 0.36, -u * 0.85); ctx.ellipse(0, -u * 0.85, u * 0.36, u * 0.5, 0, 0, TAU);
+  ctx.moveTo(u * 0.32, -u * 1.35); ctx.ellipse(0, -u * 1.35, u * 0.32, u * 0.29, 0, 0, TAU);
+  ctx.moveTo(-u * 0.3, -u * 1.52); ctx.lineTo(-u * 0.3, -u * 1.86); ctx.lineTo(-u * 0.08, -u * 1.6); ctx.closePath();
+  ctx.moveTo(u * 0.3, -u * 1.52); ctx.lineTo(u * 0.3, -u * 1.86); ctx.lineTo(u * 0.08, -u * 1.6); ctx.closePath();
+  ctx.rect(-u * 0.26, -u * 0.42, u * 0.14, u * 0.42); ctx.rect(u * 0.12, -u * 0.42, u * 0.14, u * 0.42);
+}
 function catShapeFB(u, moving, t, c) {
   // front / back view: a narrower body, the head centred on top, both ears showing, legs alternating
   ctx.beginPath();
@@ -3245,11 +3281,16 @@ function catShapeFB(u, moving, t, c) {
 const viewToward = (c, x, y) => { const dx = x - c.x, dy = y - c.y, sx = (dx - dy) * 0.866, sy = (dx + dy) * 0.5; return Math.abs(sx) > Math.abs(sy) * 0.9 ? (sx > 0 ? 'R' : 'L') : (sy > 0 ? 'F' : 'B'); };
 // a seated or stationed cat: how high it sits and which way it looks
 function seatOf(c) {
+  if (c.state === 'pause' || (c.state === 'act' && c.act === 'idle')) { // between things, still on whatever seat it was on: stay sat
+    for (const i of MEET_ORDER) { const q = chairAt(i); if (Math.hypot(c.x - q[0], c.y - q[1]) < 0.25) return { z: 0.28, view: viewToward(c, CRY.x, CRY.y), sit: true }; }
+    for (const q of DINER_STOOLS) if (Math.hypot(c.x - q[0], c.y - q[1]) < 0.25) return { z: 0.3, view: 'R', sit: true };
+    for (const q of LAB_CONSOLES) if (Math.hypot(c.x - q[0], c.y - q[1]) < 0.25) return { z: 0.3, view: c.y > LAB.y + LAB.d / 2 ? 'R' : 'L', sit: true };
+  }
   if (c.state !== 'act') return null;
-  if (c.act === 'meet') return { z: 0.28, view: viewToward(c, CRY.x, CRY.y) };
-  if (c.act === 'eat') return { z: 0.3, view: 'R' };
-  if (c.act === 'work') return { z: 0.3, view: c.y > LAB.y + LAB.d / 2 ? 'R' : 'L' };
-  if (c.act === 'task') return { z: c.taskPlace === 'lab' || c.taskPlace === 'crates' ? 0.3 : 0, view: c.taskPlace === 'lab' ? (c.y > LAB.y + LAB.d / 2 ? 'R' : 'L') : (c.dir || (c.face < 0 ? 'L' : 'R')) };
+  if (c.act === 'meet') return { z: 0.28, view: viewToward(c, CRY.x, CRY.y), sit: true };
+  if (c.act === 'eat') { const st = DINER_STOOLS.some(q => Math.hypot(c.x - q[0], c.y - q[1]) < 0.3); return { z: st ? 0.3 : 0, view: 'R', sit: st }; } // on a stool, or standing behind the stools when they are all taken
+  if (c.act === 'work') return { z: 0.3, view: c.y > LAB.y + LAB.d / 2 ? 'R' : 'L', sit: true };
+  if (c.act === 'task') return { z: 0, view: c.dir || (c.face < 0 ? 'L' : 'R') };
   if (c.act === 'shop') return { z: 0, view: 'R' };
   if (c.act === 'wager') { const p = byId(c.partner); return { z: 0, view: p ? viewToward(c, p.x, p.y) : 'R' }; }
   if (c.act === 'idle') return { z: 0, view: c.dir || (c.face < 0 ? 'L' : 'R') };
@@ -3257,7 +3298,7 @@ function seatOf(c) {
 }
 function drawCat(c, t) {
   const [px, py] = P(c.x, c.y, 0), u = K * 0.5, moving = remoteMode ? !!c.moving : (c.state === 'walk' || (c.state === 'act' && c.act === 'play'));
-  const seat = moving ? null : seatOf(c), sitting = !!seat;
+  const seat = moving ? null : seatOf(c), sitting = !!seat, sat = sitting && !!seat.sit; // sat: the sitting-up pose, on a chair, a stool or a console seat
   const view = sitting ? seat.view : (c.dir || (c.face < 0 ? 'L' : 'R')), side = view === 'L' || view === 'R', back = view === 'B';
   const da = 1, bob = moving ? Math.sin(t * 14 + c.phase) * u * 0.06 : 0;
   ctx.save(); ctx.globalAlpha = da;
@@ -3266,10 +3307,10 @@ function drawCat(c, t) {
   ctx.globalAlpha = da * (0.5 + 0.3 * Math.sin(t * 3 + c.phase)); ctx.strokeStyle = `rgb(${col})`; ctx.lineWidth = 1.3;
   ctx.beginPath(); ctx.ellipse(px, py, u * 1.0, u * 0.34, 0, 0, TAU); ctx.stroke();
   ctx.globalAlpha = da;
-  const lift = sitting ? seat.z * K : 0; // up on the chair or stool
+  const lift = sitting ? (seat.z - (sat && seat.z > 0 ? 0.06 : 0)) * K : 0; // up on the chair or stool (a sitting cat settles into the seat a little)
   ctx.translate(px, py + bob - lift);
   ctx.scale(side ? (view === 'R' ? 1 : -1) : 1, 1);
-  const shape = side ? catShape : catShapeFB;
+  const shape = side ? (sat ? catSit : catShape) : (sat ? catSitFB : catShapeFB);
   if (!reduce) {
     const f = 0.5 + 0.5 * Math.sin(t * 2.4 + c.phase);
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -3279,16 +3320,19 @@ function drawCat(c, t) {
   }
   // the tail
   ctx.strokeStyle = c.coat; ctx.lineWidth = u * 0.15; ctx.lineCap = 'round'; ctx.beginPath();
-  if (side) { ctx.moveTo(-u * 0.55, -u * 0.58); ctx.quadraticCurveTo(-u * 1.08, -u * 0.72 + Math.sin(t * 3 + c.phase) * u * 0.16, -u * 0.96, -u * 1.26); }
+  if (sat && side) { ctx.moveTo(-u * 0.5, -u * 0.3); ctx.bezierCurveTo(-u * 1.0, -u * 0.05 + Math.sin(t * 2 + c.phase) * u * 0.06, -u * 0.4, u * 0.1, u * 0.5, -u * 0.04); } // curled round the front, tip by the paws
+  else if (sat && back) { ctx.moveTo(u * 0.1, -u * 0.2); ctx.quadraticCurveTo(u * 0.75 + Math.sin(t * 2 + c.phase) * u * 0.06, -u * 0.1, u * 0.78, -u * 0.5); }
+  else if (sat) { ctx.moveTo(u * 0.34, -u * 0.1); ctx.quadraticCurveTo(u * 0.85, -u * 0.02, u * 0.82 + Math.sin(t * 2 + c.phase) * u * 0.05, -u * 0.5); }
+  else if (side) { ctx.moveTo(-u * 0.55, -u * 0.58); ctx.quadraticCurveTo(-u * 1.08, -u * 0.72 + Math.sin(t * 3 + c.phase) * u * 0.16, -u * 0.96, -u * 1.26); }
   else if (back) { ctx.moveTo(u * 0.12, -u * 0.3); ctx.quadraticCurveTo(u * 0.55 + Math.sin(t * 3 + c.phase) * u * 0.12, -u * 0.7, u * 0.42, -u * 1.1); }
   else { ctx.moveTo(u * 0.3, -u * 0.18); ctx.quadraticCurveTo(u * 0.8, -u * 0.25, u * 0.78 + Math.sin(t * 3 + c.phase) * u * 0.08, -u * 0.62); }
   ctx.stroke();
   shape(u, moving, t, c); ctx.fillStyle = c.coat; ctx.fill();
   ctx.strokeStyle = c.dark ? 'rgba(140,160,255,.75)' : 'rgba(5,8,25,.55)'; ctx.lineWidth = 1; ctx.stroke();
   ctx.fillStyle = c.eye;
-  if (side) { ctx.beginPath(); ctx.arc(u * 0.79, -u * 0.98, u * 0.07, 0, TAU); ctx.arc(u * 0.94, -u * 0.98, u * 0.07, 0, TAU); ctx.fill(); }
-  else if (!back) { ctx.beginPath(); ctx.arc(-u * 0.11, -u * 1.08, u * 0.07, 0, TAU); ctx.arc(u * 0.11, -u * 1.08, u * 0.07, 0, TAU); ctx.fill(); }
-  drawWear(c, u, view);
+  if (side) { const ex = sat ? u * 0.51 : u * 0.79, ey = sat ? -u * 1.31 : -u * 0.98; ctx.beginPath(); ctx.arc(ex, ey, u * 0.07, 0, TAU); ctx.arc(ex + u * 0.15, ey, u * 0.07, 0, TAU); ctx.fill(); }
+  else if (!back) { const ey = sat ? -u * 1.38 : -u * 1.08; ctx.beginPath(); ctx.arc(-u * 0.11, ey, u * 0.07, 0, TAU); ctx.arc(u * 0.11, ey, u * 0.07, 0, TAU); ctx.fill(); }
+  drawWear(c, u, view, sat);
   drawCarried(c, u);
   ctx.restore();
 }
@@ -3912,14 +3956,14 @@ function renderWork() {
   const open = board.tasks.filter(t => t.status === 'open'), taken = board.tasks.filter(t => t.status === 'taken');
   const doneToday = board.done.filter(t => t.day === dayNo() || (t.at != null && T - t.at < DAY_SECS));
   setT('wkOpen', fmt(open.length)); setT('wkTaken', fmt(taken.length)); setT('wkDone', fmt(doneToday.length)); setT('wkPaid', fmtSol(cats.reduce((a, c) => a + (c.taskPay || 0), 0)));
-  const key = board.tasks.map(t => t.id + t.status + (t.by || '') + (t.called && T - t.called < 180 ? 'f' : '')).join(',') + '|' + board.done.slice(0, 20).map(t => t.id).join(',') + '|' + cats.map(c => c.name + (c.tasks || 0) + totalSkill(c)).join(',');
+  const key = board.tasks.map(t => t.id + t.status + (t.by || '') + (t.called != null && T - t.called < FLAG_COOL ? 'f' : '')).join(',') + '|' + board.done.slice(0, 20).map(t => t.id).join(',') + '|' + cats.map(c => c.name + (c.tasks || 0) + totalSkill(c)).join(',');
   if (key === wkKey) return; wkKey = key;
   const tier = t => `<span class="tier t${t.tier}">tier ${t.tier}</span>`, kind = t => `<span class="${t.q ? 'kq' : 'kc'}">${t.q ? 'quantum' : 'chore'}</span>`;
   const tb = $('#wkBoard tbody'); tb.innerHTML = '';
   for (const t of board.tasks.slice().sort((a, b) => (a.status === 'taken' ? 1 : 0) - (b.status === 'taken' ? 1 : 0) || b.tier - a.tier)) {
     const tr = document.createElement('tr'); tr.innerHTML = `<td>${tier(t)}</td><td></td><td class="n"></td><td class="n"></td>`;
     tr.children[1].innerHTML = kind(t) + ' · '; tr.children[1].append(t.title + (t.bounty ? ` · ${fmtSol(t.bounty)} SOL on it` : '') + (t.poster && t.poster !== 'the box' ? ` · dropped by ${t.poster}` : ''));
-    tr.children[2].textContent = t.carry ? DEST_LABEL[t.carry] : 'done on the spot'; tr.children[3].textContent = t.status === 'carried' ? `${t.by} is carrying it` : t.status === 'taken' ? `${t.by} is on its way` : (t.called && T - t.called < 180) ? 'flagged \u00B7 the cats know' : 'waiting';
+    tr.children[2].textContent = t.carry ? DEST_LABEL[t.carry] : 'done on the spot'; tr.children[3].textContent = t.status === 'carried' ? `${t.by} is carrying it` : t.status === 'taken' ? `${t.by} is on its way` : (t.called != null && T - t.called < FLAG_COOL) ? 'flagged \u00B7 the cats know' : 'waiting';
     tb.appendChild(tr);
   }
   if (!board.tasks.length) { const tr = document.createElement('tr'); tr.innerHTML = '<td colspan="4" class="t">Nothing on the ground right now. Something turns up every few minutes.</td>'; tb.appendChild(tr); }
@@ -4098,8 +4142,7 @@ function pickLabel(mx, my) { for (let i = labelHits.length - 1; i >= 0; i--) { c
 function pickTask(mx, my) { for (let i = taskHits.length - 1; i >= 0; i--) { const h = taskHits[i]; if (mx >= h.x0 && mx <= h.x1 && my >= h.y0 && my <= h.y1) return h.id; } return null; }
 // a viewer clicked the badge over something: that is a notification, not an order. The nearest cat that fancies it hears, and goes when it likes.
 function flagTask(id) {
-  const q = board.tasks.find(x => x.id === id); if (!q || q.status !== 'open') return;
-  if (q.called && T - q.called < 6) { floatText({ x: q.x, y: q.y }, 'they heard', '#F7C86A'); return; }
+  const q = board.tasks.find(x => x.id === id); if (!q || q.status !== 'open' || (q.called != null && T - q.called < FLAG_COOL)) return;
   ringFX(q.x, q.y, '247,200,106', 1.3); floatText({ x: q.x, y: q.y }, 'flagged', '#F7C86A');
   if (remoteMode) { q.called = T; fetch(CONFIG.BRAIN_URL.replace(/\/$/, '') + '/call', { method: 'POST', body: id }).catch(() => {}); }
   else callTask(id);
@@ -4387,7 +4430,7 @@ function applyRemote(j) {
   if (e.talk) { talk.length = 0; talk.push(...e.talk); }
   if (e.placeStats) Object.assign(placeStats, e.placeStats);
   if (e.placeLogs) Object.assign(placeLogs, e.placeLogs);
-  if (e.board) { board.tasks = (e.board.tasks || []).map(t => ({ ...t, called: t.called ? T - Math.max(0, e.T - t.called) : undefined })); board.done = (e.board.done || []).map(t => ({ ...t, at: t.at != null ? T - Math.max(0, e.T - t.at) : null })); }
+  if (e.board) { board.tasks = (e.board.tasks || []).map(t => ({ ...t, called: t.called != null ? T - Math.max(0, e.T - t.called) : undefined })); board.done = (e.board.done || []).map(t => ({ ...t, at: t.at != null ? T - Math.max(0, e.T - t.at) : null })); }
   if (e.days) { days.length = 0; days.push(...e.days); }
   if (e.today) dayCur = e.today;
   if (e.visitors) { // keep our own objects so they glide between polls
