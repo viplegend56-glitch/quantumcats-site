@@ -684,7 +684,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   <section class="sec pg">
     <div class="wrap">
       <h2 class="sec-title">Work</h2>
-      <p class="sec-lead">Things turn up around the block that want doing: trash behind the diner, a dropped crate, a spill, a loose cable, a console that needs recalibrating, a readout check on the fridge. First cat there gets it, if it is good enough for the tier, and is paid out of the fee pool when it is done.</p>
+      <p class="sec-lead">Things turn up around the block that want doing: trash behind the diner, a dropped crate, a spill, a loose cable, a console that needs recalibrating, a readout check on the fridge. Most of it is left by the people and bots that come out of the buildings. First cat there gets it, if it is good enough for the tier, and is paid out of the fee pool when it is done. Click the <b>!</b> over anything in the box to flag it: the nearest cat that fancies it hears about it, and goes when it feels like going.</p>
       <div class="board-stats">
         <div><b id="wkOpen">0</b><span>waiting on the ground</span></div>
         <div><b id="wkTaken">0</b><span>being worked on</span></div>
@@ -850,7 +850,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
               <tr><td>in profit, or panicking</td><td>sell</td><td>the exchange</td></tr>
               <tr><td>feeling lucky</td><td>wager</td><td>the arena</td></tr>
               <tr><td>light-pawed and broke</td><td>steal</td><td>the bunks</td></tr>
-              <tr><td>decohering</td><td>recohere</td><td>in the circle</td></tr>
+              <tr><td>decohering</td><td>recohere</td><td>by the fridge</td></tr>
               <tr><td>cold</td><td>warm up</td><td>the heater</td></tr>
               <tr><td>holding a grudge</td><td>scrap</td><td>wherever the other cat is</td></tr>
               <tr><td>lonely</td><td>entangle</td><td>with the nearest cat</td></tr>
@@ -1228,7 +1228,7 @@ for (const b of BUILD) {
 // where everything stands: the circle dead centre, the lab under the big billboard, the rest spread round the edges of the plaza
 const CRY = { x: M(11.25), y: M(11.25) };                                      // the circle (meetings, recohering)
 const LAB = { x: M(9.4), y: M(6.6), w: 3.6, d: 3.0 };                          // the lab, right of the fridge
-const FRIDGE = { x: M(6.0), y: M(7.4), r: 0.62 };                              // the dilution fridge, top left in front of the billboard, piped to the lab
+const FRIDGE = { x: M(5.2), y: M(5.65), r: 0.62 };                             // the dilution fridge, tucked into the top corner, piped to the lab
 const VAULT = { x: M(16.9), y: M(8.9) };                                       // the treasury, on the right edge between the bunks and the scrapyard
 const LOFT = { x: M(16.3), y: M(5.3), w: 2.0, d: 1.1 };                        // the bunks, over the corner shop
 const TRAYS = { x: M(16.7), y: M(11.5), w: 0.6, d: 3.2 };                      // the scrapyard strip along the right edge
@@ -1252,7 +1252,8 @@ function wanderSpot() {
 const ST = {
   plaza:  { label: 'the plaza',       spot: () => wanderSpot() },
   bazaar: { label: 'the shop',        spot: me => { const taken = cats.filter(c => c !== me && c.act === 'shop').map(c => [c.tx, c.ty]); const free = BAZ_SPOTS.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); const q = pick(free.length ? free : BAZ_SPOTS); return [q[0], q[1]]; } },
-  cryo:   { label: 'the circle',      spot: () => { const a = rand(0, TAU), r = rand(0.95, 1.15); return [CRY.x + Math.cos(a) * r, CRY.y + Math.sin(a) * r]; } }, // inside the ring of chairs, round the beacon
+  cryo:   { label: 'the circle',      spot: () => wanderSpot() },
+  fridge: { label: 'the fridge',      spot: () => { const a = rand(-0.2, 1.3), r = FRIDGE.r + 0.95; return [FRIDGE.x + Math.cos(a) * r, FRIDGE.y + Math.sin(a) * r]; } }, // the plaza side of the fridge
   crates: { label: 'the diner',       spot: me => { const taken = cats.filter(c => c !== me && c.act === 'eat').map(c => [c.tx, c.ty]); const free = DINER_STOOLS.filter(q => !taken.some(t => Math.hypot(t[0] - q[0], t[1] - q[1]) < 0.2)); if (!free.length) return [rand(CRATES.x + 0.1, CRATES.x + 1.5), CRATES.y + 1.95]; const q = pick(free); return [q[0], q[1]]; } }, // no free stool: eat standing, behind the stools
   vent:   { label: 'the heater',      spot: () => [rand(VENT.x + 0.26, VENT.x + 1.4), rand(VENT.y + 0.26, VENT.y + 1.04)] },
   trays:  { label: 'the scrapyard',   spot: () => [rand(TRAYS.x - 1.3, TRAYS.x - 0.5), rand(TRAYS.y + 0.5, TRAYS.y + 2.9)] },
@@ -1274,52 +1275,78 @@ const OBST = [
   { x: TRAYS.x, y: TRAYS.y, w: TRAYS.w, d: TRAYS.d },          // scrapyard strip
   { x: EXC.x - 0.8, y: EXC.y - 0.8, w: 1.6, d: 1.6 },          // exchange kiosk
   { x: LAB.x - LAB.w / 2, y: 5.0, w: LAB.w, d: LAB.y + LAB.d / 2 - 5.0 }, // lab, and the slot between it and the buildings behind
-  { x: 5.0, y: FRIDGE.y - 0.9, w: FRIDGE.x - 5.0, d: 1.8 },                 // the slot between the fridge and the buildings behind
-  { x: BAZ.x - 0.2, y: 5.0, w: BAZ.w + 0.4, d: BAZ.y - 5.0 },                 // and behind the shop
+  { x: 5.0, y: FRIDGE.y - 0.9, w: FRIDGE.x - 5.0, d: 1.8 },                 // the slots between the fridge and the buildings behind it
+  { x: FRIDGE.x - 0.9, y: 5.0, w: 1.8, d: FRIDGE.y - 5.0 },
+  { x: BAZ.x - 0.2, y: 5.0, w: BAZ.w + 1.15, d: BAZ.y - 5.0 },                // and behind the shop (and its keeper)
   ...BINS.map(([bx, by]) => ({ x: bx - 0.22, y: by - 0.22, w: 0.44, d: 0.44 })),
   { x: VAULT.x - 0.45, y: VAULT.y - 0.45, w: 0.9, d: 0.9 },    // treasury
-  { x: BAZ.x - 0.1, y: BAZ.y - 0.1, w: BAZ.w + 0.2, d: BAZ.d + 0.2 }, // bazaar stalls
+  { x: BAZ.x - 0.1, y: BAZ.y - 0.1, w: BAZ.w + 0.95, d: BAZ.d + 0.2 }, // the shop stalls, and the keeper's plinth at the end of the row
   { x: VENT.x - 0.6, y: VENT.y - 0.05, w: 0.5, d: 0.95 },      // heater unit
   ...BUILD.map(b => ({ x: b.x, y: b.y, w: b.w, d: b.d })),
   { x: 1.6, y: 1.6, w: 3.4, d: BLK - 1.6 }, { x: 1.6, y: 1.6, w: BLK - 1.6, d: 3.4 }, // the two back edges as solid walls, so nothing wedges into the slots between buildings
 ];
-const OBC = [[CRY.x, CRY.y, 0.55], [FRIDGE.x, FRIDGE.y, FRIDGE.r + 0.35]]; // round ones: the beacon in the middle of the circle, the fridge with its plinth
+const OBC = [[CRY.x, CRY.y, 0.55], [FRIDGE.x, FRIDGE.y, FRIDGE.r + 0.35], [CRY.x, CRY.y, 2.15, 'circle']]; // round ones: the beacon, the fridge with its plinth, and the whole circle (only a cat with a seat in it may enter)
+let steerSelf = null; // who is being steered right now, so the circle can let its own cats through
 // repulsion away from anything within m of (px, py); [fx, fy, strength]
 function pushOut(px, py, m) {
-  let fx = 0, fy = 0, best = 0;
-  for (const o of OBST) {
+  let fx = 0, fy = 0, best = 0, who = -1;
+  for (let i = 0; i < OBST.length; i++) { const o = OBST[i];
     const nx = clamp(px, o.x, o.x + o.w), ny = clamp(py, o.y, o.y + o.d); let dx = px - nx, dy = py - ny, dd = Math.hypot(dx, dy);
     if (dd === 0) { // inside: leave by the nearest side
       const l = px - o.x, r = o.x + o.w - px, t = py - o.y, b = o.y + o.d - py, mn = Math.min(l, r, t, b);
-      dx = mn === l ? -1 : mn === r ? 1 : 0; dy = mn === t ? -1 : mn === b ? 1 : 0; dd = 1; fx += dx * 2; fy += dy * 2; best = 1; continue;
+      dx = mn === l ? -1 : mn === r ? 1 : 0; dy = mn === t ? -1 : mn === b ? 1 : 0; dd = 1; fx += dx * 2; fy += dy * 2; best = 1; who = i; continue;
     }
-    if (dd < m) { const f = (m - dd) / m; fx += dx / dd * f; fy += dy / dd * f; if (f > best) best = f; }
+    if (dd < m) { const f = (m - dd) / m; fx += dx / dd * f; fy += dy / dd * f; if (f > best) { best = f; who = i; } }
   }
-  for (const [cx, cy, r] of OBC) {
+  for (let i = 0; i < OBC.length; i++) { const [cx, cy, r, tag] = OBC[i];
+    if (tag === 'circle' && steerSelf && (steerSelf.act === 'meet' || steerSelf.chair != null)) continue;
     const dx = px - cx, dy = py - cy, dd = Math.hypot(dx, dy) || 0.001;
-    if (dd < r + m) { const f = clamp((r + m - dd) / m, 0, 2); fx += dx / dd * f; fy += dy / dd * f; if (f > best) best = f; }
+    if (dd < r + m) { const f = clamp((r + m - dd) / m, 0, 2); fx += dx / dd * f; fy += dy / dd * f; if (f > best) { best = f; who = 1000 + i; } }
   }
-  return [fx, fy, best];
+  return [fx, fy, best, who]; // who: which structure is doing most of the pushing
+}
+// which way round a structure: try both ways for a few seconds in the head (the same sliding rule, no other cats) and keep the
+// one that gets nearer the target. The side the target is on is the default, so a tie goes that way. Chosen once per structure per trip.
+function slideScore(x, y, tx, ty, s) {
+  let best = Math.hypot(tx - x, ty - y), px = x, py = y;
+  for (let k = 0; k < 32; k++) {
+    const dx = tx - px, dy = ty - py, d = Math.hypot(dx, dy); if (d < 0.3) return 0;
+    let vx = dx / d, vy = dy / d;
+    const [fx, fy, f] = pushOut(px + vx * 0.35, py + vy * 0.35, 0.4);
+    if (f > 0) { const fl = Math.hypot(fx, fy) || 1, nx = fx / fl, ny = fy / fl; vx = -ny * s + nx * 0.6 * Math.min(1, f) + dx / d * 0.45; vy = nx * s + ny * 0.6 * Math.min(1, f) + dy / d * 0.45; const vl = Math.hypot(vx, vy) || 1; vx /= vl; vy /= vl; }
+    px += vx * 0.3; py += vy * 0.3;
+    if (d < best) best = d;
+  }
+  return Math.min(best, Math.hypot(tx - px, ty - py));
+}
+function pickSlide(x, y, txn, tyn, gx, gy, tx, ty) {
+  const pref = txn * gx + tyn * gy < 0 ? -1 : 1;
+  const a = slideScore(x, y, tx, ty, pref), b = slideScore(x, y, tx, ty, -pref);
+  return b < a - 0.5 ? -pref : pref;
 }
 // one step of walking from (x, y) toward (tx, ty): steers around structures and keeps off other cats. Returns [nx, ny, vx, vy].
 // `self` is the cat (or its ghost on the site): it remembers which way round an obstacle it is sliding so it never dithers at a corner.
-function steerStep(x, y, tx, ty, sp, dt, self) {
+function steerStep(x, y, tx, ty, sp, dt, self) { steerSelf = self; try { return steerStep0(x, y, tx, ty, sp, dt, self); } finally { steerSelf = null; } }
+function steerStep0(x, y, tx, ty, sp, dt, self) {
   const dx = tx - x, dy = ty - y, d = Math.hypot(dx, dy); if (d < 1e-6) return [x, y, 0, 0];
+  if (self.sTx !== tx || self.sTy !== ty) { self.slide = 0; self.sTx = tx; self.sTy = ty; } // a new destination: choose the way round afresh
   { const [ix, iy, ins] = pushOut(x, y, 0.001); if (ins >= 1 && (ix || iy)) { const l = Math.hypot(ix, iy); return [x + ix / l * sp * dt, y + iy / l * sp * dt, ix / l, iy / l]; } } // somehow inside a structure: walk straight out
   let vx = dx / d, vy = dy / d;
   const near = pushOut(tx, ty, 0.6)[2] > 0 ? 1.3 : 0.45; // a spot right next to a structure (a stool, a console): stop steering once close, just walk in
   if (d > near) {
-    const [fx, fy, f] = pushOut(x + vx * 0.35, y + vy * 0.35, 0.4);
+    const [fx, fy, f, who] = pushOut(x + vx * 0.35, y + vy * 0.35, 0.4);
     if (f > 0) {
-      // blocked: slide along the structure (one side, chosen once per trip) with a little outward push, instead of fighting
-      // the pull of the target. Mixing the two is how a cat ends up pacing on the spot behind a counter.
+      // blocked: slide along the structure (one side, chosen once per structure per trip) with a little outward push, instead of
+      // fighting the pull of the target. Mixing the two is how a cat ends up pacing on the spot behind a counter; keeping the
+      // side chosen at one structure for the next one is how it ends up going the long way round the lab into the back pocket.
       const fl = Math.hypot(fx, fy) || 1, nx = fx / fl, ny = fy / fl, txn = -ny, tyn = nx;
-      if (!self.slide) self.slide = txn * vx + tyn * vy < 0 ? -1 : 1;
+      if (!self.slide || self.slideOn !== who) { self.slide = pickSlide(x, y, txn, tyn, vx, vy, tx, ty); self.slideOn = who; }
       const gx = dx / d, gy = dy / d;
       vx = txn * self.slide + nx * 0.6 * Math.min(1, f) + gx * 0.45; vy = tyn * self.slide + ny * 0.6 * Math.min(1, f) + gy * 0.45;
     }
   }
   for (const o of cats) { if (o.id === self.id) continue; const ox = x - o.x, oy = y - o.y, od = Math.hypot(ox, oy); if (od > 0.001 && od < 0.42) { const f = (0.42 - od) / 0.42; vx += ox / od * f * 0.8; vy += oy / od * f * 0.8; } }
+  for (const o of visitors) { if (o.id === self.id) continue; const ox = x - o.x, oy = y - o.y, od = Math.hypot(ox, oy); if (od > 0.001 && od < 0.42) { const f = (0.42 - od) / 0.42; vx += ox / od * f * 0.8; vy += oy / od * f * 0.8; } } // and off the people and bots about
   const vl = Math.hypot(vx, vy) || 1; vx /= vl; vy /= vl;
   const mv = Math.min(d, sp * dt);
   return [x + vx * mv, y + vy * mv, vx, vy];
@@ -1461,11 +1488,68 @@ const DEST = {
 };
 const DEST_LABEL = { bin: 'the bin', trays: 'the scrapyard', bazaar: 'the shop', fridge: 'the fridge' };
 const board = { tasks: [], done: [], seq: 0, next: 0 };
+// visitors: people and bots that come out of the buildings round the block, leave something that wants doing, and go back in
+const VISITOR_KINDS = {
+  courier:  { robot: true,  name: 'a courier bot',     posts: ['parcel', 'coolant'],           line: 'drop for the box. someone sign for it.', waits: false, w: 2 },
+  resident: { robot: false, name: 'a resident',        posts: ['trash', 'litter', 'crate'],   line: 'can one of you deal with this',       waits: false, w: 3 },
+  tech:     { robot: true,  name: 'a maintenance bot', posts: ['cable', 'calib', 'readout'],  line: 'flagging this for the lab cats',      waits: true,  w: 2 },
+  tourist:  { robot: false, name: 'a tourist',         posts: ['litter', 'leaves', 'spill'],  line: 'oops. sorry.',                         waits: false, w: 1.5 },
+};
+const DOORS = BUILD.map(b => b.y + b.d <= 5.01 ? [b.x + b.w / 2, 5.35] : [5.35, b.y + b.d / 2]).filter(d => pushOut(d[0], d[1], 0.3)[2] < 0.01); // every back building has a door on the plaza side (skipping the ones the lab and the fridge stand in front of)
+const visitors = []; let visitorSeq = 0, nextVisitor = 0;
+const VCOATS = ['#6E78AA', '#8C97C2', '#B9A6FF', '#5CF2FF', '#F7C86A', '#FF8A5C'];
+function spawnVisitor() {
+  const ks = Object.keys(VISITOR_KINDS), tot = ks.reduce((a, k) => a + VISITOR_KINDS[k].w, 0); let r = Math.random() * tot, kind = ks[0]; for (const k of ks) { r -= VISITOR_KINDS[k].w; if (r <= 0) { kind = k; break; } }
+  const K0 = VISITOR_KINDS[kind], task = pick(K0.posts), door = pick(DOORS), spot = TASK_KINDS[task].spawn();
+  // stand a step back from where the thing goes when that is right up against something (a console, the fridge)
+  let sx = spot[0], sy = spot[1]; { const [fx, fy, f] = pushOut(spot[0], spot[1], 0.7); if (f > 0) { const l = Math.hypot(fx, fy) || 1; sx += fx / l * 0.7; sy += fy / l * 0.7; } }
+  const v = { id: 'v' + (++visitorSeq), kind, robot: K0.robot, name: K0.name, coat: pick(VCOATS), x: door[0], y: door[1], tx: sx, ty: sy, spot, door, state: 'in', task, taskId: null, waitUntil: 0, leaveBy: 0, face: 1, slide: 0, bubble: '', bubbleT: -1e9, born: T, phase: Math.random() * 6 };
+  visitors.push(v); return v;
+}
+function visitorSay(v, text) { v.bubble = text; v.bubbleT = T; talkPush({ sys: false, cat: null, name: v.name, coat: v.coat, eye: '#F7C86A', text, t: clock(simMin) }); }
+function stepVisitors(dt) {
+  if (!nextVisitor) nextVisitor = T + rand(40, 90);
+  const open = board.tasks.filter(t => t.status === 'open').length;
+  if (T >= nextVisitor && visitors.length < 2) { spawnVisitor(); nextVisitor = T + (open < 2 ? rand(90, 180) : rand(200, 420)); }
+  else if (!visitors.length && open === 0 && T >= nextVisitor - 60) { spawnVisitor(); nextVisitor = T + rand(150, 300); } // never a box with nobody about and nothing to do
+  for (let i = visitors.length - 1; i >= 0; i--) {
+    const v = visitors[i];
+    if (T - v.born > 1200) { visitors.splice(i, 1); continue; } // nobody hangs about for ever
+    if (v.state === 'in' || v.state === 'out' || v.state === 'aside') {
+      const d = Math.hypot(v.tx - v.x, v.ty - v.y);
+      if (d < (v.state === 'out' ? 0.3 : 0.08) || (v.state === 'aside' && T - v.asideT > 4)) {
+        if (v.state === 'out') { visitors.splice(i, 1); continue; }
+        v.state = 'wait'; if (!v.taskId) v.waitUntil = T + rand(2, 5); continue;
+      }
+      const [nx, ny, vx, vy] = steerStep(v.x, v.y, v.tx, v.ty, 0.65, dt, v); const sdx = vx - vy; if (Math.abs(sdx) > 0.05) v.face = sdx > 0 ? 1 : -1; v.x = nx; v.y = ny;
+    } else if (v.state === 'wait') {
+      if (!v.taskId && T >= v.waitUntil) {
+        // put it down where it was headed (or at its feet), say the line, then step back out of the way
+        const near = Math.hypot(v.spot[0] - v.x, v.spot[1] - v.y) < 0.2, t = postTask({ kind: v.task, at: near ? [v.x, v.y] : v.spot }, v.name); t.visitor = v.id; v.taskId = t.id;
+        visitorSay(v, VISITOR_KINDS[v.kind].line); v.leaveBy = T + (VISITOR_KINDS[v.kind].waits ? 420 : rand(6, 14));
+        if (near) { const ddx = v.door[0] - v.x, ddy = v.door[1] - v.y, dl = Math.hypot(ddx, ddy) || 1, ax = v.x + ddx / dl * 0.8, ay = v.y + ddy / dl * 0.8; if (pushOut(ax, ay, 0.3)[2] === 0) { v.tx = ax; v.ty = ay; v.state = 'aside'; v.asideT = T; v.slide = 0; } }
+        continue;
+      }
+      const t = v.taskId ? board.tasks.find(q => q.id === v.taskId) : null;
+      if (v.taskId && (T >= v.leaveBy || !t)) { v.state = 'out'; v.tx = v.door[0]; v.ty = v.door[1]; v.slide = 0; if (!t && T < v.leaveBy) visitorSay(v, pick(['thanks', 'good cat', 'appreciated', 'knew one of you would'])); }
+    }
+  }
+}
+function callTask(id) {
+  // a viewer flagged something: the cats hear about it. They still decide for themselves whether and when to go.
+  const t = board.tasks.find(q => q.id === id); if (!t || t.status !== 'open') return false;
+  t.called = T; log(`Somebody flagged ${t.title}.`, 'info');
+  const c = cats.filter(x => !asleep(x) && x.act !== 'meet' && !x.task && qualifies(x, t) && (x.state === 'pause' || (x.state === 'act' && x.act === 'idle'))).sort((a, b) => Math.hypot(a.x - t.x, a.y - t.y) - Math.hypot(b.x - t.x, b.y - t.y))[0];
+  if (c) { if (c.state === 'pause') c.pauseT = Math.min(c.pauseT, 0.4); else c.actT = c.actDur; say(c, pick(['heard that', 'on it, maybe', 'if nobody else wants it', 'let me finish this first'])); }
+  return true;
+}
 const totalSkill = c => Object.values(c.skills || {}).reduce((a, b) => a + b, 0) + (c.tasks || 0);
 const qualifies = (c, t) => t.tier === 1 || (t.tier === 2 && ((c.lvl || 1) >= 2 || totalSkill(c) >= 8)) || (t.tier === 3 && ((c.lvl || 1) >= 3 || totalSkill(c) >= 24));
 const tasksFor = c => board.tasks.filter(t => t.status === 'open' && qualifies(c, t));
 function postTask(def, poster) {
-  const kind = TASK_KINDS[def.kind] ? def.kind : pick(Object.keys(TASK_KINDS)), K0 = TASK_KINDS[kind], at = K0.spawn();
+  const kind = TASK_KINDS[def.kind] ? def.kind : pick(Object.keys(TASK_KINDS)), K0 = TASK_KINDS[kind];
+  let at = (def && def.at && pushOut(def.at[0], def.at[1], 0.3)[2] === 0) ? def.at : null;
+  for (let i = 0; !at && i < 12; i++) { const q = K0.spawn(); if (i === 11 || pushOut(q[0], q[1], 0.34)[2] === 0) at = q; } // never up against a structure
   const t = { id: 'T' + String(++board.seq).padStart(3, '0'), kind, tier: K0.tier, q: K0.q, title: K0.title, x: at[0], y: at[1], carry: K0.carry, dest: K0.carry ? DEST[K0.carry](at[0], at[1]) : null, dur: K0.dur, bounty: Math.max(0, (def && def.bounty) || 0), posted: T, day: dayNo(), status: 'open', by: null, poster: poster || 'the box' };
   board.tasks.push(t);
   log(`${t.title[0].toUpperCase() + t.title.slice(1)} turned up${t.carry ? ', wants taking to ' + DEST_LABEL[t.carry] : ''} (tier ${t.tier}${t.bounty ? ', ' + fmtSol(t.bounty) + ' SOL on it' : ''}).`, 'info');
@@ -1508,7 +1592,7 @@ const ACTS = {
   eat:      { st: 'crates',   dur: 50,   verb: 'eating at the diner',          walk: 'heading to the diner',          color: '247,200,106', name: 'eat' },
   hunt:     { st: 'trays',    dur: 60,   verb: 'hunting in the scrapyard',    walk: 'creeping toward the scrapyard', color: '255,138,92', name: 'hunt' },
   work:     {                 dur: 100,                                                                                     color: '92,242,255', name: 'work' },
-  recohere: { st: 'cryo',     dur: 75,   verb: 'recohering in the circle',  walk: 'drifting toward the circle',    color: '154,123,255', name: 'recohere' },
+  recohere: { st: 'fridge',   dur: 75,   verb: 'recohering by the fridge',  walk: 'drifting over to the fridge',   color: '154,123,255', name: 'recohere' },
   warm:     { st: 'vent',     dur: 60,   verb: 'warming up at the heater',        walk: 'heading for the heater',            color: '255,138,92', name: 'warm up' },
   sell:     { st: 'exchange', dur: 45,  verb: 'selling at the exchange',       walk: 'heading to the exchange',         color: '255,120,120', name: 'sell' },
   buy:      { st: 'exchange', dur: 45, verb: 'buying at the exchange',        walk: 'heading to the exchange',         color: '92,255,170', name: 'buy' },
@@ -1587,13 +1671,13 @@ const DRIVES = [
   { act: 'idle',     label: () => (wx.rain + wx.snow > 0.3 ? 'caught in the weather' : 'nothing urgent'), w: () => 0.2 + wx.rain * 0.4 + wx.snow * 0.35 },
   { act: 'sleep',    label: 'tired',                    w: c => Math.pow(c.tired, 2.2) * 1.1 },
   { act: 'play',     label: 'wants to play',            w: c => (0.32 + c.lonely * 0.4) * c.tr.social * (spare(c) > costOf(PLAY, c) ? 1 : 0.05) * (T - (c.playT || -1e9) > 900 ? 1 : 0.3) },
-  { act: 'task',     label: 'something wants doing',    w: c => { const ts = tasksFor(c); return ts.length ? (c.coh < 0.4 ? 0.2 : 1) * (0.42 + 0.12 * Math.max(...ts.map(t => t.tier))) * c.ethic : 0; } },
+  { act: 'task',     label: c => (tasksFor(c).some(t => t.called && T - t.called < 180) ? 'somebody flagged something' : 'something wants doing'), w: c => { const ts = tasksFor(c); return ts.length ? (c.coh < 0.4 ? 0.2 : 1) * (0.42 + 0.12 * Math.max(...ts.map(t => t.tier))) * c.ethic * (ts.some(t => t.called && T - t.called < 180) ? 1.8 : 1) : 0; } },
   { act: 'shop',     label: 'feeling flush',            w: c => itemsFor(c).length ? (0.3 + 0.25 * (c.vanity || 1)) * (1 - (c.items || []).length / ITEMS.length) * (T - (c.shopT || -1e9) > 2400 ? 1 : 0.08) : 0 },
 ];
 const TH = {
   eat: ['the diner smells like sardines', 'food first, then the lab', 'could eat a whole fish'],
   hunt: ['something is moving in the cables', 'broke and hungry is a bad mix', 'somebody dropped tokens in the scrapyard'],
-  recohere: ['half of me is somewhere else', 'everything feels blurry', 'the circle hums like a purr'],
+  recohere: ['half of me is somewhere else', 'everything feels blurry', 'the fridge hums like a purr'],
   warm: ['the heater is the only warm thing out here', 'paws are freezing', 'one more cold night'],
   work: ['the lab pays tonight', 'a job now, buy later', 'every circuit is a few more lamports', 'the fee pool looks fat'],
   buy: ['chart looks cheap from down here', 'adding to the stack', 'fees in, buys out', 'size in'],
@@ -1604,8 +1688,8 @@ const TH = {
   entangle: ['too quiet on this side', '{p} gets it', 'better in pairs'],
   idle: ['a box is a box', 'watching the circle count down', 'not now'],
   play: ['the dot. the dot.', 'yarn time', 'five minutes in the yard'],
-  task: ['the board had my name on it', 'tier three. finally.', 'somebody has to do it', 'bounty is bounty'],
-  shop: ['something shiny', 'the stall cat has a new hat', 'spare SOL, spare neck'],
+  task: ['first one there', 'tier three. finally.', 'somebody has to do it', 'bounty is bounty', 'somebody flagged it. fine.'],
+  shop: ['something shiny', 'the shop bot has new stock', 'spare SOL, spare neck'],
   meet: ['circle time', 'the countdown hit zero', 'minutes to read, strategy to argue'],
   circuit: ['let\u2019s see what the machine says', 'five qubits, one thousand shots', 'superposition is a job now'],
   sleep: ['eyes won’t stay open', 'the bunks. now.', 'wake me if the chart moves'],
@@ -1618,14 +1702,14 @@ const mcapUsd = () => mkt.price * SUPPLY * CONFIG.SOL_USD;
 const fmtPrice = () => fmtUsd(mcapUsd()) + ' MC';
 const fmtKeys = v => (v >= 1e12 ? (v / 1e12).toFixed(2) + 'T' : v >= 1e9 ? (v / 1e9).toFixed(1) + 'G' : v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : Math.round(v).toLocaleString('en-US'));
 const PLACES = {
-  cryo:     { title: 'The circle',      kind: 'where the box meets · recovery',     pt: [CRY.x, CRY.y], stats: ['here', 'spent', 'visits'],     desc: 'The painted circle in the middle of the box, with the countdown above it. When it hits zero every cat that is awake comes in, sits down and talks through the day: the treasury, the chart, the lab, who did what. Between meetings cats come here to recohere, for a small fee.' },
+  cryo:     { title: 'The circle',      kind: 'where the box meets',     pt: [CRY.x, CRY.y], stats: ['here', 'spent', 'visits'],     desc: 'The painted circle in the middle of the box, with the countdown above it. When it hits zero every cat that is awake comes in, sits down and talks through the day: the treasury, the chart, the lab, who did what. Nobody walks through it the rest of the time.' },
   crates:   { title: 'The diner',       kind: 'food',                      pt: [CRATES.x + 0.8, CRATES.y + 1.2], stats: ['spent', 'here', 'visits'],   desc: 'Sardines, mostly. A meal costs ' + fmtSol(FOOD) + ' SOL at launch and gets dearer as the chart climbs. Most grudges on the block start here.' },
   vent:     { title: 'The heater',      kind: 'warmth',                    pt: [VENT.x + 0.7, VENT.y + 0.5], stats: ['spent', 'here', 'visits'],   desc: 'The only warm spot on the block. A warm-up costs ' + fmtSol(WARM) + ' SOL. It gets crowded when the weather turns.' },
   trays:    { title: 'The scrapyard',   kind: 'lost and found',            pt: [TRAYS.x - 0.7, TRAYS.y + 1.6], stats: ['here', 'found', 'visits'],   desc: 'Where broke cats hunt for food, and where every dropped token on the block ends up. Whatever a decohered or lost cat scatters lands here, and whoever digs it out keeps it.' },
   exchange: { title: 'The exchange',    kind: 'where cats buy back',       pt: [EXC.x + 0.5, EXC.y],  stats: ['here', 'bought', 'buysol'],  desc: 'A kiosk with a ticker on the front. Any cat with SOL to spare walks up and buys ' + TK + '. Cats never sell here, there is no sell button. Every buy goes straight to the chart.' },
   arena:    { title: 'The arena',       kind: 'where cats wager · entry fee',          pt: [ARENA.x, ARENA.y],  stats: ['spent', 'here', 'wagered'], desc: 'A ring painted on the pavement. Entry costs a little SOL, paid to the treasury. Two cats put up a stake of ' + TK + ', the box flips a quantum coin weighted by their coherence, and the winner takes the pot. Every wager is a transfer between the two wallets.' },
   loft:     { title: 'The bunks',       kind: 'where cats sleep · rent per night',          pt: [LOFT.x + 1.0, LOFT.y + 0.55],  stats: ['spent', 'here', 'stolen'],  desc: 'Bunks over the corner shop, rent due every night, cheaper the higher a cat\u2019s level. Tired cats climb in and sleep it off. A cat with light paws can sneak in and lift a few thousand ' + TK + ' from a sleeper, if it doesn’t get caught.' },
-  lab:      { title: 'The lab',         kind: 'quantum jobs · pays from the fee pool', pt: [LAB.x, LAB.y + LAB.d / 2 + 0.4], stats: ['here', 'circuits', 'paid'], desc: 'Where the cats work, under the big billboard. Samplers, factorers and searchers run quantum jobs at the consoles along the glass and get paid out of the creator fees for every job that finishes clean. The chip itself hangs in the dilution fridge next door, a few thousandths of a degree above absolute zero, wired to the lab by the pipe. Open from day one.' },
+  lab:      { title: 'The lab',         kind: 'quantum jobs · pays from the fee pool', pt: [LAB.x, LAB.y + LAB.d / 2 + 0.4], stats: ['here', 'circuits', 'paid'], desc: 'Where the cats work, under the big billboard. Samplers, factorers and searchers run quantum jobs at the consoles along the glass and get paid out of the creator fees for every job that finishes clean. The chip itself hangs in the dilution fridge in the corner, a few thousandths of a degree above absolute zero, wired to the lab by the pipes. A cat that is losing coherence goes and sits by the fridge to pull itself together, for a small fee. Open from day one.' },
   bazaar:   { title: 'The shop',        kind: 'things to wear · paid to the treasury', pt: [BAZ.x + 1.5, BAZ.y + 1.0], stats: ['spent', 'here', 'items'], desc: 'Three stalls under striped awnings. Collars, bandanas, shades, hats, a gold chain, a crown for the cat that thinks it has earned one. A cat with SOL to spare and nothing on wanders over and buys something; the SOL goes to the treasury. What a cat wears, it wears in the box.' },
   yard:     { title: 'The yard',        kind: 'play · costs a little',     pt: [YARD.x + YARD.w / 2, YARD.y + YARD.d / 2], stats: ['spent', 'here', 'visits'], desc: 'A fenced patch with a laser dot that never stays still and a ball of yarn that never ends. Playing costs a little SOL, paid to the treasury, and a cat comes out of it less lonely and more coherent.' },
   vault:    { title: 'The treasury',    kind: 'where the fees land',       pt: [VAULT.x, VAULT.y], stats: ['treasury', 'fees', 'wages'], desc: 'Every trade of ' + TK + ' pays the creator a fee in SOL, and the fees land here. Every job the cats finish in the lab is paid out of it, in proportion to the work: the more fees land, the more a job pays. When the pool is empty the work goes on the tab for the next payout.' },
@@ -1633,7 +1717,7 @@ const PLACES = {
 const placeStats = {}, placeLogs = {};
 for (const k of Object.keys(PLACES)) { placeStats[k] = { paid: 0, spent: 0, visits: 0, found: 0, stolen: 0, bought: 0, buysol: 0, wagered: 0, circuits: 0, keys: 0 }; placeLogs[k] = []; }
 let insMode = 'stray', placeKey = null, hoverLabel = null, remote = null;
-const labelHits = [];
+const labelHits = [], taskHits = []; let hoverTask = null;
 const stationOf = c => c.act === 'work' ? JOBS[c.job].st : c.act === 'task' ? (c.taskPlace || null) : (ACTS[c.act] ? ACTS[c.act].st : null);
 const asleep = c => c.state === 'act' && c.act === 'sleep';
 const onSeat = c => c.state === 'act' && (c.act === 'eat' || c.act === 'meet' || c.act === 'work' || c.act === 'task');
@@ -1723,7 +1807,7 @@ function decide(c) {
     ch = o; break;
   }
   if (!ch) { ch = ws.find(o => o.act === 'idle'); partner = null; }
-  if (meeting.on && T < meeting.until - 40) { joinMeeting(c); return; }
+  if (meeting.on && T < meeting.until - 40 && joinMeeting(c)) return; // a cat that cannot sit down (too hungry, no chair) gets on with its day
   if (ch.act !== 'scrap' && ch.act !== 'entangle' && ch.act !== 'wager') partner = null;
   c.weighed = ws.slice(0, 5).map(o => ({ act: o.act, label: o.label, w: o.w, win: o === ch }));
   c.act = ch.act; c.actT = 0; c.partner = null; c.initiator = false;
@@ -1747,14 +1831,14 @@ function decide(c) {
   }
   if (ch.act === 'task') {
     // first come first served: the nearest thing it qualifies for, the harder tiers first when they are close
-    const t = tasksFor(c).sort((a, b) => (Math.hypot(a.x - c.x, a.y - c.y) - a.tier * 2) - (Math.hypot(b.x - c.x, b.y - c.y) - b.tier * 2))[0];
+    const t = tasksFor(c).sort((a, b) => (Math.hypot(a.x - c.x, a.y - c.y) - a.tier * 2 - (a.called && T - a.called < 180 ? 6 : 0)) - (Math.hypot(b.x - c.x, b.y - c.y) - b.tier * 2 - (b.called && T - b.called < 180 ? 6 : 0)))[0];
     t.status = 'taken'; t.by = c.name; t.taken = T; c.task = t.id; c.taskPlace = t.kind === 'calib' ? 'lab' : 'plaza';
     c.doing = `heading for ${t.title}`; c.because = `tier ${t.tier}, nobody else got there first${t.bounty ? ', ' + fmtSol(t.bounty) + ' SOL on it' : ''}`;
-    c.tx = t.x; c.ty = t.y; c.state = 'walk'; c.slide = 0; c.stuckP = null; return;
+    c.tx = t.x; c.ty = t.y; c.state = 'walk'; c.slide = 0; c.stuckP = null; c.stuckN = 0; return;
   }
   const key = ch.act === 'work' ? JOBS[c.job].st : ACTS[ch.act].st;
   const sp = ST[key].spot(c);
-  c.tx = sp[0]; c.ty = sp[1]; c.state = 'walk'; c.slide = 0; c.stuckP = null;
+  c.tx = sp[0]; c.ty = sp[1]; c.state = 'walk'; c.slide = 0; c.stuckP = null; c.stuckN = 0;
   c.doing = ch.act === 'work' ? `heading to ${ST[key].label}` : ACTS[ch.act].walk;
 }
 function arrive(c, p) {
@@ -1841,7 +1925,7 @@ function finish(c, p) {
     const t = board.tasks.find(x => x.id === c.task);
     if (t && t.by === c.name && t.carry && t.status === 'taken') {
       // picked it up: now carry it to where it goes
-      t.status = 'carried'; t.x = null; t.y = null; c.tx = t.dest[0]; c.ty = t.dest[1]; c.state = 'walk'; c.slide = 0; c.stuckP = null; c.doing = `carrying ${t.title} to ${DEST_LABEL[t.carry]}`; c.partner = null; return;
+      t.status = 'carried'; t.x = null; t.y = null; c.tx = t.dest[0]; c.ty = t.dest[1]; c.state = 'walk'; c.slide = 0; c.stuckP = null; c.stuckN = 0; c.doing = `carrying ${t.title} to ${DEST_LABEL[t.carry]}`; c.partner = null; return;
     }
     if (t && t.by === c.name && (t.status === 'taken' || t.status === 'carried')) {
       const sk = skillLvl(skillOf(c, 'tasks')), quantum = !!t.q;
@@ -1858,6 +1942,7 @@ function finish(c, p) {
       log(`${c.name} dealt with ${t.title} (tier ${t.tier})${pay > 0 ? ' and was paid ' + fmtSol(pay) + ' SOL from the fee pool' : feePool() ? ', on the tab for the next payout' : ', logged for the next payout'}.`, quantum ? 'link' : 'gain');
       tx(c, 'task', pay > 0 ? '+' + fmtSol(pay) + ' SOL' : '+' + credit.toFixed(1) + ' work', t.title); did(c, `dealt with ${t.title} (tier ${t.tier})` + (pay > 0 ? `, paid ${fmtSol(pay)} SOL` : ''));
       if (Math.random() < 0.5) say(c, pick(['done. next.', 'that one was mine', 'first one there', 'who leaves that lying around', 'easy tier ' + t.tier]));
+      const v = t.visitor ? visitors.find(x => x.id === t.visitor) : null; if (v && v.state === 'wait') { v.leaveBy = T + 2; visitorSay(v, pick(['thanks', 'good cat', 'appreciated', 'knew one of you would'])); }
     } else c.task = null;
   } else if (a === 'shop') {
     const opts = itemsFor(c);
@@ -1866,7 +1951,7 @@ function finish(c, p) {
       spend(c, cost, 'bazaar', it.name); if (!c.items) c.items = []; c.items.push(it.key); c.wearing = it.key; c.shopT = T; placeStats.bazaar.bought++;
       burst(c, '255,200,80', 16); floatText(c, it.name, '#FFC850'); gainXp(c, 4);
       log(`${c.name} bought ${it.name} at the shop for ${fmtSol(cost)} SOL`, 'gain', 'bazaar'); tx(c, 'shop', '-' + fmtSol(cost) + ' SOL', it.name); did(c, `bought ${it.name} at the shop for ${fmtSol(cost)} SOL`); recordEvent('shop', `${c.name} bought ${it.name} for ${fmtSol(cost)} SOL`);
-      say(c, pick(['how do I look', 'worth it', 'the stall cat said it suits me', 'new look, same bag', 'drip']));
+      say(c, pick(['how do I look', 'worth it', 'the shop bot said it suits me', 'new look, same bag', 'drip']));
     } else log(`${c.name} browsed the shop and bought nothing`, 'info', 'bazaar');
   } else if (a === 'play') {
     spend(c, costOf(PLAY, c), 'yard', 'play time'); c.lonely = clamp(c.lonely - 0.35); c.coh = clamp(c.coh + 0.06); gainXp(c, 3); c.plays = (c.plays || 0) + 1; c.playT = T; did(c, 'played in the yard');
@@ -1883,7 +1968,7 @@ function finish(c, p) {
     }
     if (Math.random() < 0.55) { c.hunger = 0.12; c.lastAte = simMin; did(c, 'found something to eat in the scrapyard'); if (Math.random() < 0.5) log(`${c.name} caught something in the scrapyard`, 'info', 'trays'); } else did(c, 'went through the scrapyard and found nothing');
   } else if (a === 'recohere') {
-    spend(c, costOf(CRYO, c), 'cryo', 'cryo time'); c.coh = 1; gainXp(c, 1); did(c, 'recohered in the circle');
+    spend(c, costOf(CRYO, c), 'lab', 'cryo time by the fridge'); c.coh = 1; gainXp(c, 1); did(c, 'recohered by the fridge');
     floatText(c, 'coherent', '#B9A6FF');
     if (Math.random() < 0.4) log(`${c.name} recohered under the circle`, 'link', 'cryo');
   } else if (a === 'warm') {
@@ -2006,6 +2091,7 @@ function meetingContext() {
     top: top ? top.name : null, thief: thief && thief.stole > 0 ? thief.name : null, lastJob: stats.lastJob,
     cats: cats.filter(c => !asleep(c)).map(c => ({ name: c.name, role: JOBS[c.job].label, trait: c.tr.label, level: c.lvl || 1, persona: PERSONA[c.name] || '', sol: fmtSol(c.sol), qcat: fmtQ(c.qcat), earned: fmtSol(c.earned), jobs: c.qjobs || 0, hunger: Math.round(c.hunger * 100), coherence: Math.round(c.coh * 100), grudge: c.grudgeOn ? (byId(c.grudgeOn) || {}).name : null, lastSaid: c.said && c.said[0] ? c.said[0].text : '' })),
     asleep: cats.filter(asleep).map(c => c.name),
+    visitors: visitors.map(v => v.name + (v.state === 'wait' ? ' (waiting by ' + (TASK_KINDS[v.task] || {}).title + ')' : '')),
     board: { open: board.tasks.filter(t => t.status === 'open').map(t => `${t.title} (tier ${t.tier})`), taken: board.tasks.filter(t => t.status !== 'open').map(t => `${t.by}: ${t.title}`), doneToday: board.done.filter(t => T - (t.at || 0) < DAY_SECS).map(t => `${t.doneBy}: ${t.title}`) },
   };
 }
@@ -2036,11 +2122,12 @@ function meetFill(line) {
     .replace('{thief}', thief && thief.stole > 0 ? thief.name : 'somebody').replace('{paid}', fmtSol(stats.wages));
 }
 function joinMeeting(c) {
-  if (asleep(c) || c.act === 'meet') return;
-  if (c.hunger > 0.88 && c.sol >= costOf(FOOD, c)) return; // a starving cat eats first and shows up late
+  if (asleep(c) || c.act === 'meet') return false;
+  if (c.hunger > 0.88 && c.sol >= costOf(FOOD, c)) return false; // a starving cat eats first and shows up late
   if (c.partner) { const p = byId(c.partner); endPair(c, p); }
-  const chair = freeChair(); if (chair == null) return; const sp = chairAt(chair); c.chair = chair; releaseTask(c);
+  const chair = freeChair(); if (chair == null) return false; const sp = chairAt(chair); c.chair = chair; releaseTask(c);
   c.act = 'meet'; c.partner = null; c.initiator = false; c.state = 'walk'; c.tx = sp[0]; c.ty = sp[1]; c.doing = ACTS.meet.walk; c.because = 'the circle called a meeting'; c.thought = pick(['what now', 'a meeting. great.', 'better be about the treasury', 'front row for once']);
+  return true;
 }
 function stepMeeting(dt) {
   if (!meeting.next) meeting.next = T + rand(900, 1800);
@@ -2180,10 +2267,16 @@ function update(c, dt) {
     const sp = c.job === 'tunneler' ? 1.05 : 0.85;
     const reach = (c.partner && c.initiator) ? 0.6 : 0.04;
     const seatBound = c.act === 'meet' || c.act === 'eat' || c.act === 'work' || c.act === 'task' || c.act === 'shop'; // a cat with its own seat goes all the way
-    if (d <= reach || (!seatBound && d < 0.5 && !c.partner && cats.some(o => o !== c && o.state === 'act' && Math.hypot(o.x - c.tx, o.y - c.ty) < 0.35))) { arrive(c, p); return; } // close enough if someone is already standing on the spot
+    if (d <= reach || (!seatBound && d < 0.5 && !c.partner && cats.some(o => o !== c && o.state === 'act' && Math.hypot(o.x - c.tx, o.y - c.ty) < 0.35))) { c.nearT = 0; arrive(c, p); return; } // close enough if someone is already standing on the spot
+    if (d < 0.6) { if (!c.nearT) c.nearT = T; else if (T - c.nearT > (seatBound ? 6 : 2.5)) { c.nearT = 0; arrive(c, p); return; } } else c.nearT = 0; // nearly there but held off by other cats for a while: that will do
     const [nx, ny, vx, vy] = steerStep(c.x, c.y, c.tx, c.ty, sp, dt, c);
     // not getting anywhere for a few seconds: try going round the other way
-    if (!c.stuckP || T - c.stuckP[2] > 3) { if (c.stuckP && Math.hypot(c.x - c.stuckP[0], c.y - c.stuckP[1]) < 0.4) c.slide = -(c.slide || 1); c.stuckP = [c.x, c.y, T]; }
+    if (!c.stuckP || T - c.stuckP[2] > 3) {
+      if (c.stuckP && Math.hypot(c.x - c.stuckP[0], c.y - c.stuckP[1]) < 0.4) { c.slide = -(c.slide || 1); c.stuckN = (c.stuckN || 0) + 1; } else c.stuckN = 0;
+      c.stuckP = [c.x, c.y, T];
+      if (c.stuckN >= 2 && d < 1.2) { c.stuckN = 0; c.nearT = 0; arrive(c, p); return; } // wedged a step from the spot: that will do
+      if (c.stuckN >= 4) { c.stuckN = 0; c.state = 'pause'; c.pauseT = 0.5; c.thought = 'not that way'; releaseTask(c); return; } // wedged for good: give the trip up and think again
+    }
     catDir(c, (nx - c.x) / dt, (ny - c.y) / dt, dt);
     c.x = nx; c.y = ny;
     return;
@@ -2517,6 +2610,82 @@ function drawPerson(p, t) {
   if (wx.rain > 0.25 || wx.snow > 0.3) { ctx.strokeStyle = `rgb(${p.br})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -u * 1.55); ctx.lineTo(0, -u * 2.0); ctx.stroke(); ctx.fillStyle = `rgba(${p.br},.85)`; ctx.beginPath(); ctx.arc(0, -u * 1.95, u * 0.55, Math.PI, TAU); ctx.closePath(); ctx.fill(); }
   ctx.restore();
 }
+// the people and bots that come out of the buildings round the block: a head taller than a cat, in the style of the quay crowd
+function rrect(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+function drawHeld(v, u) {
+  // what a visitor is carrying before it puts it down, held out in front at hip height
+  const k = v.task; ctx.save(); ctx.translate(u * 0.42, -u * 0.62);
+  if (k === 'trash') { ctx.fillStyle = '#3D4470'; ctx.beginPath(); ctx.ellipse(0, 0, u * 0.3, u * 0.26, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(190,200,240,.6)'; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = '#6E78AA'; ctx.beginPath(); ctx.arc(u * 0.05, -u * 0.3, u * 0.08, 0, TAU); ctx.fill(); }
+  else if (k === 'litter') { ctx.fillStyle = '#E6ECFF'; ctx.beginPath(); ctx.ellipse(0, 0, u * 0.14, u * 0.11, 0.4, 0, TAU); ctx.fill(); }
+  else if (k === 'crate') { ctx.fillStyle = '#C89A5E'; ctx.fillRect(-u * 0.26, -u * 0.22, u * 0.52, u * 0.44); ctx.strokeStyle = 'rgba(20,10,0,.5)'; ctx.lineWidth = 1; ctx.strokeRect(-u * 0.26, -u * 0.22, u * 0.52, u * 0.44); }
+  else if (k === 'parcel') { ctx.fillStyle = '#E8DCC2'; ctx.fillRect(-u * 0.26, -u * 0.2, u * 0.52, u * 0.4); ctx.fillStyle = '#5CF2FF'; ctx.fillRect(-u * 0.26, -u * 0.03, u * 0.52, u * 0.06); }
+  else if (k === 'coolant') { ctx.fillStyle = '#2A4A5A'; ctx.fillRect(-u * 0.11, -u * 0.3, u * 0.22, u * 0.6); ctx.fillStyle = '#5CF2FF'; ctx.fillRect(-u * 0.11, -u * 0.08, u * 0.22, u * 0.1); }
+  else if (k === 'spill') { ctx.fillStyle = '#9A7BFF'; ctx.save(); ctx.rotate(0.5); ctx.fillRect(-u * 0.1, -u * 0.18, u * 0.2, u * 0.32); ctx.restore(); }
+  else if (k === 'leaves') { ctx.strokeStyle = '#8B6334'; ctx.lineWidth = Math.max(1.5, u * 0.06); ctx.beginPath(); ctx.moveTo(-u * 0.1, u * 0.5); ctx.lineTo(u * 0.1, -u * 0.5); ctx.stroke(); ctx.fillStyle = '#C98A4A'; ctx.fillRect(-u * 0.22, u * 0.42, u * 0.3, u * 0.12); } // a broom
+  else if (k === 'cable') { ctx.strokeStyle = '#5A62A0'; ctx.lineWidth = Math.max(2, u * 0.08); ctx.beginPath(); ctx.ellipse(0, 0, u * 0.22, u * 0.14, 0, 0, TAU); ctx.stroke(); }
+  else if (k === 'calib') { ctx.fillStyle = '#FF4FAE'; ctx.beginPath(); ctx.moveTo(0, -u * 0.34); ctx.lineTo(u * 0.16, u * 0.1); ctx.lineTo(-u * 0.16, u * 0.1); ctx.closePath(); ctx.fill(); }
+  else if (k === 'readout') { ctx.fillStyle = '#141A40'; ctx.fillRect(-u * 0.18, -u * 0.24, u * 0.36, u * 0.48); ctx.fillStyle = 'rgba(92,242,255,.8)'; ctx.fillRect(-u * 0.14, -u * 0.2, u * 0.28, u * 0.34); }
+  ctx.restore();
+}
+function drawVisitor(v, t) {
+  const [px, py] = P(v.x, v.y, 0), u = K * 0.5, moving = v.state === 'in' || v.state === 'out' || v.state === 'aside', holding = !v.taskId;
+  if (px < -80 || px > W + 80 || py < -80 || py > H + 80) return;
+  ctx.save(); ctx.translate(px, py); ctx.scale(v.face || 1, 1);
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(0, 0, u * 0.5, u * 0.18, 0, 0, TAU); ctx.fill();
+  if (v.robot && v.kind === 'courier') {
+    // a squat delivery bot: tracks, a crate of a body, a light bar for a face, a beacon on top; the drop rides on its back
+    const bob = moving ? Math.sin(t * 11 + v.phase) * u * 0.03 : 0;
+    ctx.fillStyle = '#1A1D33'; rrect(-u * 0.44, -u * 0.3, u * 0.88, u * 0.28, u * 0.1); ctx.fill();
+    ctx.fillStyle = '#2E3568'; for (const wx_ of [-0.3, 0, 0.3]) { ctx.beginPath(); ctx.arc(u * wx_, -u * 0.16, u * 0.09, 0, TAU); ctx.fill(); }
+    ctx.fillStyle = v.coat; rrect(-u * 0.4, -u * 1.08 + bob, u * 0.8, u * 0.8, u * 0.1); ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-u * 0.4, -u * 0.6 + bob, u * 0.8, u * 0.3);
+    ctx.fillStyle = '#0A0C1A'; ctx.fillRect(-u * 0.3, -u * 0.96 + bob, u * 0.6, u * 0.14);
+    for (let k = 0; k < 4; k++) { const on = Math.sin(t * 6 + k * 1.3 + v.phase) > -0.2; ctx.fillStyle = on ? '#5CF2FF' : 'rgba(92,242,255,.25)'; ctx.fillRect(-u * 0.26 + k * u * 0.14, -u * 0.93 + bob, u * 0.1, u * 0.08); }
+    ctx.strokeStyle = 'rgba(160,175,230,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(u * 0.2, -u * 1.08 + bob); ctx.lineTo(u * 0.2, -u * 1.34 + bob); ctx.stroke();
+    glowDot(u * 0.2, -u * 1.36 + bob, Math.max(1.5, u * 0.09), '255,138,92', Math.sin(t * 5 + v.phase) > 0 ? 0.95 : 0.3);
+    if (holding) { ctx.save(); ctx.translate(-u * 0.5, -u * 0.62 + bob); drawHeld(v, u); ctx.restore(); }
+  } else if (v.robot) {
+    // a maintenance bot: tall and thin, one eye, a tool arm, a lamp on its head
+    const bob = moving ? Math.sin(t * 9 + v.phase) * u * 0.04 : 0, step = moving ? Math.sin(t * 9 + v.phase) * u * 0.14 : 0;
+    ctx.strokeStyle = '#2E3568'; ctx.lineWidth = Math.max(2, u * 0.12); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-u * 0.12, -u * 0.05); ctx.lineTo(-u * 0.12 + step, -u * 0.5); ctx.moveTo(u * 0.12, -u * 0.05); ctx.lineTo(u * 0.12 - step, -u * 0.5); ctx.stroke();
+    ctx.fillStyle = '#3A3F6A'; rrect(-u * 0.24, -u * 1.25 + bob, u * 0.48, u * 0.8, u * 0.12); ctx.fill();
+    ctx.fillStyle = v.coat; ctx.fillRect(-u * 0.24, -u * 1.0 + bob, u * 0.48, u * 0.1);
+    ctx.fillStyle = '#22284F'; rrect(-u * 0.28, -u * 1.62 + bob, u * 0.56, u * 0.34, u * 0.1); ctx.fill();
+    glowDot(u * 0.1, -u * 1.45 + bob, Math.max(2, u * 0.11), v.state === 'wait' && v.taskId ? '255,79,174' : '92,242,255', 0.9);
+    ctx.strokeStyle = 'rgba(160,175,230,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -u * 1.62 + bob); ctx.lineTo(0, -u * 1.85 + bob); ctx.stroke();
+    glowDot(0, -u * 1.87 + bob, Math.max(1.5, u * 0.08), '247,200,106', Math.sin(t * 4 + v.phase) > 0.3 ? 0.95 : 0.2);
+    ctx.strokeStyle = '#3A3F6A'; ctx.lineWidth = Math.max(2, u * 0.1); ctx.beginPath(); ctx.moveTo(u * 0.24, -u * 1.05 + bob); ctx.lineTo(u * 0.5, -u * 0.7 + bob); ctx.stroke();
+    if (holding) { ctx.save(); ctx.translate(u * 0.08, -u * 0.1 + bob); drawHeld(v, u); ctx.restore(); }
+    else { ctx.fillStyle = '#C3CBEE'; ctx.fillRect(u * 0.42, -u * 0.8 + bob, u * 0.16, u * 0.2); } // the tool in its hand
+  } else {
+    // a person: legs, a coat, a head, a sun hat and camera for the tourist, a beanie for the resident, an umbrella in the rain
+    const step = moving ? Math.sin(t * 7 + v.phase) * u * 0.18 : 0;
+    ctx.strokeStyle = '#1A1D33'; ctx.lineWidth = Math.max(1, u * 0.16); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-u * 0.1, -u * 0.05); ctx.lineTo(-u * 0.1 + step, -u * 0.6); ctx.moveTo(u * 0.1, -u * 0.05); ctx.lineTo(u * 0.1 - step, -u * 0.6); ctx.stroke();
+    ctx.fillStyle = v.coat; rrect(-u * 0.28, -u * 1.3, u * 0.56, u * 0.8, u * 0.18); ctx.fill();
+    ctx.strokeStyle = v.coat; ctx.lineWidth = Math.max(1.5, u * 0.12); ctx.beginPath(); ctx.moveTo(u * 0.22, -u * 1.15); ctx.lineTo(u * 0.42, -u * 0.72); ctx.stroke(); // the near arm, held out
+    ctx.fillStyle = '#E8CDB2'; ctx.beginPath(); ctx.arc(0, -u * 1.5, u * 0.2, 0, TAU); ctx.fill();
+    if (v.kind === 'tourist') { ctx.fillStyle = '#F7C86A'; ctx.beginPath(); ctx.ellipse(0, -u * 1.64, u * 0.34, u * 0.08, 0, 0, TAU); ctx.fill(); ctx.fillRect(-u * 0.16, -u * 1.86, u * 0.32, u * 0.24); ctx.fillStyle = '#141A40'; ctx.fillRect(-u * 0.1, -u * 1.08, u * 0.24, u * 0.16); ctx.fillStyle = '#5CF2FF'; ctx.beginPath(); ctx.arc(u * 0.02, -u * 1.0, u * 0.05, 0, TAU); ctx.fill(); }
+    else { ctx.fillStyle = '#2A1F2C'; ctx.beginPath(); ctx.arc(0, -u * 1.56, u * 0.21, Math.PI, TAU); ctx.fill(); }
+    if (holding) drawHeld(v, u);
+    if (wx.rain > 0.25 || wx.snow > 0.3) { ctx.strokeStyle = 'rgba(160,175,230,.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -u * 1.55); ctx.lineTo(0, -u * 2.0); ctx.stroke(); ctx.fillStyle = v.coat; ctx.beginPath(); ctx.arc(0, -u * 1.95, u * 0.55, Math.PI, TAU); ctx.closePath(); ctx.fill(); }
+  }
+  ctx.restore();
+}
+function drawVendorBot(x, y, t, busy) {
+  // the shopkeeper: a bot on a plinth at the end of the row, waving its arms about while a cat is buying
+  const [px, py] = P(x, y, 0.28), u = K * 0.6, bob = Math.sin(t * 1.6) * u * 0.02, wave = busy ? Math.sin(t * 6) * 0.5 : 0;
+  drawBox(x - 0.28, y - 0.28, 0.56, 0.56, 0.28, { t: '#3A2C3A', l: '#2A1F2C', r: '#1E1620', e: 'rgba(255,79,174,.5)' });
+  ctx.save(); ctx.translate(px, py + u * 0.22);
+  ctx.fillStyle = '#1A1D33'; rrect(-u * 0.3, -u * 0.42, u * 0.6, u * 0.2, u * 0.08); ctx.fill(); // the base it rolls on
+  ctx.fillStyle = '#2E3568'; rrect(-u * 0.26, -u * 1.3 + bob, u * 0.52, u * 0.95, u * 0.12); ctx.fill();
+  ctx.fillStyle = '#FF4FAE'; ctx.fillRect(-u * 0.26, -u * 1.16 + bob, u * 0.52, u * 0.08);
+  ctx.fillStyle = '#22284F'; rrect(-u * 0.3, -u * 1.7 + bob, u * 0.6, u * 0.36, u * 0.1); ctx.fill();
+  const blink = Math.sin(t * 1.3) > 0.97; ctx.fillStyle = '#5CF2FF';
+  if (!blink) { ctx.fillRect(-u * 0.18, -u * 1.56 + bob, u * 0.12, u * 0.08); ctx.fillRect(u * 0.06, -u * 1.56 + bob, u * 0.12, u * 0.08); } else ctx.fillRect(-u * 0.18, -u * 1.53 + bob, u * 0.36, u * 0.02);
+  ctx.strokeStyle = '#3A3F6A'; ctx.lineWidth = Math.max(2, u * 0.1); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-u * 0.26, -u * 1.2 + bob); ctx.lineTo(-u * 0.6, -u * (0.95 + wave * 0.6) + bob); ctx.moveTo(u * 0.26, -u * 1.2 + bob); ctx.lineTo(u * 0.6, -u * (0.95 - wave * 0.6) + bob); ctx.stroke();
+  glowDot(0, -u * 1.78 + bob, Math.max(1.5, u * 0.08), '255,79,174', busy ? 0.95 : 0.4);
+  ctx.restore();
+}
 // the harbor: a ferry on the left water, buoys, a lighthouse on the point
 const ferry = { x: -10, y: QUAY + 6.2, v: 0.28 };
 const BUOYS = [[2.5, QUAY + 2.4, '255,70,90'], [9.5, QUAY + 2.9, '92,255,170'], [17, QUAY + 2.3, '255,70,90'], [QUAY + 2.6, 3, '92,255,170'], [QUAY + 2.9, 14, '255,70,90']];
@@ -2711,6 +2880,7 @@ function drawDiner(t) {
 const STALLS = [['255,138,92', '#F4E6C8'], ['92,255,170', '#F4E6C8'], ['154,123,255', '#F4E6C8']];
 function drawBazaar(t) {
   const n = hereAt('bazaar').length;
+  drawVendorBot(BAZ.x + BAZ.w + 0.45, BAZ.y + 0.3, t, n > 0); // the keeper minds the stalls from the end of the row
   for (let i = 0; i < 3; i++) {
     const ax = BAZ.x + i * 1.0, ay = BAZ.y, [rgb, cream] = STALLS[i];
     drawBox(ax, ay, 0.9, 0.6, 0.7, { t: '#3A2C3A', l: '#2A1F2C', r: '#1E1620', e: `rgba(${rgb},.5)` });           // counter
@@ -2725,8 +2895,6 @@ function drawBazaar(t) {
     // a lantern under the awning
     const g = P(ax + 0.45, ay + 0.5, 1.3); glowDot(g[0], g[1], K * 0.5, rgb, (n ? 0.4 : 0.22) + 0.06 * Math.sin(t * 3 + i));
   }
-  // the stall cat: a loaf behind the middle counter
-  drawLoaf({ coat: '#8C97C2', eye: '#5CF2FF', phase: 1, dark: false }, BAZ.x + 1.45, BAZ.y + 0.2, 0.75, t);
 }
 // what a cat is wearing, drawn in the cat's own frame. Side view: head at (0.72u, -0.95u). Front / back: head at (0, -1.05u).
 function drawWear(c, u, view) {
@@ -2753,21 +2921,78 @@ function drawBin(bx, by, t) {
 }
 function drawTaskItem(q, t) {
   if (q.x == null) return;
-  const p = P(q.x, q.y, 0), r = Math.max(2, K * 0.1), open = q.status === 'open';
+  const p = P(q.x, q.y, 0), r = Math.max(2.5, K * 0.11), open = q.status === 'open', flagged = open && q.called && T - q.called < 180;
+  if (p[0] < -80 || p[0] > W + 80 || p[1] < -80 || p[1] > H + 80) return;
+  const flies = n => { if (reduce) return; for (let i = 0; i < n; i++) { const a = t * 4 + i * 2.2 + q.x, fp = [p[0] + Math.cos(a) * r * 2.4, p[1] - r * 3 + Math.sin(a * 1.3) * r * 1.1]; ctx.fillStyle = 'rgba(210,215,240,.8)'; ctx.beginPath(); ctx.arc(fp[0], fp[1], 1.3, 0, TAU); ctx.fill(); } };
   ctx.save();
-  if (q.kind === 'trash' || q.kind === 'litter') {
-    if (q.kind === 'trash') { ctx.fillStyle = '#1C1F30'; ctx.beginPath(); ctx.ellipse(p[0], p[1] - r * 1.1, r * 1.6, r * 1.3, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(160,175,230,.5)'; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = '#3A3F6A'; ctx.beginPath(); ctx.arc(p[0] + r * 0.3, p[1] - r * 2.3, r * 0.4, 0, TAU); ctx.fill(); }
-    else { for (let i = 0; i < 4; i++) { const a = i * 1.7, px = p[0] + Math.cos(a) * r * 1.6, py = p[1] + Math.sin(a) * r * 0.8; ctx.fillStyle = i % 2 ? '#C9D2F2' : '#8C97C2'; ctx.save(); ctx.translate(px, py); ctx.rotate(a); ctx.fillRect(-r * 0.5, -r * 0.3, r, r * 0.6); ctx.restore(); } }
-    if (!reduce) for (let i = 0; i < 2; i++) { const a = t * 4 + i * 2.5, fp = [p[0] + Math.cos(a) * r * 1.8, p[1] - r * 1.8 + Math.sin(a * 1.3) * r * 0.8]; ctx.fillStyle = 'rgba(200,205,230,.7)'; ctx.beginPath(); ctx.arc(fp[0], fp[1], 1.2, 0, TAU); ctx.fill(); }
-  } else if (q.kind === 'crate') { drawBox(q.x - 0.18, q.y - 0.18, 0.36, 0.36, 0.3, KRAFT); }
-  else if (q.kind === 'parcel') { drawBox(q.x - 0.2, q.y - 0.16, 0.4, 0.32, 0.26, { t: '#E8DCC2', l: '#C9BCA2', r: '#A89C84', e: 'rgba(20,10,0,.35)' }); const a = P(q.x - 0.2, q.y, 0.27), b = P(q.x + 0.2, q.y, 0.27); ctx.strokeStyle = '#5CF2FF'; ctx.lineWidth = Math.max(1.5, K * 0.05); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
-  else if (q.kind === 'coolant') { const a = P(q.x, q.y, 0), b = P(q.x, q.y, 0.42); ctx.strokeStyle = '#2A4A5A'; ctx.lineWidth = Math.max(4, K * 0.2); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.strokeStyle = '#5CF2FF'; ctx.lineWidth = Math.max(1, K * 0.04); ctx.stroke(); }
-  else if (q.kind === 'spill') { ctx.fillStyle = 'rgba(80,40,120,.55)'; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 2.4, r * 1.2, 0, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(154,123,255,.5)'; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = 'rgba(230,236,255,.25)'; ctx.beginPath(); ctx.ellipse(p[0] - r * 0.6, p[1] - r * 0.3, r * 0.7, r * 0.3, 0, 0, TAU); ctx.fill(); }
-  else if (q.kind === 'leaves') { for (let i = 0; i < 5; i++) { const a = i * 1.3 + 0.4, px = p[0] + Math.cos(a) * r * 1.5, py = p[1] + Math.sin(a) * r * 0.7; ctx.fillStyle = ['#A8603A', '#C98A4A', '#7A4A2A'][i % 3]; ctx.beginPath(); ctx.ellipse(px, py, r * 0.55, r * 0.3, a, 0, TAU); ctx.fill(); } }
-  else if (q.kind === 'cable') { ctx.strokeStyle = '#3A3F6A'; ctx.lineWidth = Math.max(2, K * 0.07); ctx.beginPath(); for (let i = 0; i <= 8; i++) { const u = i / 8, pp = P(q.x - 0.5 + u, q.y + Math.sin(u * 7) * 0.12, 0.02); i ? ctx.lineTo(pp[0], pp[1]) : ctx.moveTo(pp[0], pp[1]); } ctx.stroke(); if (!reduce && Math.sin(t * 9 + q.x) > 0.6) { const e = P(q.x + 0.5, q.y, 0.05); glowDot(e[0], e[1], Math.max(2, K * 0.1), '92,242,255', 0.9); } }
-  else if (q.kind === 'calib' || q.kind === 'readout') { const col = q.kind === 'calib' ? '255,79,174' : '92,242,255', m = P(q.x, q.y, 1.0); glowDot(m[0], m[1], Math.max(2, K * 0.14), col, 0.5 + 0.45 * Math.sin(t * 6)); ctx.strokeStyle = `rgba(${col},.6)`; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 2.2, r * 1.1, 0, 0, TAU); ctx.stroke(); }
-  // an open task shows a marker so the viewer can see what the cats see
-  if (open) { const m = P(q.x, q.y, 1.5 + 0.12 * Math.sin(t * 3 + q.x)); ctx.font = `700 ${Math.max(9, K * 0.3)}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = q.tier === 3 ? '#F7C86A' : q.tier === 2 ? '#5CF2FF' : '#E6ECFF'; ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 4; ctx.fillText('!', m[0], m[1]); }
+  if (q.kind === 'trash') {
+    // a knotted bin bag, a can and a crumpled wrapper beside it, flies over the lot
+    ctx.fillStyle = '#3D4470'; ctx.beginPath(); ctx.ellipse(p[0], p[1] - r * 1.5, r * 2.3, r * 1.9, 0, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.beginPath(); ctx.ellipse(p[0] - r * 0.7, p[1] - r * 2.1, r * 0.9, r * 0.6, -0.5, 0, TAU); ctx.fill();
+    ctx.strokeStyle = 'rgba(190,200,240,.55)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(p[0], p[1] - r * 1.5, r * 2.3, r * 1.9, 0, 0, TAU); ctx.stroke();
+    ctx.fillStyle = '#6E78AA'; ctx.beginPath(); ctx.arc(p[0] + r * 0.4, p[1] - r * 3.5, r * 0.55, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#FF8A5C'; ctx.save(); ctx.translate(p[0] + r * 2.8, p[1] - r * 0.4); ctx.rotate(0.9); ctx.fillRect(-r * 0.4, -r * 0.8, r * 0.8, r * 1.6); ctx.restore();
+    ctx.fillStyle = '#E6ECFF'; ctx.beginPath(); ctx.ellipse(p[0] - r * 2.7, p[1] - r * 0.2, r * 0.7, r * 0.45, 0.3, 0, TAU); ctx.fill();
+    flies(3);
+  } else if (q.kind === 'litter') {
+    // papers, a cup and a can scattered about
+    for (let i = 0; i < 5; i++) { const a = i * 1.35 + 0.6, px = p[0] + Math.cos(a) * r * 2.2, py = p[1] + Math.sin(a) * r * 1.1; ctx.fillStyle = ['#E6ECFF', '#C9D2F2', '#FF8A5C', '#E6ECFF', '#F7C86A'][i]; ctx.save(); ctx.translate(px, py); ctx.rotate(a); ctx.fillRect(-r * 0.75, -r * 0.45, r * 1.5, r * 0.9); ctx.restore(); }
+    ctx.fillStyle = '#9A7BFF'; ctx.fillRect(p[0] - r * 0.4, p[1] - r * 1.7, r * 0.8, r * 1.5); ctx.fillStyle = '#E6ECFF'; ctx.fillRect(p[0] - r * 0.45, p[1] - r * 1.8, r * 0.9, r * 0.25);
+    flies(2);
+  } else if (q.kind === 'crate') {
+    drawBox(q.x - 0.24, q.y - 0.24, 0.48, 0.48, 0.42, KRAFT);
+    ctx.strokeStyle = 'rgba(20,10,0,.55)'; ctx.lineWidth = 1; ctx.beginPath(); for (const k of [-0.08, 0.08]) { const a = P(q.x - 0.24, q.y + k, 0.21), b = P(q.x + 0.24, q.y + k, 0.21); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); } ctx.stroke();
+  } else if (q.kind === 'parcel') {
+    drawBox(q.x - 0.25, q.y - 0.2, 0.5, 0.4, 0.34, { t: '#E8DCC2', l: '#C9BCA2', r: '#A89C84', e: 'rgba(20,10,0,.35)' });
+    const a = P(q.x - 0.25, q.y, 0.35), b = P(q.x + 0.25, q.y, 0.35); ctx.strokeStyle = '#5CF2FF'; ctx.lineWidth = Math.max(2, K * 0.06); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  } else if (q.kind === 'coolant') {
+    // a canister with a cyan band, cold enough to steam
+    const a = P(q.x, q.y, 0.02), b = P(q.x, q.y, 0.55); ctx.lineCap = 'round'; ctx.strokeStyle = '#2A4A5A'; ctx.lineWidth = Math.max(6, K * 0.28); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    ctx.lineCap = 'butt'; const m0 = P(q.x, q.y, 0.22), m1 = P(q.x, q.y, 0.32); ctx.strokeStyle = '#5CF2FF'; ctx.beginPath(); ctx.moveTo(m0[0], m0[1]); ctx.lineTo(m1[0], m1[1]); ctx.stroke();
+    glowDot(b[0], b[1], Math.max(2, K * 0.1), '92,242,255', 0.35 + 0.2 * Math.sin(t * 3 + q.y));
+  } else if (q.kind === 'spill') {
+    // a bright puddle with a sheen and a couple of drips
+    ctx.fillStyle = 'rgba(120,70,200,.7)'; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 3.4, r * 1.7, 0, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'rgba(154,123,255,.8)'; ctx.beginPath(); ctx.ellipse(p[0] + r * 3.6, p[1] + r * 0.8, r * 0.7, r * 0.35, 0, 0, TAU); ctx.ellipse(p[0] - r * 3.3, p[1] - r * 1.2, r * 0.5, r * 0.25, 0, 0, TAU); ctx.fill();
+    ctx.strokeStyle = 'rgba(200,180,255,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 3.4, r * 1.7, 0, 0, TAU); ctx.stroke();
+    ctx.fillStyle = 'rgba(230,236,255,.45)'; ctx.beginPath(); ctx.ellipse(p[0] - r * 0.9, p[1] - r * 0.5, r * 1.1, r * 0.4, -0.2, 0, TAU); ctx.fill();
+    glowDot(p[0], p[1], r * 2.2, '154,123,255', 0.18);
+  } else if (q.kind === 'leaves') {
+    for (let i = 0; i < 9; i++) { const a = i * 0.75 + 0.4, rr_ = r * (1.2 + (i % 3) * 0.9), px = p[0] + Math.cos(a) * rr_ * 1.3, py = p[1] + Math.sin(a) * rr_ * 0.6; ctx.fillStyle = ['#D97A3A', '#F0A050', '#B0582A', '#E8C060'][i % 4]; ctx.beginPath(); ctx.ellipse(px, py, r * 0.8, r * 0.42, a, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(60,30,10,.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px - Math.cos(a) * r * 0.7, py - Math.sin(a) * r * 0.35); ctx.lineTo(px + Math.cos(a) * r * 0.7, py + Math.sin(a) * r * 0.35); ctx.stroke(); }
+  } else if (q.kind === 'cable') {
+    // a thick cable snaking out of a junction box, sparking at the loose end
+    drawBox(q.x - 0.78, q.y - 0.14, 0.26, 0.28, 0.22, { t: '#3A3F6A', l: '#2A2F58', r: '#1E2248', e: 'rgba(160,175,230,.5)' });
+    ctx.lineCap = 'round'; ctx.strokeStyle = '#161A33'; ctx.lineWidth = Math.max(5, K * 0.16); ctx.beginPath(); for (let i = 0; i <= 10; i++) { const u = i / 10, pp = P(q.x - 0.55 + u * 1.15, q.y + Math.sin(u * 7) * 0.16, 0.03); i ? ctx.lineTo(pp[0], pp[1]) : ctx.moveTo(pp[0], pp[1]); } ctx.stroke();
+    ctx.strokeStyle = '#5A62A0'; ctx.lineWidth = Math.max(3, K * 0.1); ctx.stroke();
+    ctx.strokeStyle = '#F7C86A'; ctx.lineWidth = 1; ctx.setLineDash([3, 5]); ctx.stroke(); ctx.setLineDash([]);
+    const e = P(q.x + 0.6, q.y, 0.06); ctx.fillStyle = '#C3CBEE'; ctx.beginPath(); ctx.arc(e[0], e[1], Math.max(2, K * 0.06), 0, TAU); ctx.fill();
+    if (!reduce && Math.sin(t * 9 + q.x) > 0.5) { glowDot(e[0], e[1], Math.max(3, K * 0.14), '92,242,255', 0.95); ctx.strokeStyle = '#E6ECFF'; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k < 3; k++) { const a = t * 20 + k * 2.1; ctx.moveTo(e[0], e[1]); ctx.lineTo(e[0] + Math.cos(a) * r * 1.6, e[1] + Math.sin(a) * r * 1.0); } ctx.stroke(); }
+  } else if (q.kind === 'calib') {
+    // a pink marker cone set down by the console that wants recalibrating
+    const b0 = P(q.x, q.y, 0.02), tp = P(q.x, q.y, 0.5), rw = Math.max(3, K * 0.13);
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(b0[0], b0[1], rw * 1.3, rw * 0.6, 0, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#FF4FAE'; ctx.beginPath(); ctx.moveTo(b0[0] - rw, b0[1]); ctx.lineTo(tp[0], tp[1]); ctx.lineTo(b0[0] + rw, b0[1]); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#E6ECFF'; ctx.fillRect(b0[0] - rw * 0.55, b0[1] - (b0[1] - tp[1]) * 0.45, rw * 1.1, Math.max(1.5, rw * 0.3));
+    glowDot(tp[0], tp[1], Math.max(2, K * 0.1), '255,79,174', 0.5 + 0.45 * Math.sin(t * 6));
+    ctx.strokeStyle = 'rgba(255,79,174,.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 2.6 + Math.sin(t * 3) * r * 0.3, r * 1.3 + Math.sin(t * 3) * r * 0.15, 0, 0, TAU); ctx.stroke();
+  } else if (q.kind === 'readout') {
+    // a cyan handheld stood on the ground by the fridge, screen lit
+    drawBox(q.x - 0.14, q.y - 0.05, 0.28, 0.1, 0.42, { t: '#2A3160', l: '#1C2250', r: '#141A40', e: 'rgba(92,242,255,.6)' });
+    const sc = P(q.x, q.y + 0.06, 0.24), sw = Math.max(4, K * 0.2), sh = Math.max(5, K * 0.26); ctx.fillStyle = `rgba(92,242,255,${0.55 + 0.25 * Math.sin(t * 4)})`; ctx.fillRect(sc[0] - sw / 2, sc[1] - sh / 2, sw, sh);
+    ctx.fillStyle = 'rgba(7,10,26,.8)'; for (let k = 0; k < 3; k++) ctx.fillRect(sc[0] - sw / 2 + 2, sc[1] - sh / 2 + 2 + k * (sh - 4) / 3, sw * (0.4 + 0.3 * Math.abs(Math.sin(t * 3 + k))), 1.5);
+    glowDot(sc[0], sc[1] - sh, Math.max(2, K * 0.1), '92,242,255', 0.5 + 0.45 * Math.sin(t * 6));
+    ctx.strokeStyle = 'rgba(92,242,255,.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(p[0], p[1], r * 2.6 + Math.sin(t * 3) * r * 0.3, r * 1.3 + Math.sin(t * 3) * r * 0.15, 0, 0, TAU); ctx.stroke();
+  }
+  // anything still open carries a badge, which is what a viewer clicks to flag it for the cats
+  if (open) {
+    const m = P(q.x, q.y, 1.65 + 0.1 * Math.sin(t * 3 + q.x)), br = Math.max(7, K * 0.19), col = q.tier === 3 ? '247,200,106' : q.tier === 2 ? '92,242,255' : '230,236,255', hov = hoverTask === q.id;
+    ctx.strokeStyle = `rgba(${col},.35)`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(m[0], m[1] + br); ctx.lineTo(p[0], p[1] - r * 2.6); ctx.stroke();
+    if (flagged) glowDot(m[0], m[1], br * 1.5, col, 0.45 + 0.3 * Math.sin(t * 8));
+    ctx.fillStyle = hov ? `rgba(${col},.25)` : 'rgba(7,10,26,.92)'; ctx.beginPath(); ctx.arc(m[0], m[1], br, 0, TAU); ctx.fill();
+    ctx.strokeStyle = `rgba(${col},${hov || flagged ? 1 : .75})`; ctx.lineWidth = hov ? 2 : 1.2; ctx.stroke();
+    ctx.font = `700 ${Math.max(10, br * 1.45)}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = `rgb(${col})`; ctx.fillText('!', m[0], m[1] + 1);
+    taskHits.push({ id: q.id, x0: m[0] - br - 5, y0: m[1] - br - 5, x1: m[0] + br + 5, y1: m[1] + br + 5 });
+  }
   ctx.restore();
 }
 function drawCarried(c, u) {
@@ -2897,14 +3122,14 @@ function drawLab(t) {
   const ant = P(ax + w - 0.6, ay + 0.45, h + 1.7), ab = P(ax + w - 0.6, ay + 0.45, h + 0.62); ctx.strokeStyle = 'rgba(160,175,230,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(ab[0], ab[1]); ctx.lineTo(ant[0], ant[1]); ctx.stroke(); glowDot(ant[0], ant[1], Math.max(1.5, K * 0.07), surge ? '247,200,106' : '255,70,90', Math.sin(t * 2) > 0 ? 0.95 : 0.25);
   // the pipes to the fridge: jobs go out along the top one, readouts come back along the bottom one
   for (const [z, dir, rgb] of [[1.95, 1, '92,242,255'], [1.55, -1, '247,200,106']]) {
-    const x0 = ax + w, x1 = FRIDGE.x - FRIDGE.r, py = FRIDGE.y, a = P(x0, py, z), b = P(x1, py, z);
+    const x0 = ax, x1 = FRIDGE.x + FRIDGE.r, py = FRIDGE.y, a = P(x0, py, z), b = P(x1, py, z);
     ctx.strokeStyle = `rgba(${rgb},.2)`; ctx.lineWidth = Math.max(3, K * 0.13); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
     ctx.strokeStyle = 'rgba(160,175,230,.6)'; ctx.lineWidth = 1; ctx.stroke();
     for (const xx of [x0, x1]) { const r0 = P(xx, py, z - 0.1), r1 = P(xx, py, z + 0.1); ctx.strokeStyle = 'rgba(160,175,230,.8)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(r0[0], r0[1]); ctx.lineTo(r1[0], r1[1]); ctx.stroke(); }
     if (!reduce) { const n = busy ? 3 : 1; for (let k = 0; k < n; k++) { let f = ((t * (busy ? 0.55 : 0.25)) + k / n) % 1; if (dir < 0) f = 1 - f; const q = P(x0 + (x1 - x0) * f, py, z); glowDot(q[0], q[1], Math.max(1.5, K * 0.07), rgb, busy ? 0.9 : 0.5); } }
   }
   // the stand-off collar where the pipes meet the lab wall
-  drawBox(ax + w, FRIDGE.y - 0.25, 0.25, 0.5, 0.9, STEEL, 1.3);
+  drawBox(ax - 0.25, FRIDGE.y - 0.25, 0.25, 0.5, 0.9, STEEL, 1.3);
   // consoles: a desk against the glass, a lit pad where the cat sits, a holo screen that comes alive while a job runs
   for (const [qx, qy] of LAB_CONSOLES) {
     const used = workers.some(c => Math.hypot(c.x - qx, c.y - qy) < 0.45), front = qy > LAB.y + LAB.d / 2;
@@ -3176,6 +3401,7 @@ function drawHeads(t) {
     const age = T - (c.bubbleT || -1e9);
     if (age < 4.5 && c.bubble) bubble(c, c.bubble, t, age < 0.3 ? age / 0.3 : age > 3.7 ? (4.5 - age) / 0.8 : 1, 'rgba(92,242,255,.7)');
   }
+  if (!showHeads) for (const v of visitors) { const age = T - (v.bubbleT || -1e9); if (age < 4.5 && v.bubble) bubble(v, v.bubble, t, age < 0.3 ? age / 0.3 : age > 3.7 ? (4.5 - age) / 0.8 : 1, 'rgba(247,200,106,.7)'); }
 }
 function drawSelection(t) {
   const c = insPinned ? byId(selId) : null;
@@ -3312,7 +3538,7 @@ function drawEconFX(t, dt) {
 }
 function render(t, dt) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  ctx.clearRect(0, 0, W, H);
+  ctx.clearRect(0, 0, W, H); taskHits.length = 0;
   if (shake > 0) { ctx.translate(rand(-1, 1) * shake * 10, rand(-1, 1) * shake * 10); shake = Math.max(0, shake - dt * 1.2); }
   drawGround(t);
   drawWater(t, dt);
@@ -3344,6 +3570,7 @@ function render(t, dt) {
   for (const lp of LAMPS) L.push([lp[0] + lp[1], () => drawLamp(lp, t)]);
   for (const lp of QLAMPS) L.push([lp[0] + lp[1], () => drawLamp(lp, t)]);
   for (const c of cats) if (!asleep(c)) L.push([c.x + c.y + 0.01, () => drawCat(c, t)]);
+  for (const v of visitors) L.push([v.x + v.y + 0.01, () => drawVisitor(v, t)]);
   for (const q of critters) L.push([q.x + q.y + 0.6, () => drawDrone(q, t)]);
   L.push([LOFT.x + 1.0 + LOFT.y + 0.55, () => drawLoft(t)]);
   L.push([EXC.x + EXC.y, () => drawExchange(t)]);
@@ -3685,14 +3912,14 @@ function renderWork() {
   const open = board.tasks.filter(t => t.status === 'open'), taken = board.tasks.filter(t => t.status === 'taken');
   const doneToday = board.done.filter(t => t.day === dayNo() || (t.at != null && T - t.at < DAY_SECS));
   setT('wkOpen', fmt(open.length)); setT('wkTaken', fmt(taken.length)); setT('wkDone', fmt(doneToday.length)); setT('wkPaid', fmtSol(cats.reduce((a, c) => a + (c.taskPay || 0), 0)));
-  const key = board.tasks.map(t => t.id + t.status + (t.by || '')).join(',') + '|' + board.done.slice(0, 20).map(t => t.id).join(',') + '|' + cats.map(c => c.name + (c.tasks || 0) + totalSkill(c)).join(',');
+  const key = board.tasks.map(t => t.id + t.status + (t.by || '') + (t.called && T - t.called < 180 ? 'f' : '')).join(',') + '|' + board.done.slice(0, 20).map(t => t.id).join(',') + '|' + cats.map(c => c.name + (c.tasks || 0) + totalSkill(c)).join(',');
   if (key === wkKey) return; wkKey = key;
   const tier = t => `<span class="tier t${t.tier}">tier ${t.tier}</span>`, kind = t => `<span class="${t.q ? 'kq' : 'kc'}">${t.q ? 'quantum' : 'chore'}</span>`;
   const tb = $('#wkBoard tbody'); tb.innerHTML = '';
   for (const t of board.tasks.slice().sort((a, b) => (a.status === 'taken' ? 1 : 0) - (b.status === 'taken' ? 1 : 0) || b.tier - a.tier)) {
     const tr = document.createElement('tr'); tr.innerHTML = `<td>${tier(t)}</td><td></td><td class="n"></td><td class="n"></td>`;
     tr.children[1].innerHTML = kind(t) + ' · '; tr.children[1].append(t.title + (t.bounty ? ` · ${fmtSol(t.bounty)} SOL on it` : '') + (t.poster && t.poster !== 'the box' ? ` · dropped by ${t.poster}` : ''));
-    tr.children[2].textContent = t.carry ? DEST_LABEL[t.carry] : 'done on the spot'; tr.children[3].textContent = t.status === 'carried' ? `${t.by} is carrying it` : t.status === 'taken' ? `${t.by} is on its way` : 'waiting';
+    tr.children[2].textContent = t.carry ? DEST_LABEL[t.carry] : 'done on the spot'; tr.children[3].textContent = t.status === 'carried' ? `${t.by} is carrying it` : t.status === 'taken' ? `${t.by} is on its way` : (t.called && T - t.called < 180) ? 'flagged \u00B7 the cats know' : 'waiting';
     tb.appendChild(tr);
   }
   if (!board.tasks.length) { const tr = document.createElement('tr'); tr.innerHTML = '<td colspan="4" class="t">Nothing on the ground right now. Something turns up every few minutes.</td>'; tb.appendChild(tr); }
@@ -3868,6 +4095,15 @@ function setFollow(on) {
   else { cam.gz = cam.z; cam.gtx = cam.tx; cam.gty = cam.ty; }
 }
 function pickLabel(mx, my) { for (let i = labelHits.length - 1; i >= 0; i--) { const h = labelHits[i]; if (mx >= h.x0 && mx <= h.x1 && my >= h.y0 && my <= h.y1) return h.k; } return null; }
+function pickTask(mx, my) { for (let i = taskHits.length - 1; i >= 0; i--) { const h = taskHits[i]; if (mx >= h.x0 && mx <= h.x1 && my >= h.y0 && my <= h.y1) return h.id; } return null; }
+// a viewer clicked the badge over something: that is a notification, not an order. The nearest cat that fancies it hears, and goes when it likes.
+function flagTask(id) {
+  const q = board.tasks.find(x => x.id === id); if (!q || q.status !== 'open') return;
+  if (q.called && T - q.called < 6) { floatText({ x: q.x, y: q.y }, 'they heard', '#F7C86A'); return; }
+  ringFX(q.x, q.y, '247,200,106', 1.3); floatText({ x: q.x, y: q.y }, 'flagged', '#F7C86A');
+  if (remoteMode) { q.called = T; fetch(CONFIG.BRAIN_URL.replace(/\/$/, '') + '/call', { method: 'POST', body: id }).catch(() => {}); }
+  else callTask(id);
+}
 const hintEl = $('#zoomHint');
 let hintT = 0;
 const hideHint = () => { hintEl.classList.remove('show'); clearTimeout(hintT); };
@@ -3885,9 +4121,9 @@ cv.addEventListener('pointermove', e => {
   const [mx, my] = local(e);
   if (!ptrs.has(e.pointerId)) {
     if (e.pointerType === 'mouse') {
-      const lk = pickLabel(mx, my), c = lk ? null : pickAt(mx, my);
+      const tk = pickTask(mx, my), lk = tk ? null : pickLabel(mx, my), c = lk || tk ? null : pickAt(mx, my);
       const changed = lk !== hoverLabel || (c ? c.id : null) !== hoverId;
-      hoverLabel = lk; hoverId = c ? c.id : null; cv.style.cursor = lk || c ? 'pointer' : '';
+      hoverTask = tk; hoverLabel = lk; hoverId = c ? c.id : null; cv.style.cursor = lk || c || tk ? 'pointer' : '';
       if (changed) renderInspector();
     }
     return;
@@ -3919,7 +4155,8 @@ function endPtr(e, cancelled) {
     cv.classList.remove('dragging');
     if (cancelled || !dragMoved || e.timeStamp - lastMoveT > 90) { cam.vx = cam.vy = 0; }
     if (!cancelled && !dragMoved) {
-      const [mx, my] = local(e), lk = pickLabel(mx, my);
+      const [mx, my] = local(e), tk = pickTask(mx, my), lk = tk ? null : pickLabel(mx, my);
+      if (tk) { flagTask(tk); return; }
       if (lk) { openPlace(lk); return; }
       const c = pickAt(mx, my); if (c) { setMode('stray'); select(c.id, true); pin(true); flyTo(c.x, c.y, Math.max(cam.gz, 2.2)); focusOn(c.x, c.y, c); } else if (insPinned) { pin(false); setFollow(false); homeView(true); }
     }
@@ -3927,8 +4164,8 @@ function endPtr(e, cancelled) {
 }
 cv.addEventListener('pointerup', e => endPtr(e, false));
 cv.addEventListener('pointercancel', e => endPtr(e, true));
-cv.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !ptrs.size) { hoverId = null; hoverLabel = null; renderInspector(); } });
-cv.addEventListener('dblclick', e => { const [mx, my] = local(e); if (pickLabel(mx, my)) return; zoomAt(mx, my, cam.gz * 1.7, true); });
+cv.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !ptrs.size) { hoverId = null; hoverLabel = null; hoverTask = null; renderInspector(); } });
+cv.addEventListener('dblclick', e => { const [mx, my] = local(e); if (pickLabel(mx, my) || pickTask(mx, my)) return; zoomAt(mx, my, cam.gz * 1.7, true); });
 let mapActive = false;
 function setMapActive(on) { if (mapActive === on) return; mapActive = on; wrapEl.classList.toggle('active', on); if (on) hideHint(); }
 cv.addEventListener('pointerdown', () => setMapActive(true));
@@ -4091,11 +4328,12 @@ function step(dt) {
       catDir(c, (c.x - px) / dt, (c.y - py) / dt, dt);
       c.moving = Math.hypot(c.svx || 0, c.svy || 0) > 0.12;
     }
+    for (const v of visitors) { if (v.rtx == null) continue; const dx = v.rtx - v.x, dy = v.rty - v.y, d = Math.hypot(dx, dy); if (d > 3) { v.x = v.rtx; v.y = v.rty; continue; } const cap = 0.65 * 1.6 * dt; let mv = d * k; if (mv > cap) mv = cap; if (d > 0.002) { const sdx = dx / d - dy / d; if (Math.abs(sdx) > 0.05 && mv > 0.002) v.face = sdx > 0 ? 1 : -1; v.x += dx / d * mv; v.y += dy / d * mv; } }
     const tg = WX[wxKey], kk = 1 - Math.exp(-dt * 0.35); for (const f of ['rain', 'snow', 'fog', 'wind', 'cold', 'coh']) wx[f] += (tg[f] - wx[f]) * kk;
     boat.y += boat.dir * 0.35 * dt; if (boat.y > QUAY + 2) boat.dir = -1; if (boat.y < -16) boat.dir = 1;
     stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
   } else {
-  stepWeather(dt); stepMarket(dt); checkReleases(); checkStages(); stepDay(); stepMeeting(dt); stepBoard(dt); stepCritters(dt);
+  stepWeather(dt); stepMarket(dt); checkReleases(); checkStages(); stepDay(); stepMeeting(dt); stepBoard(dt); stepVisitors(dt); stepCritters(dt);
   if (T >= nextFee) { feeIn(false); nextFee = T + rand(60, 150); }
   for (const c of cats) update(c, dt);
   stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
@@ -4149,9 +4387,14 @@ function applyRemote(j) {
   if (e.talk) { talk.length = 0; talk.push(...e.talk); }
   if (e.placeStats) Object.assign(placeStats, e.placeStats);
   if (e.placeLogs) Object.assign(placeLogs, e.placeLogs);
-  if (e.board) { board.tasks = e.board.tasks || []; board.done = (e.board.done || []).map(t => ({ ...t, at: t.at != null ? T - Math.max(0, e.T - t.at) : null })); }
+  if (e.board) { board.tasks = (e.board.tasks || []).map(t => ({ ...t, called: t.called ? T - Math.max(0, e.T - t.called) : undefined })); board.done = (e.board.done || []).map(t => ({ ...t, at: t.at != null ? T - Math.max(0, e.T - t.at) : null })); }
   if (e.days) { days.length = 0; days.push(...e.days); }
   if (e.today) dayCur = e.today;
+  if (e.visitors) { // keep our own objects so they glide between polls
+    const vs = new Set();
+    for (const rv of e.visitors) { let v = visitors.find(x => x.id === rv.id); if (!v) { v = { ...rv, phase: Math.random() * 6, bubbleT: -1e9 }; visitors.push(v); } const { x, y, bubbleT, ...rest } = rv; Object.assign(v, rest); v.rtx = x; v.rty = y; if (bubbleT != null && bubbleT > -1e8) v.bubbleT = T - Math.max(0, e.T - bubbleT); vs.add(v.id); }
+    for (let i = visitors.length - 1; i >= 0; i--) if (!vs.has(visitors[i].id)) visitors.splice(i, 1);
+  }
   if (e.stats && e.stats.lastTrade) stats.lastTrade = { ...e.stats.lastTrade, t: T - Math.max(0, e.T - e.stats.lastTrade.t) };
   for (const f of e.fx || []) {
     const c = f.id ? byId(f.id) : null;
