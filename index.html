@@ -212,6 +212,14 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .xs-btn{display:inline-block;font-family:var(--hud);font-weight:700;font-size:15px;color:var(--cyan);border:1px solid var(--cyan);padding:12px 24px;text-decoration:none;letter-spacing:.02em}
 .xs-btn:hover{background:rgba(92,242,255,.1)}
 .xs-empty{padding:18px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.tok-row{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start} .tok-facts{margin:0} .tok-facts dd .btn{padding:4px 14px}
+.tre .cb{padding:22px 26px 20px}
+.tre-k{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.tre-v{font-family:var(--hud);font-weight:700;font-size:clamp(2.4rem,5vw,3.6rem);line-height:1;color:var(--text);margin-bottom:10px}
+.tre-l{font-family:var(--mono);font-size:14px;color:var(--text);margin-bottom:8px}
+.tre-f{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.tre-a{color:var(--muted);text-decoration:none;word-break:break-all} .tre-a:hover{color:var(--cyan)}
+@media (max-width:719px){.tok-row{grid-template-columns:1fr}}
 .rlog li .rq{font-family:var(--hud);font-weight:600;font-size:14.5px;color:var(--text);margin:3px 0 2px;line-height:1.35}
 .rlog li .rc{font-family:var(--mono);font-size:11px;color:var(--muted)}
 .rlog li.ok .rq{color:#5CFFAA} .rlog li.miss .rq{color:var(--soft)}
@@ -942,46 +950,46 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
     <div class="wrap">
       <h2 class="sec-title"><span data-tk>$QCATS</span></h2>
       <p class="sec-lead">The token that powers the box. Creator fees from every trade fund all of it: SOL for the chores and the gas, $QI for the lab. No deposits into the cats, no copy trading, no profit sharing.</p>
-      <div class="board-stats">
+      <div class="panel ca-panel" style="margin-bottom:18px">
+        <div class="ph"><span>Token</span><small data-tk>$QCATS</small></div>
+        <div class="cb tok-row">
+          <div class="tok-ca"><label>Contract address</label><div class="ca-row"><code class="ca-text">not launched yet</code><button class="btn sm copy-ca" type="button" disabled>Copy</button></div></div>
+          <dl class="facts tok-facts">
+            <div><dt>Ticker</dt><dd data-tk>$QCATS</dd></div>
+            <div><dt>Chain</dt><dd>Solana</dd></div>
+            <div><dt>Links</dt><dd><a class="btn sm" data-link="X_URL" href="#/qcat">X</a></dd></div>
+          </dl>
+        </div>
+      </div>
+      <div class="panel tre" style="margin-bottom:18px">
+        <div class="cb">
+          <div class="tre-k">treasury wallet · SOL value</div>
+          <div class="tre-v" id="treUsd">$0.00</div>
+          <div class="tre-l"><span id="treSol">0.00 SOL</span> · <span id="treRate">$— / SOL</span></div>
+          <div class="tre-f"><span id="treNote">SOL only, not other tokens · balance and price checked —</span><a id="treAddr" class="tre-a" href="#/qcat" target="_blank" rel="noopener">no wallet yet</a></div>
+        </div>
+      </div>
+      <div class="split">
+        <div class="panel">
+          <div class="ph"><span>Live transactions</span><small id="simNote">latest first</small></div>
+          <table class="txs" id="txTable">
+            <thead><tr><th>time</th><th>cat</th><th>type</th><th>amount</th><th>note</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="ph"><span>The ten wallets</span><small>all ten in from day one</small></div>
+          <table class="wallets" id="walletTable"><tbody></tbody></table>
+          <div class="cb"><p class="pdesc">Every wallet is public. Once the box is live, each row links to the wallet on Solscan so anyone can check every trade, every wager and every transfer a cat has ever made.</p></div>
+        </div>
+      </div>
+      <div class="board-stats" style="margin-top:18px">
         <div><b id="fFees">0</b><span>SOL received from creator rewards</span></div>
         <div><b id="fQi">0</b><span>$QI paid out by the lab</span></div>
         <div><b id="fTrades">0</b><span>trades by the cats</span></div>
         <div><b id="eHeld">0</b><span><span data-tk>$QCATS</span> held by the ten</span></div>
         <div><b id="fQiHeld">0</b><span>$QI held by the ten</span></div>
         <div><b id="fSolAll">0</b><span>SOL held, cats and treasury</span></div>
-      </div>
-      <div class="panel" style="margin-bottom:18px">
-        <div class="ph"><span>Live transactions</span><small id="simNote">latest first · a live simulation until the wallets are on-chain; then every row links to Solscan</small></div>
-        <table class="txs" id="txTable">
-          <thead><tr><th>time</th><th>cat</th><th>type</th><th>amount</th><th>note</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="split">
-        <div>
-          <div class="panel ca-panel">
-            <div class="ph"><span>Token</span><small data-tk>$QCATS</small></div>
-            <div class="cb">
-              <label>Contract address</label>
-              <div class="ca-row"><code class="ca-text">not launched yet</code><button class="btn sm copy-ca" type="button" disabled>Copy</button></div>
-              <dl class="facts">
-                <div><dt>Ticker</dt><dd data-tk>$QCATS</dd></div>
-                <div><dt>Chain</dt><dd>Solana</dd></div>
-              </dl>
-            </div>
-          </div>
-          <div class="panel" style="margin-top:18px">
-            <div class="ph"><span>Links</span></div>
-            <div class="cb links">
-              <a class="btn" data-link="X_URL" href="#/qcat">X</a>
-            </div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="ph"><span>The ten wallets</span><small>addresses at launch · all ten in from day one</small></div>
-          <table class="wallets" id="walletTable"><tbody></tbody></table>
-          <div class="cb"><p class="pdesc">Every wallet is public. Once the box is live, each row links to the wallet on Solscan so anyone can check every trade, every wager and every transfer a cat has ever made.</p></div>
-        </div>
       </div>
     </div>
   </section>
@@ -4068,7 +4076,7 @@ function drawBloch(c, t) {
   bx.strokeStyle = '#5CF2FF'; bx.lineWidth = 3; bx.stroke();
   bx.fillStyle = '#fff'; bx.beginPath(); bx.arc(ex, ey, 5, 0, TAU); bx.fill();
 }
-let liveTreasury = null; // the treasury wallet's real balances, once read
+let liveTreasury = null, liveTreasuryAt = 0, liveTreasuryPub = ''; // the treasury wallet's real balances, once read
 const liveBal = {}; // name -> { sol, qcat } straight from the chain, once the wallets and the CA exist
 const live = c => liveBal[c.name] || null, liveSol = c => { const b = live(c); return b ? b.sol : c.sol; }, liveQ = c => { const b = live(c); return b && b.qcat != null ? b.qcat : c.qcat; }, liveQi = c => { const b = live(c); return b && b.qi != null ? b.qi : (c.qi || 0); };
 const iEl = { name: $('#iName'), role: $('#iRole'), sol: $('#iSol'), q: $('#iQ'), bought: $('#iBought'), earned: $('#iEarned'), psi: $('#iPsi'), think: $('#iThink'), doing: $('#iDoing'), because: $('#iBecause'), weighed: $('#iWeighed') };
@@ -4453,6 +4461,10 @@ let txShown = -1;
 const TXK = { gas: 'info', qi: 'gain', shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'loss', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info' };
 function renderLedger() {
   { const R = remote || {}, numv = (v, f) => (v != null && isFinite(v) ? Number(v) : f), tre = liveTreasury;
+    const tSol = tre && typeof tre.sol === 'number' ? tre.sol : stats.treasury, rate = Number(CONFIG.SOL_USD) || 0;
+    setT('treUsd', '$' + (tSol * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })); setT('treSol', fmtSol(tSol) + ' SOL'); setT('treRate', '$' + rate.toFixed(2) + ' / SOL');
+    setT('treNote', 'SOL only, not other tokens · ' + (liveTreasuryAt ? 'balance and price checked ' + Math.max(0, Math.round((Date.now() - liveTreasuryAt) / 1000)) + 's ago' : 'the box\u2019s own treasury until the wallets are on-chain'));
+    const ta = document.getElementById('treAddr'); if (ta && liveTreasuryPub && ta.textContent !== liveTreasuryPub) { ta.textContent = liveTreasuryPub; ta.href = 'https://solscan.io/account/' + liveTreasuryPub; }
     setT('fFees', fmtSol(numv(R.fees, stats.fees)) + ' SOL'); setT('fQi', fmtQi(stats.qiPaid || 0)); setT('fTrades', fmt(stats.buys + stats.sells));
     setT('eHeld', fmtQ(cats.reduce((a, c) => a + liveQ(c), 0))); setT('fQiHeld', fmtQi(cats.reduce((a, c) => a + liveQi(c), 0)));
     setT('fSolAll', fmtSol(cats.reduce((a, c) => a + liveSol(c) + (live(c) ? 0 : (c.gas == null ? GAS_FLOOR : c.gas)), 0) + (tre && typeof tre.sol === 'number' ? tre.sol : stats.treasury)) + ' SOL'); }
@@ -4927,7 +4939,8 @@ function applyRemote(j) {
 }
 function applyWallets(w) {
   const tb = $('#walletTable tbody'); if (!tb) return;
-  if (w.balances && w.balances.treasury && typeof w.balances.treasury.sol === 'number') liveTreasury = w.balances.treasury;
+  if (w.treasury) liveTreasuryPub = w.treasury;
+  if (w.balances && w.balances.treasury && typeof w.balances.treasury.sol === 'number') { liveTreasury = w.balances.treasury; liveTreasuryAt = w.balances.at || Date.now(); }
   if (w.balances && w.balances.cats) for (const n of Object.keys(w.balances.cats)) { const b = w.balances.cats[n]; if (b && typeof b.sol === 'number') liveBal[n] = { sol: b.sol, qcat: b.qcat, qi: b.qi }; }
   ROSTER.forEach(([name], i) => {
     const tr = tb.children[i]; if (!tr) return;
