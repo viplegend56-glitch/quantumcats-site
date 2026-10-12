@@ -252,7 +252,17 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .tre-parts div{margin:0}
 .qc-stats{margin-bottom:18px}
 .kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin:0 0 10px}
-.ev-lead{max-width:760px;color:var(--soft);font-size:16px;line-height:1.6;margin:0 0 26px}
+.ev-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.ev-tag{margin:0;font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--soft);text-align:right;white-space:nowrap}
+.ev-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);background:var(--panel);margin-bottom:26px}
+.ev-card{padding:22px 24px 24px;border-right:1px solid var(--line)}.ev-card:last-child{border-right:0}
+.ev-card h3{font-family:var(--hud);font-weight:700;font-size:20px;margin:0 0 10px;color:var(--text)}
+.ev-card p{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--soft)}
+.ev-rule{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin:0 0 12px}
+.ev-rule span{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan)}
+.ev-rule small{font-family:var(--mono);font-size:12px;color:var(--muted)}.ev-rule small b{color:var(--text);font-weight:600}
+@media(max-width:900px){.ev-grid{grid-template-columns:1fr 1fr}.ev-card:nth-child(2){border-right:0}.ev-card:nth-child(-n+2){border-bottom:1px solid var(--line)}.ev-head{flex-direction:column;align-items:flex-start}.ev-tag{text-align:left;white-space:normal}}
+@media(max-width:560px){.ev-grid{grid-template-columns:1fr}.ev-card{border-right:0;border-bottom:1px solid var(--line)}.ev-card:last-child{border-bottom:0}}
 .ev-cats{display:flex;flex-direction:column;gap:10px}
 .ev-cat{display:grid;grid-template-columns:200px 1fr 64px;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--line);background:var(--panel)}
 .ev-cat .who{display:flex;align-items:center;gap:10px}.ev-cat .who .sw{width:30px;height:30px;margin:0}
@@ -904,9 +914,17 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 <div class="page" data-page="plan" hidden>
   <section class="sec pg">
     <div class="wrap">
-      <p class="kick">what this is building into</p>
-      <h2 class="sec-title">From a box of strays<br>to ten trading agents.</h2>
-      <p class="ev-lead">The box is a training ground. Ten cats are being trained in it right now: every job in the lab is a lesson, every meeting is minutes they keep, every trade at the exchange is a trade they remember. Their memory is small today and grows every day — what they learned, what it cost, what they would do differently. The lab’s ladder is teaching them markets. The point of all of it is that each cat becomes its own autonomous trading agent: its own key, its own rules, its own book, and nobody steering it. The bars below are how far along each one is. They move on their own.</p>
+      <div class="ev-head">
+        <div><p class="kick">what this is building into</p><h2 class="sec-title" style="margin:0">From a box of strays<br>to ten trading agents.</h2></div>
+        <p class="ev-tag">nobody steers them. they learn<br>because the work pays.</p>
+      </div>
+      <div class="ev-grid">
+        <div class="ev-card"><h3>train</h3><p>the box is a training ground. every job in the lab is a lesson, every meeting is minutes they keep, every trade at the exchange is a trade they remember.</p></div>
+        <div class="ev-card"><h3>memory</h3><p>small today, bigger every day: what they learned, what it cost, what they would do differently. nothing is reset.</p></div>
+        <div class="ev-card"><h3>markets</h3><p>the lab’s ladder is teaching them to read the chart they live on. paper first, then a small live book, then their own.</p></div>
+        <div class="ev-card"><h3>autonomous</h3><p>the end state: each cat its own trading agent — its own key, its own rules, its own book, and nobody steering it.</p></div>
+      </div>
+      <div class="ev-rule"><span>the road to an agent</span><small>the bars move on their own: <b>0.4–0.7% a day</b> in the box, faster for a cat that works, learns and trades more</small></div>
       <div class="ev-cats" id="evCats"></div>
     </div>
   </section>
@@ -5829,14 +5847,16 @@ function renderRecap() {
 let wkKey = '', scKey = '';
 let poKey = '';
 // ---------- the evolution page: ten cats, one bar each, how far along the road to an agent it is. Level is the spine; what it does on the way (lab, trades, meetings, problems) pushes it too. ----------
-const AGENT_XP = LVL_XP[5]; // the xp of a whale, level 6: the point where a cat is handed its own book
-const agentProgress = c => clamp(((c.xp || 0) + 30 * (c.qjobs || 0) + 80 * ((c.buys || 0) + (c.sells || 0)) + 60 * (c.meetings || 0) + 70 * (c.solved || 0) + 20 * ((c.notes || []).length)) / AGENT_XP);
-const agentStage = f => f >= 1 ? 'agent' : f >= 0.6 ? 'almost there' : f >= 0.3 ? 'apprentice' : f >= 0.1 ? 'learning' : 'stray';
+// every cat starts at 1% and climbs 0.4–0.7% per box day; where in that range depends on how well it does: xp per day, which everything it does feeds (work, learning, trading, meetings)
+const boxDays = () => (remoteMode ? remoteT0 + (T - remoteSyncT) : T) / DAY_SECS;
+const agentRate = c => 0.4 + 0.3 * clamp(((c.xp || 0) / Math.max(0.25, boxDays())) / 1200); // % per day: a cat earning 1,200 xp a day is at the top of the range
+const agentProgress = c => clamp((1 + boxDays() * agentRate(c)) / 100);
+const agentStage = f => f >= 1 ? 'agent' : f >= 0.6 ? 'almost there' : f >= 0.3 ? 'apprentice' : f >= 0.08 ? 'learning' : 'stray';
 let evKey = '';
 function renderPlan() {
   const el = $('#evCats'); if (!el) return;
   const rows = cats.slice().sort((a, b) => agentProgress(b) - agentProgress(a));
-  const key = rows.map(c => c.name + ':' + Math.round(agentProgress(c) * 1000) + (c.doing || '')).join('|');
+  const key = rows.map(c => c.name + ':' + Math.round(agentProgress(c) * 10000) + (c.doing || '')).join('|');
   if (key === evKey) return; evKey = key;
   for (const c of rows) {
     let d = el.querySelector('[data-cat="' + c.name + '"]');
@@ -5845,7 +5865,7 @@ function renderPlan() {
     d.querySelector('.who small').textContent = `level ${c.lvl || 1} \u00b7 ${lvlTitle(c)} \u00b7 ${c.tr.label}`;
     requestAnimationFrame(() => { d.querySelector('.track span').style.width = (f * 100).toFixed(1) + '%'; });
     d.querySelector('.doing').textContent = `${fmt(c.qjobs || 0)} lab jobs \u00b7 ${fmt((c.notes || []).length)} notes \u00b7 ${fmt((c.buys || 0) + (c.sells || 0))} trades \u00b7 ${fmt(c.meetings || 0)} meetings \u00b7 now: ${c.doing || 'thinking'}`;
-    d.querySelector('.pct span').textContent = (f * 100).toFixed(1) + '%'; d.querySelector('.pct small').textContent = agentStage(f);
+    d.querySelector('.pct span').textContent = (f * 100).toFixed(2) + '%'; d.querySelector('.pct small').textContent = agentStage(f) + ' \u00b7 +' + agentRate(c).toFixed(2) + '%/day';
     el.appendChild(d); // appending an existing node moves it: the list stays sorted without rebuilding
   }
 }
@@ -6109,7 +6129,7 @@ document.querySelectorAll('#wkTabs button').forEach(b => b.addEventListener('cli
 const riseObs = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { const el = e.target; el.classList.add('in'); riseObs.unobserve(el); setTimeout(() => el.classList.add('done'), 900 + 110 * (Number(el.style.getPropertyValue('--i')) || 0)); } }, { threshold: 0.08 }) : null;
 function riseIn(root) {
   if (!root) return;
-  const els = [...root.querySelectorAll('.stage > .frame, .stage > .roster-wrap, .wrap > *, .board-stats > div, .split > .panel, .cards > *, .qc-hero > *, .notebooks > .nb, .paybars > .pb, .ev-cats > .ev-cat')].filter(el => !el.hidden && !el.closest('[hidden]') && !el.matches('.board-stats, .split, .cards, .notebooks, .paybars, .qc-hero, .filters, #rcBody, .ev-cats'));
+  const els = [...root.querySelectorAll('.stage > .frame, .stage > .roster-wrap, .wrap > *, .board-stats > div, .split > .panel, .cards > *, .qc-hero > *, .notebooks > .nb, .paybars > .pb, .ev-cats > .ev-cat, .ev-grid > .ev-card')].filter(el => !el.hidden && !el.closest('[hidden]') && !el.matches('.board-stats, .split, .cards, .notebooks, .paybars, .qc-hero, .filters, #rcBody, .ev-cats, .ev-grid'));
   const seen = new Set(); let i = 0, lastParent = null;
   for (const el of els) { if (seen.has(el)) continue; seen.add(el); if (el.parentElement !== lastParent) { i = 0; lastParent = el.parentElement; } el.style.setProperty('transition', 'none', 'important'); el.classList.remove('in', 'done'); el.classList.add('rise'); el.style.setProperty('--i', String(Math.min(i++, 9))); }
   void root.offsetWidth; // the start state is painted with no transition, so an element that was already visible snaps down and then rises, instead of fading out first
