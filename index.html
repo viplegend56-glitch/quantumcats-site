@@ -219,6 +219,7 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .tre-k{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
 .tre-v{font-family:var(--hud);font-weight:700;font-size:clamp(2.4rem,5vw,3.6rem);line-height:1;color:var(--text);margin-bottom:10px}
 .tre-l{font-family:var(--mono);font-size:14px;color:var(--text);margin-bottom:8px}
+.tre-parts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 16px;margin:0 0 12px;padding:0}.tre-parts div{border:1px solid var(--line);padding:10px 12px;background:rgba(92,242,255,.03)}.tre-parts dt{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.tre-parts dd{margin:0;font-family:var(--mono);font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:2px}.tre-parts dd small{font-size:11.5px;color:var(--cyan)}@media(max-width:640px){.tre-parts{grid-template-columns:1fr}}
 .tre-f{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .tre-a{color:var(--muted);text-decoration:none;word-break:break-all} .tre-a:hover{color:var(--cyan)}
 @media (max-width:719px){.tok-row{grid-template-columns:1fr}}
@@ -389,6 +390,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 .filters button{padding:7px 13px;font-family:var(--mono);font-size:12.5px;color:var(--muted);background:rgba(92,242,255,.03);border:1px solid var(--line);cursor:pointer}
 .filters button:hover{color:var(--text);border-color:var(--line2)}
 .filters button.on{color:#041018;background:var(--cyan);border-color:var(--cyan)}
+.wk-tabs{margin:0 0 6px}.wk-tabs button{padding:10px 18px;font-size:13.5px;letter-spacing:.08em;text-transform:uppercase}.wk-sec[hidden]{display:none}
+.powrap{max-height:620px;overflow:auto}.powrap thead th{position:sticky;top:0;background:var(--bg2);z-index:1}
 .filters button b{font-weight:500;margin-left:6px;opacity:.7}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:14px}
 .ccard{display:flex;flex-direction:column;gap:10px;padding:14px 14px 12px;cursor:pointer;text-align:left;color:inherit;font:inherit;transition:border-color .15s,transform .15s}
@@ -735,9 +738,15 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 <!-- ============ LEADERBOARD ============ -->
 <!-- ============ WORK ============ -->
 <div class="page" data-page="work" hidden>
-  <section class="sec pg">
+  <section class="sec pg" style="padding-bottom:0">
     <div class="wrap">
-      <h2 class="sec-title">The lab</h2>
+      <h2 class="sec-title">Work</h2>
+      <div class="filters wk-tabs" id="wkTabs"><button type="button" data-wk="lab" class="on">The lab</button><button type="button" data-wk="yard">The scrapyard</button><button type="button" data-wk="chores">Chores</button></div>
+    </div>
+  </section>
+  <section class="sec pg wk-sec" data-wk="lab" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sec-title" style="font-size:1.6rem">The lab</h2>
       <p class="sec-lead">Every lab job is a study session: the cat runs a circuit, works through the next topic on its ladder, and writes down what it learned. The lab also posts problems any cat can take; a wrong answer costs coherence. Pay comes from goals: each cat picks one, the work fills its bar, and only a full bar is paid, in $QI, from the treasury.</p>
       <div class="board-stats">
         <div><b id="lbSessions">0</b><span>study sessions</span></div>
@@ -767,7 +776,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <p class="mut" style="font-family:var(--mono);font-size:11.5px;margin-top:14px">The ladder: <span id="lbLadder"></span></p>
     </div>
   </section>
-  <section class="sec pg" style="padding-top:0">
+  <section class="sec pg wk-sec" data-wk="yard" style="padding-top:0" hidden>
     <div class="wrap">
       <h2 class="sec-title" style="font-size:1.6rem">The scrapyard</h2>
       <p class="sec-lead">Old quantum hardware washes up at the harbour and ends up in the yard: dead cryostats, coax by the mile, boards nobody labelled. Jobs go up on the bench; a cat takes one, strips it for parts the lab can use, and the treasury pays it in <span data-tk>$QCATS</span> from its own supply the moment it is done. Tier 1 any cat; tier 2 and 3 take experience.</p>
@@ -789,7 +798,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       </div>
     </div>
   </section>
-  <section class="sec pg" style="padding-top:0">
+  <section class="sec pg wk-sec" data-wk="chores" style="padding-top:0" hidden>
     <div class="wrap">
       <h2 class="sec-title" style="font-size:1.6rem">Chores</h2>
       <p class="sec-lead">Things get left on the open floor round the circle that want doing. Delivery drones bring most of it in over the harbour. First cat there gets it, if it is good enough for the tier, and is paid SOL out of the fee pool when it is done. Click the <b>!</b> over anything in the box to flag it: the nearest cat that fancies it hears about it, and goes when it feels like going. Never more than three things out at once.</p>
@@ -871,8 +880,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       </div>
       <div class="split">
         <div class="panel">
-          <div class="ph"><span>Payouts</span><small>latest first</small></div>
-          <table class="txs" id="poTable"><thead><tr><th>time</th><th>cat</th><th>SOL</th><th>$QI</th><th>$QCATS</th><th></th></tr></thead><tbody></tbody></table>
+          <div class="ph"><span>Payouts</span><small>latest first · scroll for more</small></div>
+          <div class="powrap"><table class="txs" id="poTable"><thead><tr><th>time</th><th>cat</th><th>SOL</th><th>$QI</th><th>$QCATS</th><th></th></tr></thead><tbody></tbody></table></div>
         </div>
         <div class="panel">
           <div class="ph"><span>Top earners</span><small>paid out, all time</small></div>
@@ -1020,10 +1029,14 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       </div>
       <div class="panel tre" style="margin-bottom:18px">
         <div class="cb">
-          <div class="tre-k">treasury wallet · SOL value</div>
+          <div class="tre-k">treasury wallet · total value</div>
           <div class="tre-v" id="treUsd">$0.00</div>
-          <div class="tre-l"><span id="treSol">0.00 SOL</span> · <span id="treRate">$— / SOL</span></div>
-          <div class="tre-f"><span id="treNote">SOL only, not other tokens · balance and price checked —</span><a id="treAddr" class="tre-a" href="#/qcat" target="_blank" rel="noopener">no wallet yet</a></div>
+          <dl class="facts tre-parts" id="treParts">
+            <div><dt>SOL</dt><dd><span id="treSol">0.00 SOL</span><small id="treSolUsd">$0.00</small></dd></div>
+            <div><dt data-tk>$QCATS</dt><dd><span id="treQcat">—</span><small id="treQcatUsd"></small></dd></div>
+            <div><dt>$QI</dt><dd><span id="treQi">—</span><small id="treQiUsd"></small></dd></div>
+          </dl>
+          <div class="tre-f"><span id="treNote"><span id="treRate">$— / SOL</span> · balance and prices checked —</span><a id="treAddr" class="tre-a" href="#/qcat" target="_blank" rel="noopener">no wallet yet</a></div>
         </div>
       </div>
       <div class="split">
@@ -1323,7 +1336,7 @@ const LOFT = { x: M(16.3), y: M(5.3), w: 2.0, d: 1.1 };                        /
 const TRAYS = { x: M(16.2), y: M(11.2), w: 1.3, d: 3.7 };                      // the scrapyard: a fenced yard along the right edge, with a gantry over it
 const BENCH_SPOTS = [0, 1, 2, 3].map(i => [TRAYS.x - 0.42, TRAYS.y + 0.75 + i * 0.72]); // four places at the sorting bench, outside the fence, facing the yard
 const CRATES = { x: M(14.9), y: M(16.0), w: 1.6, d: 0.8 };                     // the diner counter
-const FUND = { x: M(13.8), y: M(8.9) };                                        // the build fund: a column on the plaza between the lab and the treasury that fills as the cats put SOL in
+const FUND = { x: M(16.35), y: M(14.75) };                                     // the build fund: a column in the corner between the scrapyard and the diner that fills as the cats put SOL in
 const FUND_SPOTS = [0, 1, 2, 3, 4].map(i => { const a = -0.3 + i * 0.5; return [FUND.x - 0.95 * Math.cos(a), FUND.y - 0.95 * Math.sin(a)]; }); // where a cat stands to give
 const DINER_STOOLS = [0, 1, 2, 3].map(i => [CRATES.x + 0.08 + i * 0.48, CRATES.y + 1.3]); // four stools along the front of the counter
 const VENT = { x: M(10.7), y: M(16.6) };                                       // the heater grate (1.4 x 0.85)
@@ -1968,6 +1981,21 @@ function sellTok(c) { // what a selling cat parts with: a forced choice (testing
 }
 function buyTok(c) { if (c.forceTok) return c.forceTok === 'qi' ? QI : TK; if (c.trait === 'loyal') return TK; return Math.random() < ({ degen: 0.5, greedy: 0.5, patient: 0.4 }[c.trait] || 0.4) ? QI : TK; }
 const shortOfSol = c => c.sol < costOf(FOOD, c) * 4;
+// what an act costs to start, so a cat never sets off for something it cannot pay for (forced trips from the admin puppet are let through)
+function canAfford(c, act) {
+  if (c.forced === act) return true;
+  switch (act) {
+    case 'eat': return menuFor(c).length > 0;
+    case 'recohere': return c.sol >= costOf(CRYO, c);
+    case 'warm': return c.sol >= warmCost(3, c);
+    case 'play': return c.sol >= costOf(PLAY, c);
+    case 'gamble': return c.sol >= costOf(FOOD, c) * 12;
+    case 'wager': return c.sol > costOf(FOOD, c) * 2 + 0.01;
+    case 'shop': return itemsFor(c).length > 0;
+    case 'donate': return spare(c) >= costOf(0.03, c);
+    default: return true;
+  }
+}
 const workToDo = c => tasksFor(c).length > 0 || scrapFor(c).length > 0; // something on the ground or on the yard bench it qualifies for
 function sellUrge(c) {
   if (!((c.qi || 0) >= 1 || (c.qcat || 0) >= 1)) return 0;
@@ -1986,10 +2014,10 @@ function sellUrge(c) {
 }
 const anyoneAsleep = c => cats.some(o => o !== c && asleep(o));
 const DRIVES = [
-  { act: 'eat',      label: 'hungry',                   w: c => c.hunger * 1.25 * (menuFor(c).length ? 1 : 0.15) },
+  { act: 'eat',      label: 'hungry',                   w: c => c.hunger * 1.25 * (menuFor(c).length ? 1 : 0) }, // nothing it can pay for: it does not go and stare at the menu
   { act: 'salvage',  label: c => (c.hunger > 0.6 && c.sol < costOf(FOOD, c) ? 'broke and hungry' : scrapFor(c).length ? 'a job on the yard bench, paid in ' + TK : 'nothing on the bench'), w: c => (scrapFor(c).length ? 0.32 + 0.12 * (c.trait === 'greedy' || c.trait === 'loyal' ? 1 : 0) + 0.1 * Math.min(2, skillLvl(skillOf(c, 'salvage'))) + (qcatPool() >= scrapPay(1) ? 0.2 : 0) : 0) * (c.ethic || 1) * (c.coh < 0.35 ? 0.3 : 1) + (c.hunger > 0.6 && c.sol < costOf(FOOD, c) ? 0.5 + c.hunger * 0.6 : 0) + (shortOfSol(c) && scrapFor(c).length && !tasksFor(c).length ? 0.5 : 0) },
-  { act: 'recohere', label: 'decohering',               w: c => (1 - c.coh) * 1.3 * (c.sol >= CRYO ? 1 : 0.45) },
-  { act: 'warm',     label: 'cold',                     w: c => c.cold * 0.95 * (c.sol >= warmCost(3, c) ? 1 : 0.4) },
+  { act: 'recohere', label: 'decohering',               w: c => (1 - c.coh) * 1.3 * (c.sol >= costOf(CRYO, c) ? 1 : 0) },
+  { act: 'warm',     label: 'cold',                     w: c => c.cold * 0.95 * (c.sol >= warmCost(3, c) ? 1 : 0) },
   { act: 'work',     label: c => (c.sol < costOf(FOOD, c) * 3 ? 'needs SOL' : 'feels like working'), w: c => (c.coh < 0.4 ? 0.2 : 1) * (clamp(1 - c.sol / (0.004 * priceMul())) * 0.9 + 0.3) * c.ethic * (c.tr.label === 'momentum ape' ? rand(0.3, 1.7) : 1) },
   { act: 'buy',      label: c => (mkt.mom < -0.002 ? 'buying the dip' : 'feels like buying'), w: c => c.forced === 'buy' ? 1.5 : (T < (c.buyCool || 0) ? 0 : 1) * (spare(c) > 0 ? 0.22 + 0.4 * clamp(spare(c) / 0.05) : 0) * c.tr.eager * (0.5 + tradeItch(c)) * (1 + (c.tr.dip ? -mkt.mom * 40 * c.tr.dip : mkt.mom * 40)) },
   { act: 'sell',     label: c => (c.sol < costOf(FOOD, c) * 4 && !workToDo(c) ? 'short of SOL and nothing to do: selling' : c.sol < costOf(FOOD, c) && c.hunger > 0.5 ? 'broke, selling to eat' : c.tr.panic && mkt.mom < -0.004 ? 'chart is dumping' : c.tr.tp && mkt.price > c.entry * c.tr.tp ? 'taking profit' : 'selling a sliver'), w: c => sellUrge(c) },
@@ -2000,7 +2028,7 @@ const DRIVES = [
   { act: 'entangle', label: 'wants company',            w: c => c.lonely * 0.85 * c.tr.social },
   { act: 'idle',     label: () => (wx.rain + wx.snow > 0.3 ? 'caught in the weather' : 'nothing urgent'), w: () => 0.2 + wx.rain * 0.4 + wx.snow * 0.35 },
   { act: 'sleep',    label: 'tired',                    w: c => Math.pow(c.tired, 2.2) * 1.1 },
-  { act: 'play',     label: 'wants to play',            w: c => (0.42 + c.lonely * 0.4) * c.tr.social * (c.sol > costOf(PLAY, c) * 3 ? 1 : 0.05) * (T - (c.playT || -1e9) > 900 ? 1 : 0.25) },
+  { act: 'play',     label: 'wants to play',            w: c => (0.42 + c.lonely * 0.4) * c.tr.social * (c.sol > costOf(PLAY, c) * 3 ? 1 : 0) * (T - (c.playT || -1e9) > 900 ? 1 : 0.25) },
   { act: 'task',     label: c => (tasksFor(c).some(t => t.called != null && T - t.called < 180) ? 'somebody flagged something' : 'something wants doing'), w: c => { const ts = tasksFor(c); return ts.length ? (c.coh < 0.4 ? 0.2 : 1) * (0.42 + 0.12 * Math.max(...ts.map(t => t.tier)) + (shortOfSol(c) ? 0.6 : 0)) * c.ethic * (ts.some(t => t.called != null && T - t.called < 180) ? 1.8 : 1) : 0; } },
   { act: 'donate',   label: c => (fundOpen() ? 'the fund is full' : 'feels like giving'), w: c => (fundOpen() || (liveTx() && !fundLive()) || T < (c.donateCool || 0) || c.hunger > 0.6 || spare(c) < costOf(0.03, c) ? 0 : (0.3 + 0.33 * clamp(spare(c) / 0.05)) * ({ loyal: 1.5, patient: 1.15, degen: 0.85, greedy: 0.5 }[c.trait] || 1) * (c.ethic || 1)) },
   { act: 'shop',     label: 'feeling flush',            w: c => itemsFor(c).length ? (0.3 + 0.25 * (c.vanity || 1)) * (1 - (c.items || []).length / ITEMS.length) * (T - (c.shopT || -1e9) > 2400 ? 1 : 0.08) : 0 },
@@ -2158,6 +2186,7 @@ function decide(c) {
     if (o.act === 'scrap' || o.act === 'entangle' || o.act === 'wager') { partner = findPartner(c, o.act); if (!partner) continue; }
     if (paced(c, o.act)) continue;
     if (o.act === 'buy' && c.forced !== 'buy' && spare(c) < (testFlat() || 0.006)) continue;
+    if (!canAfford(c, o.act)) continue; // it knows what things cost: no trips to the diner, the heater, the beacon, the yard or the casino with an empty wallet
     if (o.act === 'shop' && !itemsFor(c).length) continue;
     if (o.act === 'task' && !tasksFor(c).length) continue;
     if (o.act === 'salvage' && !scrapFor(c).length && !(c.hunger > 0.6 && c.sol < costOf(FOOD, c))) continue;
@@ -2297,7 +2326,7 @@ function applyTrade(c, dir, tok, sol, q, why, sig) {
   }
 }
 // ---------- the build fund: the cats put SOL toward the boarded-up buildings; at the goal, the hoardings come down ----------
-const fundGoal = () => (Number(CONFIG.FUND_GOAL) > 0 ? Number(CONFIG.FUND_GOAL) : 5);
+const fundGoal = () => (Number(CONFIG.FUND_GOAL) > 0 ? Number(CONFIG.FUND_GOAL) : 2.5);
 const fundSol = () => (stats.fundSol || 0), fundOpen = () => fundSol() >= fundGoal() || !!stats.fundOpened, fundLive = () => !!CONFIG.FUND_LIVE; // FUND_LIVE: the brain has a fund wallet to read (set the moment it reports a balance)
 function give(c, amt) {
   const cost = Math.min(c.sol, amt); if (!(cost > 0)) return;
@@ -3638,7 +3667,8 @@ function pickGoal(c) {
   const lvl = c.lvl || 1, kind = JOBS[c.job].kind, last = c.goalLast || '';
   let pool = GOALS.filter(g => g.key !== last && (g.tier === 1 || (g.tier === 2 && lvl >= 2) || (g.tier === 3 && lvl >= 4)) && (!g.kind || g.kind === kind || Math.random() < 0.15));
   if (!pool.length) pool = GOALS.filter(g => g.tier === 1);
-  const w = g => (g.kind === kind ? 3 : 1) * ({ degen: g.tier === 3 || g.streak ? 2 : 1, greedy: g.tier === 3 ? 2.5 : g.tier === 2 ? 1.3 : 0.6, patient: g.parts.some(pt => pt[0] === 'topic' || pt[0] === 'note' || pt[0] === 'session' || pt[0] === 'topicnote') ? 2 : 1, loyal: g.tier === 1 ? 1.5 : 1 }[c.trait] || 1);
+  const held = {}; for (const o of cats) if (o !== c && o.goal) held[o.goal.key] = (held[o.goal.key] || 0) + 1; // what the others are on right now: a cat picks something different when it can
+  const w = g => (1 / (1 + 4 * (held[g.key] || 0))) * (g.kind === kind ? 3 : 1) * ({ degen: g.tier === 3 || g.streak ? 2 : 1, greedy: g.tier === 3 ? 2.5 : g.tier === 2 ? 1.3 : 0.6, patient: g.parts.some(pt => pt[0] === 'topic' || pt[0] === 'note' || pt[0] === 'session' || pt[0] === 'topicnote') ? 2 : 1, loyal: g.tier === 1 ? 1.5 : 1 }[c.trait] || 1);
   let tot = 0; for (const g of pool) tot += w(g); let r = Math.random() * tot, g = pool[0];
   for (const x of pool) { r -= w(x); if (r <= 0) { g = x; break; } }
   const topic = CURRICULUM[topicIdx(c)];
@@ -4142,7 +4172,12 @@ function drawFund(t) {
   // the slot and a coin dropping when somebody is giving
   for (const c of cats) if (c.state === 'act' && c.act === 'donate' && !reduce) { const ph = (t * 1.4 + c.id) % 1; const q = P(fx, fy, 2.3 - ph * 2.0); glowDot(q[0], q[1], Math.max(2, K * 0.07), '247,200,106', (1 - ph) * 0.9); }
   // the figure on the plinth, and the sign when it is done
-  { const q = P(fx, fy, 2.4); ctx.font = `700 ${Math.max(8, K * 0.26)}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = open ? '#5CFFAA' : '#C3CBEE'; ctx.shadowColor = open ? 'rgba(92,255,170,.9)' : 'rgba(92,242,255,.6)'; ctx.shadowBlur = 6; ctx.fillText(open ? 'OPEN' : `${fmtSol(fundSol())} / ${fmtSol(fundGoal())}`, q[0], q[1]); ctx.shadowBlur = 0; }
+  { const q = P(fx, fy, 2.45), hov = hoverLabel === 'fund' || (insPinned && insMode === 'place' && placeKey === 'fund'), text = open ? 'OPEN' : `${fmtSol(fundSol())} / ${fmtSol(fundGoal())} SOL`;
+    ctx.font = `700 ${Math.max(9, Math.min(14, K * 0.26))}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(text).width + 12, th = Math.max(9, Math.min(14, K * 0.26)) * 1.6;
+    ctx.fillStyle = 'rgba(6,7,20,.8)'; ctx.fillRect(q[0] - tw / 2, q[1] - th / 2, tw, th); ctx.strokeStyle = `rgba(92,255,170,${hov ? 0.9 : 0.45})`; ctx.lineWidth = hov ? 1.5 : 1; ctx.strokeRect(q[0] - tw / 2 + 0.5, q[1] - th / 2 + 0.5, tw - 1, th - 1);
+    ctx.fillStyle = open ? '#5CFFAA' : '#E6ECFF'; ctx.shadowColor = open ? 'rgba(92,255,170,.9)' : 'rgba(92,242,255,.5)'; ctx.shadowBlur = hov ? 10 : 5; ctx.fillText(text, q[0], q[1] + 0.5); ctx.shadowBlur = 0; }
+  if (hoverLabel === 'fund') { ctx.strokeStyle = 'rgba(92,255,170,.7)'; ctx.lineWidth = 1.5; for (const [dx, dy] of [[-0.22, -0.22], [0.22, -0.22], [0.22, 0.22], [-0.22, 0.22]]) { const a = P(fx + dx, fy + dy, 0.16), b = P(fx + dx, fy + dy, 2.06); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); } }
   glowDot(P(fx, fy, 0.2)[0], P(fx, fy, 0.2)[1], K * 0.6, '92,255,170', 0.08 + 0.1 * frac);
 }
 const critters = [];
@@ -4478,7 +4513,6 @@ function neonSign(x, y, z, text, rgb, t, size, o) {
 // every place gets the same kind of sign, mounted on the structure itself
 const SIGNS = {
   vault:    [VAULT.x, VAULT.y, 2.75, 'TREASURY', '247,200,106'],
-  fund:     [FUND.x, FUND.y, 2.75, 'BUILD FUND', '92,255,170'],
   crates:   [CRATES.x + 0.8, CRATES.y + 0.95, 1.72, 'DINER', '255,138,92'],
   vent:     [VENT.x - 0.35, VENT.y + 1.0, 1.1, 'HEATER', '255,138,92'],
   trays:    [TRAYS.x + 0.65, TRAYS.y + 1.85, 1.6, 'SCRAPYARD', '154,123,255'],
@@ -4847,6 +4881,28 @@ function drawArena(t) {
   for (const a of [0.8, 2.35, 3.95, 5.5]) { const px = ARENA.x + Math.cos(a) * ARENA.r * 1.05, py = ARENA.y + Math.sin(a) * ARENA.r * 1.05; drawBox(px - 0.08, py - 0.08, 0.16, 0.16, 0.9, { t: '#3A2F3A', l: '#2A222C', r: '#1E1820' }); const q = P(px, py, 1.0); glowDot(q[0], q[1], Math.max(1.2, K * 0.06), '255,200,80', live ? 0.9 : 0.35); }
   if (live && !reduce) { const m = P(ARENA.x, ARENA.y, 0.6); if (Math.random() < 0.8) for (let i = 0; i < 2; i++) { const an = rand(0, TAU), sp = rand(30, 90), l = rand(0.3, 0.6); parts.push({ x: m[0], y: m[1], vx: Math.cos(an) * sp, vy: Math.sin(an) * sp - 20, life: l, max: l, rgb: pick(['255,200,80', '255,79,174', '255,255,255']), r: rand(0.8, 1.8) }); } }
 }
+// the billboard on the lab roof: THE EXPANSION — the two boarded-up buildings the build fund is for, and how far along it is. Clicking it opens the fund.
+// it stands on the roof beside the cooling unit in the back-right corner, its face toward the plaza's right side (the fund's corner)
+const BILL = { x: () => LAB.x + LAB.w / 2 - 1.02, v0: () => LAB.y - LAB.d / 2 + 0.12, v1: () => LAB.y - LAB.d / 2 + 1.62, z0: 2.3 + 0.5, z1: 2.3 + 1.5 };
+function billboardBox() { if (K < 14) return null; const a = P(BILL.x(), BILL.v0(), BILL.z0), b = P(BILL.x(), BILL.v1(), BILL.z1), c = P(BILL.x(), BILL.v0(), BILL.z1), d = P(BILL.x(), BILL.v1(), BILL.z0); const xs = [a[0], b[0], c[0], d[0]], ys = [a[1], b[1], c[1], d[1]]; return { x0: Math.min(...xs) - 4, y0: Math.min(...ys) - 4, x1: Math.max(...xs) + 4, y1: Math.max(...ys) + 4 }; }
+function drawBillboard(t) {
+  const X = BILL.x(), u0 = BILL.v0(), u1 = BILL.v1(), z0 = BILL.z0, z1 = BILL.z1, open = fundOpen(), hov = hoverLabel === 'fund', fl = 0.8 + 0.2 * Math.sin(t * 2.3), pt = (v, z) => P(X, v, z);
+  // two posts up from the roof slab, the panel between them
+  for (const v of [u0 + 0.08, u1 - 0.08]) { const a = pt(v, 2.3 + 0.12), b = pt(v, z1); ctx.strokeStyle = '#4A5080'; ctx.lineWidth = Math.max(2, K * 0.06); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+  const q = [pt(u0, z0), pt(u1, z0), pt(u1, z1), pt(u0, z1)];
+  ctx.fillStyle = 'rgba(8,10,28,.96)'; poly(q); ctx.fill();
+  ctx.strokeStyle = open ? `rgba(92,255,170,${0.9 * fl})` : `rgba(247,200,106,${(hov ? 1 : 0.75) * fl})`; ctx.lineWidth = hov ? 1.8 : 1.2; poly(q); ctx.stroke();
+  // lamps along the top edge
+  for (let k = 0; k < 4; k++) { const g = pt(u0 + (u1 - u0) * (k + 0.5) / 4, z1 + 0.08); glowDot(g[0], g[1], Math.max(1.5, K * 0.05), open ? '92,255,170' : '247,200,106', 0.5 + 0.3 * Math.sin(t * 3 + k)); }
+  let a = pt(u0, z1), c = pt(u1, z1); if (c[0] < a[0]) [a, c] = [c, a];
+  const dlen = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, ux = (c[0] - a[0]) / dlen, uy = (c[1] - a[1]) / dlen, hpx = (z1 - z0) * K;
+  ctx.save(); ctx.transform(ux, uy, 0, 1, a[0], a[1]); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `700 ${Math.max(6, hpx * 0.34)}px "Chakra Petch", sans-serif`; ctx.fillStyle = open ? `rgba(92,255,170,${0.95 * fl})` : `rgba(247,200,106,${0.95 * fl})`; ctx.shadowColor = open ? 'rgba(92,255,170,.8)' : 'rgba(247,200,106,.8)'; ctx.shadowBlur = 6;
+  ctx.fillText('THE EXPANSION', dlen / 2, hpx * 0.33, dlen * 0.92);
+  ctx.font = `500 ${Math.max(5, hpx * 0.2)}px "IBM Plex Mono", monospace`; ctx.fillStyle = open ? 'rgba(230,236,255,.9)' : 'rgba(195,203,238,.9)'; ctx.shadowBlur = 0;
+  ctx.fillText(open ? 'both wings open' : `build fund ${fmtSol(fundSol())} / ${fmtSol(fundGoal())} SOL`, dlen / 2, hpx * 0.72, dlen * 0.92);
+  ctx.restore();
+}
 function drawLab(t) {
   const live = true, workers = cats.filter(c => c.state === 'act' && c.act === 'work' && JOBS[c.job].st === 'lab'), busy = workers.length > 0, surge = T < labBoostUntil;
   const ax = LAB.x - LAB.w / 2, ay = LAB.y - LAB.d / 2, w = LAB.w, d = LAB.d, h = 2.3;
@@ -4952,7 +5008,7 @@ function drawLoaf(c, x, y, z, t) {
 }
 const BUNKW = { t: '#3A2C3A', l: '#2A1F2C', r: '#1E1620', e: 'rgba(247,200,106,.4)' };
 function drawLoft(t) {
-  const sleepers = hereAt('loft'), n = sleepers.length;
+  const sleepers = cats.filter(asleep), n = sleepers.length; // asleep, not just in the loft: a thief at the stashes is awake and drawn as itself
   const ax = LOFT.x, ay = LOFT.y, w = LOFT.w, d = LOFT.d, h = 2.25;
   drawBox(ax, ay, w, d, 0.12, BUNKW);                                              // floor
   wall(ax, ay, ax + w, ay, 0.12, h, '#2C2032'); wall(ax, ay, ax, ay + d, 0.12, h, '#231A28'); // the two back walls (open front, so you can see in)
@@ -5140,6 +5196,9 @@ function drawLabels(t) {
     const locked = PLACES[k].stage && !stageOn(PLACES[k].stage);
     neonSign(x, y, z, locked ? text + ' \u00B7 ' + fmtUsd(STAGES.find(st => st.key === PLACES[k].stage).mc) : text, rgb, t, 0.34, { key: k, dim: locked, hov: hoverLabel === k, on: insPinned && insMode === 'place' && placeKey === k });
   }
+  // the build fund has no sign either: the column (and the billboard on the lab roof) is what you click
+  { const a = P(FUND.x, FUND.y, 0), b = P(FUND.x, FUND.y, 2.7); labelHits.push({ k: 'fund', x0: b[0] - K * 0.5, y0: b[1] - K * 0.25, x1: a[0] + K * 0.5, y1: a[1] + K * 0.1 }); }
+  { const bb = billboardBox(); if (bb) labelHits.push({ k: 'fund', ...bb }); }
   // the circle has no sign: its countdown is the thing you click
   { const d = P(CRY.x, CRY.y, 3.6), rr = Math.max(14, K * 0.62) + 6; labelHits.push({ k: 'cryo', x0: d[0] - rr, y0: d[1] - rr, x1: d[0] + rr, y1: d[1] + rr }); }
   if (insPinned && insMode === 'place' && PLACES[placeKey]) {
@@ -5367,7 +5426,7 @@ function render(t, dt) {
   for (const d of deliveries) L.push([d.x + d.y + 0.8, () => drawDelivery(d, t)]);
   L.push([DOCK.x + DOCK.y - 0.3, () => drawDock(t)]);
   for (const q of critters) L.push([q.x + q.y + 0.6, () => drawDrone(q, t)]);
-  L.push([LOFT.x + 1.0 + LOFT.y + 0.55, () => drawLoft(t)]);
+  L.push([LOFT.x + LOFT.y + 0.3, () => drawLoft(t)]); // keyed at its back corner: a cat walking in, or a thief at the stashes, is drawn over the floor and walls, never behind them
   L.push([EXC.x - 0.85 + EXC.y, () => drawExchange(t)]);
   L.push([CASINO.x - 1.0 + CASINO.y, () => drawCasino(t, 'slots')]);
   L.push([TABLE.x + TABLE.y, () => drawCasino(t, 'table')]);
@@ -5375,7 +5434,7 @@ function render(t, dt) {
   for (const [bx, by] of BINS) L.push([bx + by, () => drawBin(bx, by, t)]);
   for (const q of board.tasks) if (q.x != null) L.push([q.x + q.y + 0.005, () => drawTaskItem(q, t)]);
   L.push([ARENA.x + ARENA.y - 1.2, () => drawArena(t)]);
-  L.push([LAB.x + LAB.y, () => drawLab(t)]);
+  L.push([LAB.x + LAB.y, () => { drawLab(t); drawBillboard(t); }]);
   L.push([FRIDGE.x + FRIDGE.y, () => drawFridge(t)]);
   L.sort((a, b) => a[0] - b[0]);
   for (const it of L) it[1]();
@@ -5413,6 +5472,7 @@ function drawBloch(c, t) {
 }
 let liveTreasury = null, liveTreasuryAt = 0, liveTreasuryPub = ''; // the treasury wallet's real balances, once read
 let liveFundPub = ''; // the build fund wallet's address, once the brain reports one
+let remoteMarket = null; // the brain's last read of the two charts: { ok, priceUsd, mcapUsd, qi: { ok, priceUsd, priceSol } }
 const liveBal = {}; // name -> { sol, qcat } straight from the chain, once the wallets and the CA exist
 const live = c => liveBal[c.name] || null, liveSol = c => { const b = live(c); return b ? b.sol : c.sol; }, liveQ = c => { const b = live(c); return b && b.qcat != null ? b.qcat : c.qcat; }, liveQi = c => { const b = live(c); return b && b.qi != null ? b.qi : (c.qi || 0); };
 const iEl = { name: $('#iName'), role: $('#iRole'), sol: $('#iSol'), q: $('#iQ'), bought: $('#iBought'), earned: $('#iEarned'), psi: $('#iPsi'), think: $('#iThink'), doing: $('#iDoing'), because: $('#iBecause'), weighed: $('#iWeighed') };
@@ -5877,12 +5937,18 @@ function renderBoard() {
 /* ---------- ledger ---------- */
 const placeBody = null, txBody = $('#txTable tbody');
 let txShown = -1;
-const TXK = { gas: 'info', qi: 'gain', chore: 'info', shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'loss', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info', gave: 'info', fund: 'gain' };
+const TXK = { gas: 'info', qi: 'gain', chore: 'info', shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'loss', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info', gave: 'info', fund: 'gain', deposit: 'gain' };
 function renderLedger() {
   { const R = remote || {}, numv = (v, f) => (v != null && isFinite(v) ? Number(v) : f), tre = liveTreasury;
-    const tSol = tre && typeof tre.sol === 'number' ? tre.sol : stats.treasury, rate = Number(CONFIG.SOL_USD) || 0;
-    setT('treUsd', '$' + (tSol * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })); setT('treSol', fmtSol(tSol) + ' SOL'); setT('treRate', '$' + rate.toFixed(2) + ' / SOL');
-    setT('treNote', 'SOL only, not other tokens · ' + (liveTreasuryAt ? 'balance and price checked ' + Math.max(0, Math.round((Date.now() - liveTreasuryAt) / 1000)) + 's ago' : 'the box\u2019s own treasury until the wallets are on-chain'));
+    const tSol = tre && typeof tre.sol === 'number' ? tre.sol : stats.treasury, rate = Number(CONFIG.SOL_USD) || 0, usd = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // the whole wallet in dollars: SOL at the SOL price, the coin and $QI at their charts (the box's own prices until the charts are wired in)
+    const tQcat = tre && typeof tre.qcat === 'number' ? tre.qcat : null, tQi = tre && typeof tre.qi === 'number' ? tre.qi : null; // only what the wallet really holds; the box's pretend $QI pool is not money
+    const pQcat = remoteMarket && remoteMarket.ok && remoteMarket.priceUsd > 0 ? remoteMarket.priceUsd : mkt.price * rate, pQi = remoteMarket && remoteMarket.qi && remoteMarket.qi.priceUsd > 0 ? remoteMarket.qi.priceUsd : qiUsd();
+    const vSol = tSol * rate, vQcat = (tQcat || 0) * pQcat, vQi = (tQi || 0) * pQi;
+    setT('treUsd', usd(vSol + vQcat + vQi)); setT('treSol', fmtSol(tSol) + ' SOL'); setT('treSolUsd', usd(vSol)); setT('treRate', '$' + rate.toFixed(2) + ' / SOL');
+    setT('treQcat', tQcat == null ? (remoteMode ? 'not read yet' : 'none yet') : fmtQ(tQcat) + ' ' + TK); setT('treQcatUsd', tQcat == null ? '' : usd(vQcat) + (pQcat > 0 ? '' : ' · no chart yet'));
+    setT('treQi', tQi == null ? (remoteMode ? 'not read yet' : 'none yet') : fmtQi(tQi) + ' $QI'); setT('treQiUsd', tQi == null ? '' : usd(vQi));
+    { const el = document.getElementById('treNote'); if (el) el.childNodes[el.childNodes.length - 1].textContent = ' · ' + (liveTreasuryAt ? 'balance and prices checked ' + Math.max(0, Math.round((Date.now() - liveTreasuryAt) / 1000)) + 's ago' : 'the box\u2019s own treasury until the wallets are on-chain'); }
     const ta = document.getElementById('treAddr'); if (ta && liveTreasuryPub && ta.textContent !== liveTreasuryPub) { ta.textContent = liveTreasuryPub; ta.href = 'https://solscan.io/account/' + liveTreasuryPub; }
     setT('fFees', fmtSol(numv(R.fees, stats.fees)) + ' SOL'); setT('fQi', fmtQi(stats.qiPaid || 0)); setT('fTrades', fmt(stats.buys + stats.sells));
     setT('eHeld', fmtQ(cats.reduce((a, c) => a + liveQ(c), 0))); setT('fQiHeld', fmtQi(cats.reduce((a, c) => a + liveQi(c), 0)));
@@ -5976,6 +6042,7 @@ function applyRoute() {
   const r = ROUTES.includes(h) ? h : 'box';
   detailName = r === 'cats' && segs[1] ? decodeURIComponent(segs[1]) : null;
   if (r === 'recap') { rcPick = segs[1] ? String(parseInt(segs[1], 10)) : 'today'; rcKey = ''; }
+  if (r === 'work') showWork(['lab', 'yard', 'chores'].includes(segs[1]) ? segs[1] : (wkTab || 'lab'));
   if (!ROUTES.includes(h) && location.hash && location.hash !== '#/box') { history.replaceState(null, '', '#/box'); }
   route = r;
   document.querySelectorAll('.page').forEach(p => { p.hidden = p.dataset.page !== r; });
@@ -5987,6 +6054,9 @@ function applyRoute() {
   if (r === 'ledger') renderLedger();
   if (r === 'box') { W = 0; try { resize(); } catch (_) {} }
 }
+let wkTab = null; try { wkTab = localStorage.getItem('qc.wk') || null; } catch (_) {}
+function showWork(k) { wkTab = k; try { localStorage.setItem('qc.wk', k); } catch (_) {} document.querySelectorAll('.wk-sec').forEach(sec => { sec.hidden = sec.dataset.wk !== k; }); document.querySelectorAll('#wkTabs button').forEach(b => b.classList.toggle('on', b.dataset.wk === k)); }
+document.querySelectorAll('#wkTabs button').forEach(b => b.addEventListener('click', () => { showWork(b.dataset.wk); if (location.hash !== '#/work/' + b.dataset.wk) history.replaceState(null, '', '#/work/' + b.dataset.wk); }));
 window.addEventListener('hashchange', applyRoute);
 function interesting() {
   const alive = cats.filter(c => c.id !== selId && !asleep(c));
@@ -6308,6 +6378,7 @@ function applyRemote(j) {
   const e = j.engine; if (!e) return;
   if (j.config) applyLinks(j.config);
   if (j.config && j.config.SOL_USD) CONFIG.SOL_USD = j.config.SOL_USD;
+  if (j.market) { remoteMarket = j.market; if (j.market.qi && j.market.qi.priceSol > 0) mkt.qiSol = j.market.qi.priceSol; }
   if (j.config) for (const k of ['PRICE_MUL', 'TEST_FLAT', 'QI_SOL', 'LAB_PAY_MIN_USD', 'LAB_PAY_MAX_USD', 'PACE_MIN', 'LIVE_TX', 'START_QCATS', 'GOAL_MUL', 'SCRAP_PAY', 'FUND_GOAL', 'FUND_LIVE']) if (j.config[k] != null) CONFIG[k] = j.config[k]; // the brain's prices: the box shows what the cats will pay
   { const al = catAlloc(); setT('xAlloc', al >= 1000 && al % 1000 === 0 ? (al / 1000) + 'K' : fmtQ(al)); setT('xAllocTxt', al.toLocaleString('en-US')); }
   { const el = $('#tAi'); if (el) el.textContent = j.ai ? 'AI dialogue on \u00B7 ' : 'built-in lines \u00B7 '; }
