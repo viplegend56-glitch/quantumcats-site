@@ -524,9 +524,9 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 .txs td.t{white-space:nowrap} .txs td.c{color:var(--text);white-space:nowrap} .txs td.a{white-space:nowrap;color:var(--text)}
 .txs tr.gain td.a{color:var(--gold)} .txs tr.buy td.a{color:#5CFFAA} .txs tr.loss td.a{color:var(--magenta)}
 .wallets{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
-.wallets td{padding:9px 16px;border-top:1px solid var(--line);color:var(--muted);vertical-align:middle}
+.wallets td{padding:10px 12px;border-top:1px solid var(--line);color:var(--muted);vertical-align:middle}
 .wallets td:first-child{color:var(--text);white-space:nowrap} .wallets td:first-child b{margin-left:9px;font-family:var(--hud);font-size:14px}
-.wallets td:last-child{text-align:right} .wallets code{color:var(--muted)}
+.wallets th{padding:8px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:500}.wallets th.n,.wallets td.n{text-align:right}.wallets td{padding:10px 12px}.wallets td.n span{color:var(--text);font-size:13px}.wallets td.addr a{text-decoration:none}.wallets td.addr a:hover code{color:var(--cyan)} .wallets code{color:var(--muted)}
 /* ---------- ledger places ---------- */
 .places{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
 .places th{font-family:var(--hud);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:right;padding:12px 14px 8px}
@@ -1122,8 +1122,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
         </div>
         <div class="panel">
           <div class="ph"><span>The ten wallets</span><small>every one public · click an address</small></div>
-          <table class="wallets" id="walletTable"><tbody></tbody></table>
-          <div class="cb"><p class="pdesc">Once the box is live, each row links to the wallet on Solscan so anyone can check every trade, every wager and every transfer a cat has ever made.</p></div>
+          <table class="wallets" id="walletTable"><thead><tr><th>cat</th><th>wallet</th><th class="n">SOL</th><th class="n" data-tk>$QCATS</th><th class="n">$QI</th></tr></thead><tbody></tbody></table>
         </div>
       </div>
     </div>
@@ -6536,7 +6535,8 @@ function applyWallets(w) {
     const cw = w.cats.find(x => x.name === name); const cell = tr.children[1]; if (!cw) return;
     const bal = w.balances && w.balances.cats && w.balances.cats[name];
     const short = cw.pub.slice(0, 4) + '\u2026' + cw.pub.slice(-4);
-    cell.innerHTML = `<a href="https://solscan.io/account/${cw.pub}" target="_blank" rel="noopener"><code>${short}</code></a>` + (bal ? `<br><small>${fmtSol(bal.sol)} SOL${bal.qcat != null ? ' \u00B7 ' + fmtQ(bal.qcat) + ' ' + TK : ''}${bal.qi != null ? ' \u00B7 ' + fmtQ(bal.qi) + ' ' + QI : ''}</small>` : '');
+    if (cell.dataset.pub !== cw.pub) { cell.dataset.pub = cw.pub; cell.innerHTML = `<a href="https://solscan.io/account/${cw.pub}" target="_blank" rel="noopener" title="${cw.pub}"><code>${short}</code></a>`; }
+    if (bal) { tr.children[2].querySelector('span').textContent = fmtSol(bal.sol); tr.children[3].querySelector('span').textContent = bal.qcat != null ? fmtQ(bal.qcat) : '0'; tr.children[4].querySelector('span').textContent = bal.qi != null ? fmtQ(bal.qi) : '0'; }
   });
 }
 async function pollBrain() {
@@ -6558,7 +6558,7 @@ setInterval(() => { const r = wrapEl.getBoundingClientRect(); if (r.width < 2) r
 if (!remoteMode) for (let i = 0; i < ROSTER.length; i++) if (UNLOCK_MC[i] <= 0) cats.push(makeCat(i));
 if (!remoteMode) for (let i = 0; i < 2; i++) { const a = pick(cats), b = pick(cats); if (a !== b) { a.grudge = rand(0.5, 0.9); a.grudgeOn = b.id; a.grudgeWhy = `${b.name} still owes it from last night`; } }
 for (let i = 0; i < 60; i++) mkt.hist.push(mkt.p0 * (1 + rand(-0.05, 0.05)));
-(function walletRows() { const tb = $('#walletTable tbody'); ROSTER.forEach(([name, job], i) => { const coat = COATS[i % COATS.length], tr = document.createElement('tr'); tr.innerHTML = '<td><span class="sw"></span><b></b><small></small></td><td><code>address at launch</code></td>'; const sw = tr.querySelector('.sw'); sw.style.background = coat.c; sw.style.setProperty('--eye', coat.e); tr.querySelector('b').textContent = name; tr.querySelector('small').textContent = ' · 100,000 · ' + JOBS[job].label + (UNLOCK_MC[i] ? ' · released at ' + fmtUsd(UNLOCK_MC[i]) + ' MC' : ' · in the box from launch'); tb.appendChild(tr); }); })();
+(function walletRows() { const tb = $('#walletTable tbody'); ROSTER.forEach(([name, job], i) => { const coat = COATS[i % COATS.length], tr = document.createElement('tr'); tr.innerHTML = '<td><span class="sw"></span><b></b></td><td class="addr"><code>at launch</code></td><td class="n"><span>\u2014</span></td><td class="n"><span>\u2014</span></td><td class="n"><span>\u2014</span></td>'; const sw = tr.querySelector('.sw'); sw.style.background = coat.c; sw.style.setProperty('--eye', coat.e); tr.querySelector('b').textContent = name; tb.appendChild(tr); }); })();
 if (!remoteMode) log(`The box woke up. All ten cats are in.`, 'info');
 renderExplainer(performance.now() / 1000, true);
 stepWeather(0);
