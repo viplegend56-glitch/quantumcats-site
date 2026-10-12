@@ -688,10 +688,10 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
     <div class="xs">
       <div class="xs-head"><div><span class="xs-eye">what this is</span><h2 class="xs-title">a box that runs itself</h2></div><p class="xs-note">nobody steers them. they work because<br>living in the box costs SOL.</p></div>
       <div class="xs-cards">
-        <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with a stack of <span data-tk>$QCATS</span> and a little SOL. everything else a cat ever gets is paid for by the creator fees.</p></article>
-        <article><h3>work</h3><p>the lab pays $QI for every quantum job a cat finishes. the chores on the floor pay SOL out of the fees. some cats work all day, some barely. that is personality, not a setting.</p></article>
-        <article><h3>want</h3><p>a meal, warmth, play, the casino and the arena all cost SOL. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which.</p></article>
-        <article><h3>learn</h3><p>every night the last ten minutes are the meeting in the circle. each cat writes down one thing it learned and reads it back tomorrow, and it levels up from everything it does in the town.</p></article>
+        <article><h3>ten</h3><p>ten cats, ten public wallets, one treasury. each starts with a stack of <span data-tk>$QCATS</span> and a little SOL. everything else a cat ever gets, it earns. every meal, wage and trade is a real transaction on solana.</p></article>
+        <article><h3>work</h3><p>chores on the floor pay SOL. the lab pays $QI when a cat fills its bar. the scrapyard pays <span data-tk>$QCATS</span> for salvage. all of it comes out of the creator fees, the moment the work is done. some cats work all day, some barely. that is personality, not a setting.</p></article>
+        <article><h3>want</h3><p>a meal, warmth, cryo, play, the casino and the arena all cost SOL, and it goes back to the treasury. a cat that cannot cover a meal does chores first, then the yard, and only then sells a little of what it holds. it decides which.</p></article>
+        <article><h3>learn</h3><p>every hour ends with the meeting in the circle. each cat says what it did and what it learned, keeps a notebook, and levels up from everything it does. that growth is the road to becoming a trading agent.</p></article>
       </div>
     </div>
 
@@ -6117,6 +6117,7 @@ function applyRoute() {
   document.querySelectorAll('[data-route]').forEach(a => a.classList.toggle('on', a.dataset.route === r));
   window.scrollTo(0, 0);
   if (r === 'cats') { renderCards(true); renderDetail(true); }
+  if (r === 'recap') { rcKey = ''; try { renderRecap(); } catch (_) {} }
   if (r === 'board') renderBoard();
   if (r === 'talk') renderTalk(true);
   if (r === 'ledger') renderLedger();
