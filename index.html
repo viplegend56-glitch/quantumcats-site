@@ -1328,7 +1328,7 @@ const BUILD = [
   { x: 2, y: 12.8, w: 3, d: 2.6, h: 3.6 },
   { x: 2, y: 16, w: 3, d: 2.2, h: 2.4 },
   { x: 5.6, y: 2, w: 3.2, d: 3, h: 5.2 },
-  { x: 9.4, y: 2, w: 2.8, d: 3, h: 3.4, board: 'X' },   // the expansion billboard: on the face behind the lab's back-left corner, between the casino and the lab
+  { x: 9.4, y: 2, w: 2.8, d: 3, h: 3.4 },
   { x: 12.8, y: 2, w: 2.6, d: 3, h: 6.4, board: 'C' },
   { x: 16, y: 2, w: 2.2, d: 3, h: 4.0 },
   { x: 19.4, y: 2, w: 2.6, d: 3, h: 5.4 },
@@ -1353,8 +1353,8 @@ const VAULT = { x: M(16.9), y: M(8.9) };                                       /
 const LOFT = { x: M(16.3), y: M(5.3), w: 2.0, d: 1.1 };                        // the bunks, over the corner shop
 const TRAYS = { x: M(16.2), y: M(11.2), w: 1.3, d: 3.7 };                      // the scrapyard: a fenced yard along the right edge, with a gantry over it
 const BENCH_SPOTS = [0, 1, 2, 3].map(i => [TRAYS.x - 0.42, TRAYS.y + 0.75 + i * 0.72]); // four places at the sorting bench, outside the fence, facing the yard
-const CRATES = { x: M(14.9) + 1.3, y: M(16.0), w: 1.6, d: 0.8 };               // the diner counter, in the bottom corner of the plaza
-const FUND = { x: CRATES.x + CRATES.w / 2, y: CRATES.y + 2.45 };                  // the build fund: a column in the corner, centred in front of the diner
+const CRATES = { x: M(14.9) - 1.6, y: M(16.0), w: 1.6, d: 0.8 };               // the diner counter, close to the heater, with open floor between it and the build fund
+const FUND = { x: M(17.6), y: M(17.45) };                                      // the build fund: a column in the bottom corner of the plaza, past the diner
 const FUND_SPOTS = [[FUND.x - 0.95, FUND.y - 0.1], [FUND.x - 0.95, FUND.y + 0.35], [FUND.x + 0.95, FUND.y - 0.1], [FUND.x + 0.95, FUND.y + 0.35]]; // where a cat stands to give: either side of the column
 const DINER_STOOLS = [0, 1, 2, 3].map(i => [CRATES.x + 0.08 + i * 0.48, CRATES.y + 1.3]); // four stools along the front of the counter
 const VENT = { x: M(10.7), y: M(16.6) };                                       // the heater grate (1.4 x 0.85)
@@ -4050,7 +4050,6 @@ function drawRoofStuff(b, t) {
 }
 function drawBillboard(b, t) {
   if (b.board === 'C' || b.board === 'D') return drawHoarding(b, t);
-  if (b.board === 'X') return drawExpansion(b, t);
   return; // the coin boards came down
   // a lit panel on the face that looks at the plaza, showing the coin and the chart
   const L = b.board === 'L', z0 = b.h * 0.45, z1 = z0 + 1.6, fl = 0.85 + 0.15 * Math.sin(t * 9 + b.x);
@@ -4902,25 +4901,6 @@ function drawArena(t) {
   for (const a of [0.8, 2.35, 3.95, 5.5]) { const px = ARENA.x + Math.cos(a) * ARENA.r * 1.05, py = ARENA.y + Math.sin(a) * ARENA.r * 1.05; drawBox(px - 0.08, py - 0.08, 0.16, 0.16, 0.9, { t: '#3A2F3A', l: '#2A222C', r: '#1E1820' }); const q = P(px, py, 1.0); glowDot(q[0], q[1], Math.max(1.2, K * 0.06), '255,200,80', live ? 0.9 : 0.35); }
   if (live && !reduce) { const m = P(ARENA.x, ARENA.y, 0.6); if (Math.random() < 0.8) for (let i = 0; i < 2; i++) { const an = rand(0, TAU), sp = rand(30, 90), l = rand(0.3, 0.6); parts.push({ x: m[0], y: m[1], vx: Math.cos(an) * sp, vy: Math.sin(an) * sp - 20, life: l, max: l, rgb: pick(['255,200,80', '255,79,174', '255,255,255']), r: rand(0.8, 1.8) }); } }
 }
-// THE EXPANSION: a billboard on the building behind the lab's back-left corner (between the casino and the lab), with how far the build fund is. Clicking it opens the fund.
-const XPAN = { z0: 1.5, z1: 3.1 };
-function expansionFace() { const b = BUILD.find(x => x.board === 'X'); if (!b) return null; return { u0: b.x + 0.3, u1: b.x + b.w - 0.3, y: b.y + b.d + 0.06 }; }
-function billboardBox() { if (K < 14) return null; const f = expansionFace(); if (!f) return null; const q = [P(f.u0, f.y, XPAN.z0), P(f.u1, f.y, XPAN.z0), P(f.u1, f.y, XPAN.z1), P(f.u0, f.y, XPAN.z1)]; const xs = q.map(v => v[0]), ys = q.map(v => v[1]); return { x0: Math.min(...xs) - 4, y0: Math.min(...ys) - 4, x1: Math.max(...xs) + 4, y1: Math.max(...ys) + 4 }; }
-function drawExpansion(b, t) {
-  const f = expansionFace(), u0 = f.u0, u1 = f.u1, z0 = XPAN.z0, z1 = XPAN.z1, open = fundOpen(), hov = hoverLabel === 'fund', fl = 0.8 + 0.2 * Math.sin(t * 2.3), pt = (u, z) => P(u, f.y, z);
-  const q = [pt(u0, z0), pt(u1, z0), pt(u1, z1), pt(u0, z1)];
-  ctx.fillStyle = 'rgba(8,10,28,.96)'; poly(q); ctx.fill();
-  ctx.strokeStyle = open ? `rgba(92,255,170,${0.9 * fl})` : `rgba(247,200,106,${(hov ? 1 : 0.75) * fl})`; ctx.lineWidth = hov ? 1.8 : 1.2; poly(q); ctx.stroke();
-  for (let k = 0; k < 5; k++) { const g = pt(u0 + (u1 - u0) * (k + 0.5) / 5, z1 + 0.1); glowDot(g[0], g[1], Math.max(1.5, K * 0.05), open ? '92,255,170' : '247,200,106', 0.5 + 0.3 * Math.sin(t * 3 + k)); }
-  let a = pt(u0, z1), c = pt(u1, z1); if (c[0] < a[0]) [a, c] = [c, a];
-  const dlen = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, ux = (c[0] - a[0]) / dlen, uy = (c[1] - a[1]) / dlen, hpx = (z1 - z0) * K;
-  ctx.save(); ctx.transform(ux, uy, 0, 1, a[0], a[1]); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = `700 ${Math.max(6, hpx * 0.34)}px "Chakra Petch", sans-serif`; ctx.fillStyle = open ? `rgba(92,255,170,${0.95 * fl})` : `rgba(247,200,106,${0.95 * fl})`; ctx.shadowColor = open ? 'rgba(92,255,170,.8)' : 'rgba(247,200,106,.8)'; ctx.shadowBlur = 6;
-  ctx.fillText('THE EXPANSION', dlen / 2, hpx * 0.33, dlen * 0.92);
-  ctx.font = `500 ${Math.max(5, hpx * 0.2)}px "IBM Plex Mono", monospace`; ctx.fillStyle = open ? 'rgba(230,236,255,.9)' : 'rgba(195,203,238,.9)'; ctx.shadowBlur = 0;
-  ctx.fillText(open ? 'both wings open' : `build fund ${fmtSol(fundSol())} / ${fmtSol(fundGoal())} SOL`, dlen / 2, hpx * 0.72, dlen * 0.92);
-  ctx.restore();
-}
 function drawLab(t) {
   const live = true, workers = cats.filter(c => c.state === 'act' && c.act === 'work' && JOBS[c.job].st === 'lab'), busy = workers.length > 0, surge = T < labBoostUntil;
   const ax = LAB.x - LAB.w / 2, ay = LAB.y - LAB.d / 2, w = LAB.w, d = LAB.d, h = 2.3;
@@ -5214,9 +5194,8 @@ function drawLabels(t) {
     const locked = PLACES[k].stage && !stageOn(PLACES[k].stage);
     neonSign(x, y, z, locked ? text + ' \u00B7 ' + fmtUsd(STAGES.find(st => st.key === PLACES[k].stage).mc) : text, rgb, t, 0.34, { key: k, dim: locked, hov: hoverLabel === k, on: insPinned && insMode === 'place' && placeKey === k });
   }
-  // the build fund has no sign either: the column (and the billboard on the lab roof) is what you click
+  // the build fund has no sign either: the column is what you click
   { const a = P(FUND.x, FUND.y, 0), b = P(FUND.x, FUND.y, 2.7); labelHits.push({ k: 'fund', x0: b[0] - K * 0.5, y0: b[1] - K * 0.25, x1: a[0] + K * 0.5, y1: a[1] + K * 0.1 }); }
-  { const bb = billboardBox(); if (bb) labelHits.push({ k: 'fund', ...bb }); }
   // the circle has no sign: its countdown is the thing you click
   { const d = P(CRY.x, CRY.y, 3.6), rr = Math.max(14, K * 0.62) + 6; labelHits.push({ k: 'cryo', x0: d[0] - rr, y0: d[1] - rr, x1: d[0] + rr, y1: d[1] + rr }); }
   if (insPinned && insMode === 'place' && PLACES[placeKey]) {
