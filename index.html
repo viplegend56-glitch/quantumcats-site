@@ -397,7 +397,11 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .facts dt{color:var(--muted)} .facts dd{margin:0;text-align:right;font-family:var(--mono);font-size:13px}
 
 footer{border-top:1px solid var(--line);padding:30px 0 40px}
-.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px 32px;align-items:center}
+.foot-l{display:flex;flex-direction:column;gap:6px;min-width:0}.foot-brand{display:flex;align-items:baseline;gap:10px;font-family:var(--hud);font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--text)}.foot-brand em{font-style:normal;font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.foot-l small{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.5}
+.foot-r{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}.foot-ca,.foot-soc{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);padding:7px 10px}.foot-ca label,.foot-soc label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}.foot-ca code{font-family:var(--mono);font-size:12px;color:var(--text)}
+@media (max-width:640px){.foot{flex-direction:column;align-items:flex-start}}
 .foot nav{display:flex;gap:22px;font-family:var(--hud);letter-spacing:.06em}
 .foot nav a{text-decoration:none;color:var(--muted)}
 .foot nav a:hover{color:var(--cyan)}
@@ -1129,7 +1133,14 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 
 <footer>
   <div class="wrap foot">
-    <small><span data-name>Quantum Cats</span> is a box of simulated cats. Characters, not advisers. Nothing here is financial advice.</small>
+    <div class="foot-l">
+      <div class="foot-brand"><span data-name>Quantum Cats</span><em>an experiment</em></div>
+      <small>Ten simulated cats in a box. Characters, not advisers. Nothing here is financial advice.</small>
+    </div>
+    <div class="foot-r">
+      <div class="foot-ca"><label>CA</label><code class="ca-short">not launched yet</code><button class="btn sm copy-ca" type="button" disabled>Copy</button></div>
+      <div class="foot-soc"><label>socials</label><a class="btn sm" data-link="X_URL" href="#/qcat">X</a></div>
+    </div>
   </div>
 </footer>
 
@@ -1182,6 +1193,7 @@ let ca = (CONFIG.CA || '').trim();
 function applyLinks(cfg) {
   ca = (cfg.CA || '').trim();
   document.querySelectorAll('.ca-text').forEach(e => e.textContent = ca || 'not launched yet');
+  document.querySelectorAll('.ca-short').forEach(e => { e.textContent = ca ? ca.slice(0, 6) + '\u2026' + ca.slice(-6) : 'not launched yet'; e.title = ca; });
   document.querySelectorAll('.copy-ca').forEach(b => { b.disabled = !ca; b.title = ca ? 'copy the contract address' : 'not launched yet'; });
   const w = (sel, url) => document.querySelectorAll(sel).forEach(a => { if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; } });
   document.querySelectorAll('[data-link]').forEach(a => { const u = cfg[a.dataset.link]; if (u) { a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.classList.remove('soon'); a.title = ''; } else { a.classList.add('soon'); a.title = 'coming soon'; } });
@@ -2076,7 +2088,7 @@ function sellTok(c) { // what a selling cat parts with: a forced choice (testing
   const starving = c.sol < costOf(FOOD, c) && c.hunger > 0.9; if (c.trait === 'loyal' && !starving) return QI;
   return Math.random() < (SELL_QI[c.trait] || 0.5) ? QI : TK;
 }
-function buyTok(c) { if (c.forceTok) return c.forceTok === 'qi' ? QI : TK; if (c.trait === 'loyal') return TK; return Math.random() < ({ degen: 0.5, greedy: 0.5, patient: 0.4 }[c.trait] || 0.4) ? QI : TK; }
+function buyTok(c) { if (c.forceTok) return c.forceTok === 'qi' ? QI : TK; if (liveTx() && !qcatLive()) return QI; /* for real, with no CA yet, there is no $QCATS to buy */ if (c.trait === 'loyal') return TK; return Math.random() < ({ degen: 0.5, greedy: 0.5, patient: 0.4 }[c.trait] || 0.4) ? QI : TK; }
 const shortOfSol = c => c.sol < costOf(FOOD, c) * 4;
 // what an act costs to start, so a cat never sets off for something it cannot pay for (forced trips from the admin puppet are let through)
 function canAfford(c, act) {
