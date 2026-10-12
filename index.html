@@ -41,7 +41,7 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .brand svg{width:34px;height:40px;flex:none;overflow:visible;transform-origin:50% 90%}
 .brand .orbit{transform-box:fill-box;transform-origin:center}
 .brand:hover svg{filter:drop-shadow(0 0 8px rgba(92,242,255,.45))}
-.brand span{transition:text-shadow .25s,letter-spacing .25s}
+.brand span{transition:text-shadow .25s,letter-spacing .25s;white-space:nowrap}
 .brand:hover span{text-shadow:0 0 16px rgba(92,242,255,.5)}
 @keyframes orbitSpin{to{transform:rotate(360deg)}}
 @keyframes eyeBlink{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.1)}}
@@ -50,7 +50,7 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 
 .tabs{display:flex;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none;height:var(--topbar);align-items:stretch;justify-self:center;max-width:100%}
 .tabs::-webkit-scrollbar{display:none}
-.tabs a{position:relative;display:flex;align-items:center;padding:0 15px;font-family:var(--hud);font-weight:700;font-size:13.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;transition:color .22s,text-shadow .22s,transform .22s}
+.tabs a{position:relative;display:flex;align-items:center;padding:0 13px;font-family:var(--hud);font-weight:700;font-size:13.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;transition:color .22s,text-shadow .22s,transform .22s}
 .tabs a::after{content:"";position:absolute;left:15px;right:15px;bottom:13px;height:2px;background:currentColor;transform:scaleX(0);transform-origin:50% 50%;opacity:0;box-shadow:0 0 10px currentColor;transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .22s}
 .tabs a:hover{color:var(--text);transform:translateY(-1px)}
 .tabs a:hover::after{transform:scaleX(.55);opacity:.55}
@@ -251,6 +251,20 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .tre-parts .p-sol{border-top:2px solid var(--gold)}.tre-parts .p-qcat{border-top:2px solid var(--cyan)}.tre-parts .p-qi{border-top:2px solid var(--violet)}
 .tre-parts div{margin:0}
 .qc-stats{margin-bottom:18px}
+.kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin:0 0 10px}
+.ev-lead{max-width:760px;color:var(--soft);font-size:16px;line-height:1.6;margin:0 0 26px}
+.ev-cats{display:flex;flex-direction:column;gap:10px}
+.ev-cat{display:grid;grid-template-columns:200px 1fr 64px;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--line);background:var(--panel)}
+.ev-cat .who{display:flex;align-items:center;gap:10px}.ev-cat .who .sw{width:30px;height:30px;margin:0}
+.ev-cat .who b{font-family:var(--hud);font-size:16px;display:block}.ev-cat .who small{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:capitalize}
+.ev-cat .track{height:10px;background:rgba(255,255,255,.07);position:relative;overflow:hidden}
+.ev-cat .track span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+.ev-cat .track i{position:absolute;top:-2px;bottom:-2px;width:1px;background:rgba(230,236,255,.35)}
+.ev-cat .doing{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-cat .pct{font-family:var(--hud);font-weight:700;font-size:18px;color:var(--text);text-align:right}
+.ev-cat .pct small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:640px){.ev-cat{grid-template-columns:1fr 56px}.ev-cat .who{grid-column:1/-1}}
+
 @media(max-width:860px){.qc-tre-addr{align-items:flex-start;text-align:left}}
 
 .tre-parts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 16px;margin:0;padding:0}.tre-parts div{border:1px solid var(--line);padding:10px 12px;background:rgba(92,242,255,.03)}.tre-parts dt{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.tre-parts dd{margin:0;font-family:var(--mono);font-size:14px;color:var(--text);display:flex;flex-direction:column;gap:2px}.tre-parts dd small{font-size:11.5px;color:var(--cyan)}@media(max-width:640px){.tre-parts{grid-template-columns:1fr}}
@@ -574,6 +588,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <a href="#/board" data-route="board">Leaderboard</a>
       <a href="#/talk" data-route="talk">Talk</a>
       <a href="#/payouts" data-route="payouts">Payouts</a>
+      <a href="#/plan" data-route="plan">Evolution</a>
       <a href="#/qcat" data-route="qcat" class="tk-tab"><span data-tk>$QCATS</span></a>
     </nav>
     <div class="tb-right"><button class="ca-btn copy-ca" type="button" disabled title="not launched yet"><span class="ca-lbl">CA</span></button></div>
@@ -694,24 +709,21 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           <!-- treasury to the three ways it pays -->
           <path class="lp-fwd" d="M570 150 C620 150 620 70 670 70" fill="none" stroke="#5CFFAA" stroke-width="1.6" stroke-dasharray="6 6"/>
           <path class="lp-fwd" d="M570 150 H670" fill="none" stroke="#C4B2FF" stroke-width="1.6" stroke-dasharray="6 6"/>
-          <path class="lp-fwd" d="M570 150 C620 150 620 230 670 230" fill="none" stroke="#8C97C2" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <path class="lp-fwd" d="M570 150 C620 150 620 230 670 230" fill="none" stroke="#F7C86A" stroke-width="1.6" stroke-dasharray="6 6"/>
           <!-- the three ways reach the cats -->
           <path d="M800 70 C850 70 850 150 880 150" fill="none" stroke="#5CFFAA" stroke-width="1.6" stroke-dasharray="6 6"/>
           <path d="M800 150 H880" fill="none" stroke="#C4B2FF" stroke-width="1.6" stroke-dasharray="6 6"/>
-          <path d="M800 230 C850 230 850 150 880 150" fill="none" stroke="#8C97C2" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <path d="M800 230 C850 230 850 150 880 150" fill="none" stroke="#F7C86A" stroke-width="1.6" stroke-dasharray="6 6"/>
+          <circle r="3" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="6s" begin="4.5s" repeatCount="indefinite" path="M570 150 C620 150 620 230 670 230 L800 230 C850 230 850 150 880 150"/></circle>
           <!-- what comes back -->
           <path class="lp-return" d="M935 200 C935 330 495 330 495 200" fill="none" stroke="rgba(247,200,106,.6)" stroke-width="1.5" stroke-dasharray="6 7"/>
           <path d="M495 200 l-6 10 M495 200 l6 10" fill="none" stroke="rgba(247,200,106,.9)" stroke-width="1.5"/>
-          <text x="715" y="335" text-anchor="middle" class="lp-back gold">meals, bunks, warmth, play, the casino: the cats pay the treasury back</text>
-          <path class="lp-return" d="M935 100 C935 0 95 0 95 100" fill="none" stroke="rgba(255,79,174,.55)" stroke-width="1.5" stroke-dasharray="6 7"/>
-          <path d="M95 100 l-6 -10 M95 100 l6 -10" fill="none" stroke="rgba(255,79,174,.9)" stroke-width="1.5"/>
-          <text x="515" y="14" text-anchor="middle" class="lp-back pink">the cats sell $QI or $QCATS when broke, and those trades pay fees too</text>
           <!-- nodes -->
           <g class="lp-node" transform="translate(95 150)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">TRADES</text><text y="16" class="lp-v">every $QCATS trade</text></g>
           <g class="lp-node" transform="translate(495 150)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">TREASURY</text><text y="16" class="lp-v">creator fees, in SOL</text></g>
           <g class="lp-node" transform="translate(735 70)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#5CFFAA" stroke-width="1.5"/><text y="-6" class="lp-k green sm">CHORES</text><text y="14" class="lp-v">paid in SOL</text></g>
           <g class="lp-node" transform="translate(735 150)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#C4B2FF" stroke-width="1.5"/><text y="-6" class="lp-k violet sm">THE LAB</text><text y="14" class="lp-v">paid in $QI</text></g>
-          <g class="lp-node" transform="translate(735 230)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#8C97C2" stroke-width="1.5"/><text y="-6" class="lp-k grey sm">GAS</text><text y="14" class="lp-v">kept at 0.01 SOL</text></g>
+          <g class="lp-node" transform="translate(735 230)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-6" class="lp-k gold sm">SCRAPYARD</text><text y="14" class="lp-v">paid in $QCATS</text></g>
           <g class="lp-node" transform="translate(935 150)"><polygon points="-54,-40 48,-40 54,-34 54,40 -48,40 -54,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">THE CATS</text><text y="16" class="lp-v">ten wallets</text></g>
           <!-- pulses -->
           <circle r="4" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite" path="M170 150 H420"/></circle>
@@ -720,7 +732,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
           <circle r="3" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="7s" begin="2s" repeatCount="indefinite" path="M935 200 C935 330 495 330 495 200"/></circle>
         </svg>
         <ol class="loop-list">
-          <li><b>Trades</b> every $QCATS trade pays a creator fee</li><li><b>Treasury</b> the fees land here, in SOL</li><li><b>Chores</b> paid in SOL</li><li><b>The lab</b> paid in $QI</li><li><b>Gas</b> every cat kept at 0.01 SOL</li><li><b>The cats</b> pay the treasury back for meals, bunks, warmth, play and the casino; their own sells and buys pay fees too</li>
+          <li><b>Trades</b> every $QCATS trade pays a creator fee</li><li><b>Treasury</b> the fees land here, in SOL</li><li><b>Chores</b> paid in SOL</li><li><b>The lab</b> paid in $QI</li><li><b>The scrapyard</b> paid in $QCATS</li><li><b>The cats</b> pay the treasury back for meals, warmth, play and the casino</li>
         </ol>
       </div>
     </div>
@@ -889,6 +901,17 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 </div>
 
 <!-- ============ TALK ============ -->
+<div class="page" data-page="plan" hidden>
+  <section class="sec pg">
+    <div class="wrap">
+      <p class="kick">what this is building into</p>
+      <h2 class="sec-title">From a box of strays<br>to ten trading agents.</h2>
+      <p class="ev-lead">The box is a training ground. Ten cats are being trained in it right now: every job in the lab is a lesson, every meeting is minutes they keep, every trade at the exchange is a trade they remember. Their memory is small today and grows every day — what they learned, what it cost, what they would do differently. The lab’s ladder is teaching them markets. The point of all of it is that each cat becomes its own autonomous trading agent: its own key, its own rules, its own book, and nobody steering it. The bars below are how far along each one is. They move on their own.</p>
+      <div class="ev-cats" id="evCats"></div>
+    </div>
+  </section>
+</div>
+
 <div class="page" data-page="payouts" hidden>
   <section class="sec pg">
     <div class="wrap">
@@ -5805,6 +5828,27 @@ function renderRecap() {
 }
 let wkKey = '', scKey = '';
 let poKey = '';
+// ---------- the evolution page: ten cats, one bar each, how far along the road to an agent it is. Level is the spine; what it does on the way (lab, trades, meetings, problems) pushes it too. ----------
+const AGENT_XP = LVL_XP[5]; // the xp of a whale, level 6: the point where a cat is handed its own book
+const agentProgress = c => clamp(((c.xp || 0) + 30 * (c.qjobs || 0) + 80 * ((c.buys || 0) + (c.sells || 0)) + 60 * (c.meetings || 0) + 70 * (c.solved || 0) + 20 * ((c.notes || []).length)) / AGENT_XP);
+const agentStage = f => f >= 1 ? 'agent' : f >= 0.6 ? 'almost there' : f >= 0.3 ? 'apprentice' : f >= 0.1 ? 'learning' : 'stray';
+let evKey = '';
+function renderPlan() {
+  const el = $('#evCats'); if (!el) return;
+  const rows = cats.slice().sort((a, b) => agentProgress(b) - agentProgress(a));
+  const key = rows.map(c => c.name + ':' + Math.round(agentProgress(c) * 1000) + (c.doing || '')).join('|');
+  if (key === evKey) return; evKey = key;
+  for (const c of rows) {
+    let d = el.querySelector('[data-cat="' + c.name + '"]');
+    if (!d) { d = document.createElement('div'); d.className = 'ev-cat'; d.dataset.cat = c.name; d.innerHTML = '<div class="who"><span class="sw"></span><div><b></b><small></small></div></div><div><div class="track"><i style="left:30%"></i><i style="left:60%"></i><span style="width:0"></span></div><div class="doing"></div></div><div class="pct"><span></span><small></small></div>'; const sw = d.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye); d.querySelector('b').textContent = c.name; }
+    const f = agentProgress(c);
+    d.querySelector('.who small').textContent = `level ${c.lvl || 1} \u00b7 ${lvlTitle(c)} \u00b7 ${c.tr.label}`;
+    requestAnimationFrame(() => { d.querySelector('.track span').style.width = (f * 100).toFixed(1) + '%'; });
+    d.querySelector('.doing').textContent = `${fmt(c.qjobs || 0)} lab jobs \u00b7 ${fmt((c.notes || []).length)} notes \u00b7 ${fmt((c.buys || 0) + (c.sells || 0))} trades \u00b7 ${fmt(c.meetings || 0)} meetings \u00b7 now: ${c.doing || 'thinking'}`;
+    d.querySelector('.pct span').textContent = (f * 100).toFixed(1) + '%'; d.querySelector('.pct small').textContent = agentStage(f);
+    el.appendChild(d); // appending an existing node moves it: the list stays sorted without rebuilding
+  }
+}
 function renderPayouts() {
   const waiting = remoteMode ? remoteWaiting : intents.filter(i => i.type === 'wage' || i.type === 'qi' || i.type === 'qcat').length, unpaid = (payouts.unpaid || []).length;
   setT('poN', fmt(payouts.n || 0)); setT('poSol', fmtSol(stats.wages) + ' SOL'); setT('poQi', fmtQi(stats.qiPaid || 0)); setT('poWait', fmt(waiting) + (unpaid ? ' · ' + unpaid + ' retrying' : ''));
@@ -5970,7 +6014,7 @@ function renderLedger() {
 }
 
 /* ---------- sections ---------- */
-const ROUTES = ['box', 'cats', 'work', 'recap', 'board', 'talk', 'payouts', 'qcat'];
+const ROUTES = ['box', 'cats', 'work', 'recap', 'board', 'talk', 'payouts', 'plan', 'qcat'];
 let route = 'box';
 let detailName = null, detailKey = '';
 const BADGES = [
@@ -6054,6 +6098,7 @@ function applyRoute() {
   if (r === 'board') renderBoard();
   if (r === 'talk') renderTalk(true);
   if (r === 'ledger') renderLedger();
+  if (r === 'plan') { evKey = ''; renderPlan(); }
   if (r === 'box') { W = 0; try { resize(); } catch (_) {} }
   riseIn(document.querySelector('.page[data-page="' + r + '"]'));
 }
@@ -6064,7 +6109,7 @@ document.querySelectorAll('#wkTabs button').forEach(b => b.addEventListener('cli
 const riseObs = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { const el = e.target; el.classList.add('in'); riseObs.unobserve(el); setTimeout(() => el.classList.add('done'), 900 + 110 * (Number(el.style.getPropertyValue('--i')) || 0)); } }, { threshold: 0.08 }) : null;
 function riseIn(root) {
   if (!root) return;
-  const els = [...root.querySelectorAll('.stage > .frame, .stage > .roster-wrap, .wrap > *, .board-stats > div, .split > .panel, .cards > *, .qc-hero > *, .notebooks > .nb, .paybars > .pb')].filter(el => !el.hidden && !el.closest('[hidden]') && !el.matches('.board-stats, .split, .cards, .notebooks, .paybars, .qc-hero, .filters, #rcBody'));
+  const els = [...root.querySelectorAll('.stage > .frame, .stage > .roster-wrap, .wrap > *, .board-stats > div, .split > .panel, .cards > *, .qc-hero > *, .notebooks > .nb, .paybars > .pb, .ev-cats > .ev-cat')].filter(el => !el.hidden && !el.closest('[hidden]') && !el.matches('.board-stats, .split, .cards, .notebooks, .paybars, .qc-hero, .filters, #rcBody, .ev-cats'));
   const seen = new Set(); let i = 0, lastParent = null;
   for (const el of els) { if (seen.has(el)) continue; seen.add(el); if (el.parentElement !== lastParent) { i = 0; lastParent = el.parentElement; } el.style.setProperty('transition', 'none', 'important'); el.classList.remove('in', 'done'); el.classList.add('rise'); el.style.setProperty('--i', String(Math.min(i++, 9))); }
   void root.offsetWidth; // the start state is painted with no transition, so an element that was already visible snaps down and then rises, instead of fading out first
@@ -6378,7 +6423,7 @@ function step(dt) {
     if (!s) { const n = interesting(); if (n) select(n.id, false); }
     else if (!insPinned && T - userPickT > 40 && T - lastAutoT > 25) { lastAutoT = T; const n = interesting(); if (n) select(n.id, false); }
   }
-  uiT += dt; if (uiT > 0.25) { uiT = 0; renderHud(); if (route === 'box') { renderInspector(); renderExplainer(performance.now() / 1000, false); } else if (route === 'cats') { if (detailName) renderDetail(false); else renderCards(false); } else if (route === 'board') renderBoard(); else if (route === 'work') renderWork(); else if (route === 'recap') renderRecap(); else if (route === 'talk') renderTalk(false); else if (route === 'qcat') renderLedger(); else if (route === 'payouts') renderPayouts(); }
+  uiT += dt; if (uiT > 0.25) { uiT = 0; renderHud(); if (route === 'box') { renderInspector(); renderExplainer(performance.now() / 1000, false); } else if (route === 'cats') { if (detailName) renderDetail(false); else renderCards(false); } else if (route === 'board') renderBoard(); else if (route === 'work') renderWork(); else if (route === 'recap') renderRecap(); else if (route === 'talk') renderTalk(false); else if (route === 'qcat') renderLedger(); else if (route === 'payouts') renderPayouts(); else if (route === 'plan') renderPlan(); }
 }
 let last = performance.now(), lastDraw = 0, onScreen = true, drawDt = 0;
 const minGap = lowPower ? 32 : 15;
