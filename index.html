@@ -623,7 +623,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
     <div class="xs">
       <div class="xs-head"><div><span class="xs-eye">what this is</span><h2 class="xs-title">a box that runs itself</h2></div><p class="xs-note">nobody steers them. they work because<br>living in the box costs SOL.</p></div>
       <div class="xs-cards">
-        <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with 100K <span data-tk>$QCATS</span> and a little SOL. everything else a cat ever gets is paid for by the creator fees.</p></article>
+        <article><h3>ten</h3><p>ten cats, ten public wallets. each starts with a stack of <span data-tk>$QCATS</span> and a little SOL. everything else a cat ever gets is paid for by the creator fees.</p></article>
         <article><h3>work</h3><p>the lab pays $QI for every quantum job a cat finishes. the chores on the floor pay SOL out of the fees. some cats work all day, some barely. that is personality, not a setting.</p></article>
         <article><h3>want</h3><p>a meal, warmth, play, the casino and the arena all cost SOL. a cat that cannot cover a meal sells a little of what it holds, $QI or $QCATS, and it decides which.</p></article>
         <article><h3>learn</h3><p>every night the last ten minutes are the meeting in the circle. each cat writes down one thing it learned and reads it back tomorrow, and it levels up from everything it does in the town.</p></article>
@@ -878,8 +878,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
         <article class="panel card">
           <div class="ph"><span>Ten wallets</span></div>
           <div class="cb">
-            <div class="big" aria-hidden="true">100K</div>
-            <p>Every cat is given 100,000 <span data-tk>$QCATS</span> and a little SOL, in a real wallet of its own. All ten are in the box from day one.</p>
+            <div class="big" aria-hidden="true" id="xAlloc">10K</div>
+            <p>Every cat is given <span id="xAllocTxt">10,000</span> <span data-tk>$QCATS</span> and a little SOL, in a real wallet of its own. All ten are in the box from day one.</p>
           </div>
         </article>
         <article class="panel card">
@@ -1493,7 +1493,7 @@ const WXICON = {
 };
 
 /* ---------- agents ---------- */
-const SUPPLY = 1e9, CAT_ALLOC = 1e5; // 100,000 per cat: 1,000,000 across the ten, 0.1% of supply
+const SUPPLY = 1e9; const catAlloc = () => (Number(CONFIG.START_QCATS) > 0 ? Number(CONFIG.START_QCATS) : 10000); // the stack each cat starts with; set in the brain's admin when the treasury hands it out
 const COATS = [
   { c: '#E08A3C', e: '#B6FF6A' }, { c: '#1C2033', e: '#F2D45C', d: 1 }, { c: '#9097B3', e: '#5CF2FF' },
   { c: '#ECEFF7', e: '#5CA8FF' }, { c: '#9A6B43', e: '#C8FF7A' }, { c: '#E8CC98', e: '#7AF0C8' }, { c: '#4B4F66', e: '#FFD36A', d: 1 },
@@ -1984,7 +1984,7 @@ function makeCat(i) {
   return {
     id: ++uid, name, job, trait, tr: TRAITS[trait], coat: coat.c, eye: coat.e, dark: !!coat.d,
     x: sp[0], y: sp[1], tx: sp[0], ty: sp[1], face: Math.random() < 0.5 ? 1 : -1,
-    sol: 0.1, gas: GAS_FLOOR, qi: 0, qiEarned: 0, qiSold: 0, qiSellSol: 0, twork: 0, qcat: CAT_ALLOC, earned: 0, xp: 0, lvl: 1, meetings: 0, hist: [], said: [], bought: 0, solSpent: 0, stole: 0, robbed: 0, found: 0, buys: 0, sells: 0, sold: 0, sellSol: 0, entry: mkt.price, sellCool: 0, arenaNet: 0, arenaSol: 0, arenaW: 0, arenaL: 0, arrived: false, released: T,
+    sol: 0.1, gas: GAS_FLOOR, qi: 0, qiEarned: 0, qiSold: 0, qiSellSol: 0, twork: 0, qcat: catAlloc(), earned: 0, xp: 0, lvl: 1, meetings: 0, hist: [], said: [], bought: 0, solSpent: 0, stole: 0, robbed: 0, found: 0, buys: 0, sells: 0, sold: 0, sellSol: 0, entry: mkt.price, sellCool: 0, arenaNet: 0, arenaSol: 0, arenaW: 0, arenaL: 0, arrived: false, released: T,
     hunger: rand(0, 0.75), coh: rand(0.35, 1), cold: rand(0, 0.6), lonely: rand(0, 0.6),
     grudge: 0, grudgeOn: null, grudgeWhy: '', starve: 0, tired: rand(0, 0.7), stamina: rand(0.75, 1.35), memory: [],
     ethic: ({ degen: 0.85, patient: 1.0, greedy: 1.35, loyal: 1.15 }[trait] || 1) * rand(0.85, 1.15), qjobs: 0, qwork: 0, qnq: 0, qmax: 0, skills: {}, tasks: 0, taskPay: 0, meals: 0, plays: 0, faints: 0, decohered: 0, acts: [], items: [], wearing: null, vanity: rand(0.5, 1.6),
@@ -2166,7 +2166,7 @@ function applyTrade(c, dir, tok, sol, q, why, sig) {
     c.sol -= sol; c.solSpent += sol; c.buys++; stats.buys++; placeStats.exchange.buysol += sol;
     if (isQi) { c.qi += q; c.qiBought = (c.qiBought || 0) + q; stats.qiBought = (stats.qiBought || 0) + q; stats.qiBuySol = (stats.qiBuySol || 0) + sol; }
     else { c.entry = (c.entry * c.qcat + sol) / (c.qcat + q); c.qcat += q; c.bought += q; stats.buySol += sol; stats.boughtBack += q; placeStats.exchange.bought += q; if (!mkt.pinned && !sig) mkt.price *= 1 + sol / (mkt.price * SUPPLY * 0.35); }
-    floatText(c, '+' + fq(q) + ' ' + tok, isQi ? '#C4B2FF' : '#5CFFAA'); buyFX(c); gainXp(c, isQi ? 3 : 4 + Math.min(14, q / CAT_ALLOC * 100));
+    floatText(c, '+' + fq(q) + ' ' + tok, isQi ? '#C4B2FF' : '#5CFFAA'); buyFX(c); gainXp(c, isQi ? 3 : 4 + Math.min(14, q / catAlloc() * 100));
     log(`${c.name} bought ${fq(q)} ${tok} for ${fmtSol(sol)} SOL at the exchange`, 'gain', 'exchange'); txWith(c, 'buy', '+' + fq(q) + ' ' + tok, fmtSol(sol) + ' SOL', sig); did(c, `bought ${fq(q)} ${tok} for ${fmtSol(sol)} SOL`); recordEvent('buy', `${c.name} bought ${fq(q)} ${tok} for ${fmtSol(sol)} SOL`);
   } else {
     c.sol += sol; c.sells++; stats.sells++;
@@ -2375,7 +2375,7 @@ function release(i) {
   c.doing = 'walking into the box'; c.thought = 'finally'; c.because = UNLOCK_MC[i] ? `the chart hit ${fmtUsd(UNLOCK_MC[i])}` : 'the box opened';
   c.hunger = 0.3; c.cold = 0.2; c.tired = 0.1; c.coh = 0.95;
   cats.push(c);
-  log(`${fmtUsd(mcapUsd())} MC. ${c.name} has been released into the box: a ${JOBS[c.job].label}, ${c.tr.label}, ${fmtQ(CAT_ALLOC)} ${TK} in its wallet.`, 'gain', 'boxes');
+  log(`${fmtUsd(mcapUsd())} MC. ${c.name} has been released into the box: a ${JOBS[c.job].label}, ${c.tr.label}, ${fmtQ(c.qcat)} ${TK} in its wallet.`, 'gain', 'boxes');
   if (dayCur) dayCur.cats0[c.name] = snapCat(c); recordEvent('release', `${c.name} was released into the box at ${fmtUsd(mcapUsd())} MC`);
   say(c, pick(['finally', 'what did I miss', 'which one of you is winning', 'where is the exchange']));
   ringFX(c.x, c.y, '92,242,255', 1.8); burst(c, '92,242,255', 30);
@@ -5511,7 +5511,8 @@ function applyRemote(j) {
   const e = j.engine; if (!e) return;
   if (j.config) applyLinks(j.config);
   if (j.config && j.config.SOL_USD) CONFIG.SOL_USD = j.config.SOL_USD;
-  if (j.config) for (const k of ['PRICE_MUL', 'TEST_FLAT', 'QI_SOL', 'LAB_PAY_MIN_USD', 'LAB_PAY_MAX_USD', 'PACE_MIN', 'LIVE_TX']) if (j.config[k] != null) CONFIG[k] = j.config[k]; // the brain's prices: the box shows what the cats will pay
+  if (j.config) for (const k of ['PRICE_MUL', 'TEST_FLAT', 'QI_SOL', 'LAB_PAY_MIN_USD', 'LAB_PAY_MAX_USD', 'PACE_MIN', 'LIVE_TX', 'START_QCATS']) if (j.config[k] != null) CONFIG[k] = j.config[k]; // the brain's prices: the box shows what the cats will pay
+  { const al = catAlloc(); setT('xAlloc', al >= 1000 && al % 1000 === 0 ? (al / 1000) + 'K' : fmtQ(al)); setT('xAllocTxt', al.toLocaleString('en-US')); }
   { const el = $('#tAi'); if (el) el.textContent = j.ai ? 'AI dialogue on \u00B7 ' : 'built-in lines \u00B7 '; }
   // cats: keep local objects (for smooth motion), update everything else from the server
   const seen = new Set();
