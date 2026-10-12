@@ -6055,7 +6055,7 @@ function applyRoute() {
   if (r === 'talk') renderTalk(true);
   if (r === 'ledger') renderLedger();
   if (r === 'box') { W = 0; try { resize(); } catch (_) {} }
-  else riseIn(document.querySelector('.page[data-page="' + r + '"]'));
+  riseIn(document.querySelector('.page[data-page="' + r + '"]'));
 }
 let wkTab = null; try { wkTab = localStorage.getItem('qc.wk') || null; } catch (_) {}
 function showWork(k) { wkTab = k; try { localStorage.setItem('qc.wk', k); } catch (_) {} document.querySelectorAll('.wk-sec').forEach(sec => { sec.hidden = sec.dataset.wk !== k; }); riseIn(document.querySelector('.wk-sec[data-wk="' + k + '"]')); document.querySelectorAll('#wkTabs button').forEach(b => b.classList.toggle('on', b.dataset.wk === k)); }
@@ -6064,9 +6064,11 @@ document.querySelectorAll('#wkTabs button').forEach(b => b.addEventListener('cli
 const riseObs = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { const el = e.target; el.classList.add('in'); riseObs.unobserve(el); setTimeout(() => el.classList.add('done'), 900 + 110 * (Number(el.style.getPropertyValue('--i')) || 0)); } }, { threshold: 0.08 }) : null;
 function riseIn(root) {
   if (!root) return;
-  const els = [...root.querySelectorAll('.wrap > *, .board-stats > div, .split > .panel, .cards > *, .qc-hero > *, .notebooks > .nb, .paybars > .pb')].filter(el => !el.hidden && !el.closest('[hidden]') && !el.matches('.board-stats, .split, .cards, .notebooks, .paybars, .qc-hero, .filters, #rcBody'));
+  const els = [...root.querySelectorAll('.stage > .frame, .stage > .roster-wrap, .wrap > *, .board-stats > div, .split > .panel, .cards > *, .qc-hero > *, .notebooks > .nb, .paybars > .pb')].filter(el => !el.hidden && !el.closest('[hidden]') && !el.matches('.board-stats, .split, .cards, .notebooks, .paybars, .qc-hero, .filters, #rcBody'));
   const seen = new Set(); let i = 0, lastParent = null;
-  for (const el of els) { if (seen.has(el)) continue; seen.add(el); if (el.parentElement !== lastParent) { i = 0; lastParent = el.parentElement; } el.classList.remove('in', 'done'); el.classList.add('rise'); el.style.setProperty('--i', String(Math.min(i++, 9))); }
+  for (const el of els) { if (seen.has(el)) continue; seen.add(el); if (el.parentElement !== lastParent) { i = 0; lastParent = el.parentElement; } el.style.setProperty('transition', 'none', 'important'); el.classList.remove('in', 'done'); el.classList.add('rise'); el.style.setProperty('--i', String(Math.min(i++, 9))); }
+  void root.offsetWidth; // the start state is painted with no transition, so an element that was already visible snaps down and then rises, instead of fading out first
+  for (const el of seen) el.style.removeProperty('transition');
   void root.offsetWidth;
   if (!riseObs) { for (const el of seen) el.classList.add('in'); return; }
   for (const el of seen) { riseObs.unobserve(el); riseObs.observe(el); }
@@ -6479,7 +6481,7 @@ async function pollBrain() {
 if (remoteMode) { cats.length = 0; pollBrain(); setInterval(pollBrain, 2000); }
 
 /* ---------- start ---------- */
-resize(); homeView(false);
+resize(); homeView(false); riseIn(document.querySelector('.page[data-page="box"]'));
 let rzPending = false;
 const queueResize = () => { if (rzPending) return; rzPending = true; requestAnimationFrame(() => { rzPending = false; try { resize(); } catch (e) { console.warn('resize skipped', e); } }); };
 // plain resize events + a cheap size check instead of ResizeObserver (avoids observer-loop errors in embedded previews)
