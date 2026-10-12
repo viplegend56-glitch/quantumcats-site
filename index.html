@@ -1740,6 +1740,7 @@ const scrapPay = tier => { const per = mkt.price * (Number(CONFIG.SOL_USD) || 15
 const qcatPool = () => (stats.qcatPool || 0), qcatLive = () => CONFIG.QCAT_LIVE === true; // the treasury's own $QCATS: a pretend pile while the box runs on its own, the real balance once the brain reads it
 function stepScrap() {
   if (!board.scrap) { board.scrap = []; board.scrapDone = []; }
+  if (liveTx() && !mkt.pinned) return; // for real, the yard posts nothing until the chart has been read: a job is priced in dollars at the chart, never at a placeholder
   if (board.scrap.length < 4 && T >= (board.scrapNext || 0)) {
     const [title, tier, out] = pick(SCRAP_JOBS);
     if (!board.scrap.some(j => j.title === title)) board.scrap.push({ id: 'S' + (++board.scrapSeq), title, tier, out, pay: scrapPay(tier), dur: 45 + tier * 30, posted: T, t: clock(simMin), status: 'open', by: null });
@@ -5865,7 +5866,7 @@ function renderRecap() {
   const key = [d.day, d.final, d.jobs, d.tasks, d.events.length, d.meeting.lines.length, Object.keys(d.cats).length, Math.round(d.fees * 1e6)].join(':');
   if (key === rcKey) return; rcKey = key;
   const st = $('#rcStats'); st.innerHTML = '';
-  for (const [v, l] of [[(d.gained != null ? (d.gained >= 0 ? '+' : '') + fmtSol(d.gained) : fmtSol(d.fees)) + ' SOL', 'treasury, over the day'], [fmtSol(d.wages) + ' SOL', 'paid to cats'], [fmtSol(d.upkeep) + ' SOL', 'spent on living'], [fmt(d.jobs), 'lab sessions'], [fmt(d.tasks), 'chores dealt with']]) { const div = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const sp = document.createElement('span'); sp.textContent = l; div.append(b, sp); st.appendChild(div); }
+  for (const [v, l] of [[fmtSol(d.wages) + ' SOL', 'paid to cats'], [fmtSol(d.upkeep) + ' SOL', 'spent on living'], [fmt(d.jobs), 'lab sessions'], [fmt(d.tasks), 'chores dealt with']]) { const div = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const sp = document.createElement('span'); sp.textContent = l; div.append(b, sp); st.appendChild(div); }
   $('#rcTop').textContent = (d.topWorker ? 'most work: ' + d.topWorker : '') + (d.topEarner ? ' · top earner: ' + d.topEarner : '');
   const tb = $('#rcCats tbody'); tb.innerHTML = '';
   for (const [name, x] of Object.entries(d.cats).sort((a, b) => (b[1].jobs + b[1].tasks) - (a[1].jobs + a[1].tasks))) { const tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="a"></td><td class="n"></td>'; const c = tr.children; c[0].textContent = name; c[1].textContent = fmt(x.jobs); c[2].textContent = fmt(x.tasks); c[3].textContent = fmtSol(x.earned); c[4].textContent = fmtSol(x.spent); c[5].textContent = x.lvlTo > x.lvlFrom ? `${x.lvlFrom} → ${x.lvlTo}` : String(x.lvlTo); tb.appendChild(tr); }
@@ -6486,7 +6487,7 @@ function step(dt) {
     stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
   } else {
   stepWeather(dt); stepMarket(dt); checkReleases(); checkStages(); checkFund(); stepDay(); stepMeeting(dt); stepBoard(dt); stepDeliveries(dt); stepBots(dt); if (!isPaused()) { stepGas(); stepLab(); stepScrap(); stepPayout(); stepPayroll(); } stepCritters(dt);
-  if (T >= nextFee) { feeIn(false); nextFee = T + rand(60, 150); }
+  if (feePool() && !isPaused() && T >= nextFee) { feeIn(false); nextFee = T + rand(60, 150); } // the box's own pretend fees, only while it runs on its own with no wallets
   for (const c of cats) update(c, dt); separateAll(dt);
   stepTraffic(dt); stepPeople(dt); stepHarbor(dt);
   }
