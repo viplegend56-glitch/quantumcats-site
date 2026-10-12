@@ -1328,7 +1328,7 @@ const BUILD = [
   { x: 2, y: 12.8, w: 3, d: 2.6, h: 3.6 },
   { x: 2, y: 16, w: 3, d: 2.2, h: 2.4 },
   { x: 5.6, y: 2, w: 3.2, d: 3, h: 5.2 },
-  { x: 9.4, y: 2, w: 2.8, d: 3, h: 3.4 },
+  { x: 9.4, y: 2, w: 2.8, d: 3, h: 3.4, board: 'X' },   // the expansion billboard: on the face behind the lab's back-left corner, between the casino and the lab
   { x: 12.8, y: 2, w: 2.6, d: 3, h: 6.4, board: 'C' },
   { x: 16, y: 2, w: 2.2, d: 3, h: 4.0 },
   { x: 19.4, y: 2, w: 2.6, d: 3, h: 5.4 },
@@ -1353,9 +1353,9 @@ const VAULT = { x: M(16.9), y: M(8.9) };                                       /
 const LOFT = { x: M(16.3), y: M(5.3), w: 2.0, d: 1.1 };                        // the bunks, over the corner shop
 const TRAYS = { x: M(16.2), y: M(11.2), w: 1.3, d: 3.7 };                      // the scrapyard: a fenced yard along the right edge, with a gantry over it
 const BENCH_SPOTS = [0, 1, 2, 3].map(i => [TRAYS.x - 0.42, TRAYS.y + 0.75 + i * 0.72]); // four places at the sorting bench, outside the fence, facing the yard
-const CRATES = { x: M(14.9), y: M(16.0), w: 1.6, d: 0.8 };                     // the diner counter
-const FUND = { x: M(17.6), y: M(17.45) };                                      // the build fund: a column in the open corner of the plaza past the diner, that fills as the cats put SOL in
-const FUND_SPOTS = [0, 1, 2, 3, 4].map(i => { const a = -0.3 + i * 0.5; return [FUND.x - 0.95 * Math.cos(a), FUND.y - 0.95 * Math.sin(a)]; }); // where a cat stands to give
+const CRATES = { x: M(14.9) + 1.3, y: M(16.0), w: 1.6, d: 0.8 };               // the diner counter, in the bottom corner of the plaza
+const FUND = { x: CRATES.x + CRATES.w / 2, y: CRATES.y + 2.45 };                  // the build fund: a column in the corner, centred in front of the diner
+const FUND_SPOTS = [[FUND.x - 0.95, FUND.y - 0.1], [FUND.x - 0.95, FUND.y + 0.35], [FUND.x + 0.95, FUND.y - 0.1], [FUND.x + 0.95, FUND.y + 0.35]]; // where a cat stands to give: either side of the column
 const DINER_STOOLS = [0, 1, 2, 3].map(i => [CRATES.x + 0.08 + i * 0.48, CRATES.y + 1.3]); // four stools along the front of the counter
 const VENT = { x: M(10.7), y: M(16.6) };                                       // the heater grate (1.4 x 0.85)
 const ARENA = { x: M(5.45), y: M(13.4), r: 0.95 }; ARENA.slots = [[ARENA.x - 0.3, ARENA.y + 0.22], [ARENA.x + 0.3, ARENA.y - 0.22]]; // the two cats square up in the middle of the ring
@@ -4050,6 +4050,7 @@ function drawRoofStuff(b, t) {
 }
 function drawBillboard(b, t) {
   if (b.board === 'C' || b.board === 'D') return drawHoarding(b, t);
+  if (b.board === 'X') return drawExpansion(b, t);
   return; // the coin boards came down
   // a lit panel on the face that looks at the plaza, showing the coin and the chart
   const L = b.board === 'L', z0 = b.h * 0.45, z1 = z0 + 1.6, fl = 0.85 + 0.15 * Math.sin(t * 9 + b.x);
@@ -4192,7 +4193,7 @@ function drawFund(t) {
   // the slot and a coin dropping when somebody is giving
   for (const c of cats) if (c.state === 'act' && c.act === 'donate' && !reduce) { const ph = (t * 1.4 + c.id) % 1; const q = P(fx, fy, 2.3 - ph * 2.0); glowDot(q[0], q[1], Math.max(2, K * 0.07), '247,200,106', (1 - ph) * 0.9); }
   // the figure on the plinth, and the sign when it is done
-  { const q = P(fx, fy, 2.45), hov = hoverLabel === 'fund' || (insPinned && insMode === 'place' && placeKey === 'fund'), text = open ? 'OPEN' : `${fmtSol(fundSol())} / ${fmtSol(fundGoal())} SOL`;
+  { const q = P(fx, fy, 2.32), hov = hoverLabel === 'fund' || (insPinned && insMode === 'place' && placeKey === 'fund'), text = open ? 'OPEN' : `${fmtSol(fundSol())} / ${fmtSol(fundGoal())} SOL`;
     ctx.font = `700 ${Math.max(9, Math.min(14, K * 0.26))}px "Chakra Petch", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const tw = ctx.measureText(text).width + 12, th = Math.max(9, Math.min(14, K * 0.26)) * 1.6;
     ctx.fillStyle = 'rgba(6,7,20,.8)'; ctx.fillRect(q[0] - tw / 2, q[1] - th / 2, tw, th); ctx.strokeStyle = `rgba(92,255,170,${hov ? 0.9 : 0.45})`; ctx.lineWidth = hov ? 1.5 : 1; ctx.strokeRect(q[0] - tw / 2 + 0.5, q[1] - th / 2 + 0.5, tw - 1, th - 1);
@@ -4901,19 +4902,16 @@ function drawArena(t) {
   for (const a of [0.8, 2.35, 3.95, 5.5]) { const px = ARENA.x + Math.cos(a) * ARENA.r * 1.05, py = ARENA.y + Math.sin(a) * ARENA.r * 1.05; drawBox(px - 0.08, py - 0.08, 0.16, 0.16, 0.9, { t: '#3A2F3A', l: '#2A222C', r: '#1E1820' }); const q = P(px, py, 1.0); glowDot(q[0], q[1], Math.max(1.2, K * 0.06), '255,200,80', live ? 0.9 : 0.35); }
   if (live && !reduce) { const m = P(ARENA.x, ARENA.y, 0.6); if (Math.random() < 0.8) for (let i = 0; i < 2; i++) { const an = rand(0, TAU), sp = rand(30, 90), l = rand(0.3, 0.6); parts.push({ x: m[0], y: m[1], vx: Math.cos(an) * sp, vy: Math.sin(an) * sp - 20, life: l, max: l, rgb: pick(['255,200,80', '255,79,174', '255,255,255']), r: rand(0.8, 1.8) }); } }
 }
-// the billboard on the lab roof: THE EXPANSION — the two boarded-up buildings the build fund is for, and how far along it is. Clicking it opens the fund.
-// it stands on the roof beside the cooling unit in the back-right corner, its face toward the plaza's right side (the fund's corner)
-const BILL = { x: () => LAB.x + LAB.w / 2 - 1.02, v0: () => LAB.y - LAB.d / 2 + 0.12, v1: () => LAB.y - LAB.d / 2 + 1.62, z0: 2.3 + 0.5, z1: 2.3 + 1.5 };
-function billboardBox() { if (K < 14) return null; const a = P(BILL.x(), BILL.v0(), BILL.z0), b = P(BILL.x(), BILL.v1(), BILL.z1), c = P(BILL.x(), BILL.v0(), BILL.z1), d = P(BILL.x(), BILL.v1(), BILL.z0); const xs = [a[0], b[0], c[0], d[0]], ys = [a[1], b[1], c[1], d[1]]; return { x0: Math.min(...xs) - 4, y0: Math.min(...ys) - 4, x1: Math.max(...xs) + 4, y1: Math.max(...ys) + 4 }; }
-function drawBillboard(t) {
-  const X = BILL.x(), u0 = BILL.v0(), u1 = BILL.v1(), z0 = BILL.z0, z1 = BILL.z1, open = fundOpen(), hov = hoverLabel === 'fund', fl = 0.8 + 0.2 * Math.sin(t * 2.3), pt = (v, z) => P(X, v, z);
-  // two posts up from the roof slab, the panel between them
-  for (const v of [u0 + 0.08, u1 - 0.08]) { const a = pt(v, 2.3 + 0.12), b = pt(v, z1); ctx.strokeStyle = '#4A5080'; ctx.lineWidth = Math.max(2, K * 0.06); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+// THE EXPANSION: a billboard on the building behind the lab's back-left corner (between the casino and the lab), with how far the build fund is. Clicking it opens the fund.
+const XPAN = { z0: 1.5, z1: 3.1 };
+function expansionFace() { const b = BUILD.find(x => x.board === 'X'); if (!b) return null; return { u0: b.x + 0.3, u1: b.x + b.w - 0.3, y: b.y + b.d + 0.06 }; }
+function billboardBox() { if (K < 14) return null; const f = expansionFace(); if (!f) return null; const q = [P(f.u0, f.y, XPAN.z0), P(f.u1, f.y, XPAN.z0), P(f.u1, f.y, XPAN.z1), P(f.u0, f.y, XPAN.z1)]; const xs = q.map(v => v[0]), ys = q.map(v => v[1]); return { x0: Math.min(...xs) - 4, y0: Math.min(...ys) - 4, x1: Math.max(...xs) + 4, y1: Math.max(...ys) + 4 }; }
+function drawExpansion(b, t) {
+  const f = expansionFace(), u0 = f.u0, u1 = f.u1, z0 = XPAN.z0, z1 = XPAN.z1, open = fundOpen(), hov = hoverLabel === 'fund', fl = 0.8 + 0.2 * Math.sin(t * 2.3), pt = (u, z) => P(u, f.y, z);
   const q = [pt(u0, z0), pt(u1, z0), pt(u1, z1), pt(u0, z1)];
   ctx.fillStyle = 'rgba(8,10,28,.96)'; poly(q); ctx.fill();
   ctx.strokeStyle = open ? `rgba(92,255,170,${0.9 * fl})` : `rgba(247,200,106,${(hov ? 1 : 0.75) * fl})`; ctx.lineWidth = hov ? 1.8 : 1.2; poly(q); ctx.stroke();
-  // lamps along the top edge
-  for (let k = 0; k < 4; k++) { const g = pt(u0 + (u1 - u0) * (k + 0.5) / 4, z1 + 0.08); glowDot(g[0], g[1], Math.max(1.5, K * 0.05), open ? '92,255,170' : '247,200,106', 0.5 + 0.3 * Math.sin(t * 3 + k)); }
+  for (let k = 0; k < 5; k++) { const g = pt(u0 + (u1 - u0) * (k + 0.5) / 5, z1 + 0.1); glowDot(g[0], g[1], Math.max(1.5, K * 0.05), open ? '92,255,170' : '247,200,106', 0.5 + 0.3 * Math.sin(t * 3 + k)); }
   let a = pt(u0, z1), c = pt(u1, z1); if (c[0] < a[0]) [a, c] = [c, a];
   const dlen = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1, ux = (c[0] - a[0]) / dlen, uy = (c[1] - a[1]) / dlen, hpx = (z1 - z0) * K;
   ctx.save(); ctx.transform(ux, uy, 0, 1, a[0], a[1]); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -5454,7 +5452,7 @@ function render(t, dt) {
   for (const [bx, by] of BINS) L.push([bx + by, () => drawBin(bx, by, t)]);
   for (const q of board.tasks) if (q.x != null) L.push([q.x + q.y + 0.005, () => drawTaskItem(q, t)]);
   L.push([ARENA.x + ARENA.y - 1.2, () => drawArena(t)]);
-  L.push([LAB.x + LAB.y, () => { drawLab(t); drawBillboard(t); }]);
+  L.push([LAB.x + LAB.y, () => drawLab(t)]);
   L.push([FRIDGE.x + FRIDGE.y, () => drawFridge(t)]);
   L.sort((a, b) => a[0] - b[0]);
   for (const it of L) it[1]();
