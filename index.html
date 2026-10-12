@@ -250,7 +250,9 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .qc-mix .m-sol{background:var(--gold)}.qc-mix .m-qcat{background:var(--cyan)}.qc-mix .m-qi{background:var(--violet)}
 .tre-parts .p-sol{border-top:2px solid var(--gold)}.tre-parts .p-qcat{border-top:2px solid var(--cyan)}.tre-parts .p-qi{border-top:2px solid var(--violet)}
 .tre-parts div{margin:0}
-.qc-stats{margin-bottom:18px}
+.qc-stats{margin-bottom:18px;grid-template-columns:repeat(3,minmax(0,1fr))}.qc-stats div:nth-child(1) b{color:#C4B2FF}.qc-stats div:nth-child(2) b{color:#5CFFAA}.board-stats.qc-stats div.hi{border-color:rgba(247,200,106,.55);background:linear-gradient(180deg,rgba(247,200,106,.09),rgba(247,200,106,.02))}.board-stats.qc-stats div.hi b{color:var(--gold);font-size:2.3rem}.board-stats.qc-stats div.hi span{color:var(--gold)}.board-stats span span{display:inline;margin:0}
+.wallets tfoot td{border-top:1px solid rgba(247,200,106,.35);color:var(--text)}.wallets tfoot td:first-child{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}.wallets tfoot small{color:var(--gold);font-size:12px}
+.wfoot{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:10px 12px 2px}.wfoot span{color:var(--text)}
 .kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin:0 0 10px}
 .ev-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:18px}
 .ev-tag{margin:0;font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--soft);text-align:right;white-space:nowrap}
@@ -420,8 +422,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 @keyframes wxpulse{0%{box-shadow:0 0 0 0 var(--wxc)}100%{box-shadow:0 0 0 14px rgba(0,0,0,0)}}
 
 /* ---------- place view ---------- */
-.pdesc{color:var(--soft);font-size:13px;line-height:1.5;margin:10px 0 12px}
-.pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:4px}
+.pdesc{color:var(--soft);font-size:13px;line-height:1.5;margin:10px 0 16px}
+.pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 4px}
 .pstats div{border:1px solid var(--line);padding:8px 8px 6px}
 .pstats b{display:block;font-family:var(--hud);font-size:1.1rem;font-weight:700;color:var(--gold);line-height:1}
 .pstats span{display:block;font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-top:5px;line-height:1.3}
@@ -557,7 +559,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   .buyback .last{flex-basis:100%}
   .ugrid{grid-template-columns:repeat(5,minmax(0,1fr))}
   .stages{grid-template-columns:1fr}
-  .board-stats{grid-template-columns:1fr 1fr}
+  .board-stats,.qc-stats{grid-template-columns:1fr 1fr}
   .board td.nm small{display:none}
   .board th:nth-child(n+6),.board td:nth-child(n+6){display:none}
   .split{grid-template-columns:1fr}
@@ -893,12 +895,6 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   <section class="sec pg">
     <div class="wrap">
       <h2 class="sec-title">Leaderboard</h2>
-      <div class="board-stats">
-        <div><b id="qEarned">0</b><span>SOL earned, all cats</span></div>
-        <div><b id="qQi">0</b><span>$QI earned in the lab</span></div>
-        <div><b id="qCasino">0</b><span>SOL the casino has taken off them</span></div>
-        <div><b id="qHeld">0</b><span><span data-tk>$QCATS</span> in the ten wallets</span></div>
-      </div>
       <div class="panel">
         <table class="board" id="board">
           <thead><tr><th>#</th><th>cat</th><th data-s="lvl" class="on">level</th><th data-s="earned">SOL earned</th><th data-s="qi">$QI earned</th><th data-s="qcat"><span data-tk>$QCATS</span> holding</th><th data-s="casino">casino</th><th data-s="arena">arena</th><th data-s="trades">trades</th></tr></thead>
@@ -1085,7 +1081,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
         </div>
         <div class="qc-token">
           <div class="qc-ca"><label>Contract address</label><div class="ca-row"><code class="ca-text">not launched yet</code><button class="btn sm copy-ca" type="button" disabled>Copy</button></div></div>
-          <div class="qc-chips"><span><small>ticker</small><b data-tk>$QCATS</b></span><span><small>chain</small><b>Solana</b></span><span><small>pays the lab</small><b>$QI</b></span><span class="qc-soc"><small>socials</small><a class="btn sm" data-link="X_URL" href="#/qcat">X</a></span></div>
+          <div class="qc-chips"><span><small>ticker</small><b data-tk>$QCATS</b></span><span><small>chain</small><b>Solana</b></span><span class="qc-soc"><small>socials</small><a class="btn sm" data-link="X_URL" href="#/qcat">X</a></span></div>
         </div>
       </div>
 
@@ -1108,12 +1104,9 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       </div>
 
       <div class="board-stats qc-stats">
-        <div><b id="fFees">0</b><span>SOL from creator rewards</span></div>
-        <div><b id="fQi">0</b><span>$QI paid out by the lab</span></div>
-        <div><b id="fTrades">0</b><span>trades by the cats</span></div>
-        <div><b id="eHeld">0</b><span><span data-tk>$QCATS</span> held by the ten</span></div>
-        <div><b id="fQiHeld">0</b><span>$QI held by the ten</span></div>
-        <div><b id="fSolAll">0</b><span>SOL held, cats and treasury</span></div>
+        <div><b id="fQi">0</b><span>$QI paid out</span></div>
+        <div><b id="fQcatPaid">0</b><span><span data-tk>$QCATS</span> paid out</span></div>
+        <div class="hi"><b id="fFees">0</b><span>SOL from creator rewards</span></div>
       </div>
 
       <div class="split">
@@ -1126,7 +1119,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
         </div>
         <div class="panel">
           <div class="ph"><span>The ten wallets</span><small>every one public · click an address</small></div>
-          <table class="wallets" id="walletTable"><thead><tr><th>cat</th><th>wallet</th><th class="n">SOL</th><th class="n" data-tk>$QCATS</th><th class="n">$QI</th></tr></thead><tbody></tbody></table>
+          <table class="wallets" id="walletTable"><thead><tr><th>cat</th><th>wallet</th><th class="n">SOL</th><th class="n" data-tk>$QCATS</th><th class="n">$QI</th></tr></thead><tbody></tbody><tfoot><tr><td>all ten</td><td class="addr"><small id="wTotUsd">worth $0.00 together</small></td><td class="n"><span id="wSol">0.00</span></td><td class="n"><span id="wQcat">0</span></td><td class="n"><span id="wQi">0</span></td></tr></tfoot></table>
+          <div class="wfoot"><span id="wEarned">0.00 SOL</span> earned by the cats, all time</div>
         </div>
       </div>
     </div>
@@ -2133,7 +2127,10 @@ const DRIVES = [
   { act: 'sleep',    label: 'tired',                    w: c => Math.pow(c.tired, 2.2) * 1.1 },
   { act: 'play',     label: 'wants to play',            w: c => (0.42 + c.lonely * 0.4) * c.tr.social * (c.sol > costOf(PLAY, c) * 3 ? 1 : 0) * (T - (c.playT || -1e9) > 900 ? 1 : 0.25) },
   { act: 'task',     label: c => (tasksFor(c).some(t => t.called != null && T - t.called < 180) ? 'somebody flagged something' : 'something wants doing'), w: c => { const ts = tasksFor(c); return ts.length ? (c.coh < 0.4 ? 0.2 : 1) * (0.42 + 0.12 * Math.max(...ts.map(t => t.tier)) + (shortOfSol(c) ? 0.6 : 0)) * c.ethic * (ts.some(t => t.called != null && T - t.called < 180) ? 1.8 : 1) : 0; } },
-  { act: 'donate',   label: c => (fundOpen() ? 'the fund is full' : 'feels like giving'), w: c => (fundOpen() || (liveTx() && !fundLive()) || T < (c.donateCool || 0) || c.hunger > 0.6 || spare(c) < costOf(0.03, c) ? 0 : (0.3 + 0.33 * clamp(spare(c) / 0.05)) * ({ loyal: 1.5, patient: 1.15, degen: 0.85, greedy: 0.5 }[c.trait] || 1) * (c.ethic || 1)) },
+  { act: 'donate',   label: c => (fundOpen() ? 'the fund is full' : spare(c) >= askAmt(fundAsk()) ? 'going for the prize at the fund' : 'feels like giving'), w: c => { if (fundOpen() || T < (c.donateCool || 0) || c.hunger > 0.6) return 0; const a = fundAsk(), sp = spare(c); if (sp < costOf(0.01, c)) return 0;
+      let w = 0.12 + 0.2 * clamp(sp / costOf(0.05)); // a plain gift now and then, when flush
+      if (sp >= askAmt(a)) w += a.kind === 'xp' ? 0.3 : ((c.items || []).includes(a.item) ? 0.05 : 0.4); // the prize: XP for the ladder, or a cosmetic it does not have yet
+      return w * ({ loyal: 1.4, patient: 1.15, degen: 0.9, greedy: 0.6 }[c.trait] || 1) * (c.ethic || 1); } },
   { act: 'shop',     label: 'feeling flush',            w: c => itemsFor(c).length ? (0.3 + 0.25 * (c.vanity || 1)) * (1 - (c.items || []).length / ITEMS.length) * (T - (c.shopT || -1e9) > 2400 ? 1 : 0.08) : 0 },
 ];
 const TH = {
@@ -2168,7 +2165,7 @@ const PLACES = {
   cryo:     { title: 'The circle',    kind: 'where the box meets',                 pt: [CRY.x, CRY.y], stats: ['here', 'spent', 'visits'], desc: 'The meeting is the last ten minutes of every day. Recohering out here costs ' + fmtSol(CRYO) + ' SOL.' },
   crates:   { title: 'The diner',     kind: 'food · paid to the treasury',          pt: [CRATES.x + 0.8, CRATES.y + 1.2], stats: ['spent', 'here', 'visits'], desc: '' },
   vent:     { title: 'The heater',    kind: 'warmth · by the minute',               pt: [VENT.x + 0.7, VENT.y + 0.5], stats: ['spent', 'here', 'visits'], desc: '' },
-  trays:    { title: 'The scrapyard', kind: 'salvage jobs \u00b7 paid in ' + TK,        pt: [TRAYS.x + TRAYS.w / 2, TRAYS.y + TRAYS.d / 2], stats: ['here', 'jobs', 'qcat'], desc: 'Old quantum hardware washes up at the harbour and ends up here: dead cryostats, coax by the mile, boards nobody labelled. Jobs go up on the bench; a cat takes one, strips it for parts the lab can use, and the treasury pays it in ' + TK + ' from its own supply the moment it is done.' },
+  trays:    { title: 'The scrapyard', kind: 'salvage jobs \u00b7 paid in ' + TK,        pt: [TRAYS.x + TRAYS.w / 2, TRAYS.y + TRAYS.d / 2], stats: ['here', 'jobs', 'qcat'], desc: 'Old quantum hardware washes up here. A cat takes a job off the bench, strips it for parts, and the treasury pays it in ' + TK + ' the moment it is done.' },
   exchange: { title: 'The exchange', kind: 'where cats sell $QI or ' + TK + ' for SOL, and buy', pt: [EXC.x + 0.5, EXC.y], stats: ['here', 'sells', 'visits'], desc: '' },
   casino:   { title: 'The casino',    kind: 'the house is the treasury',            pt: [CASINO.x + 0.5, CASINO.y], stats: ['here', 'wagered', 'spent'], desc: '' },
   arena:    { title: 'The arena',     kind: 'wagers in SOL · entry ' + fmtSol(ARENA_FEE) + ' SOL', pt: [ARENA.x, ARENA.y], stats: ['spent', 'here', 'wagered'], desc: '' },
@@ -2177,7 +2174,7 @@ const PLACES = {
   bazaar:   { title: 'The shop',      kind: 'things to wear · paid to the treasury', pt: [BAZ.x + 1.5, BAZ.y + 1.0], stats: ['spent', 'here', 'items'], desc: '' },
   yard:     { title: 'The yard',      kind: 'play · ' + fmtSol(PLAY) + ' SOL a visit', pt: [YARD.x + YARD.w / 2, YARD.y + YARD.d / 2], stats: ['spent', 'here', 'visits'], desc: '' },
   vault:    { title: 'The treasury',  kind: 'where the fees land',                  pt: [VAULT.x, VAULT.y], stats: ['fees', 'wages', 'qipaid'], desc: '' },
-  fund:     { title: 'The build fund', kind: 'SOL from the cats \u00b7 opens the boarded-up buildings', pt: [FUND.x, FUND.y], stats: ['raised', 'goal', 'givers'], desc: 'Two buildings on the block are still boarded up. The cats put a little of their own SOL in the column when they can spare it \u2014 it goes to the fund wallet, every lamport on-chain \u2014 and when the column reaches the goal the hoardings come down and the buildings open. Giving earns a cat a little experience.' },
+  fund:     { title: 'The build fund', kind: 'the cats chip in \u00b7 opens the boarded-up buildings', pt: [FUND.x, FUND.y], stats: ['raised', 'goal', 'givers'], desc: 'See the two COMING SOON boards? This is for them. Cats drop a little SOL in when they can spare it (it lands in the treasury, on-chain), and there is always a prize for the next gift over the line.' },
 };
 const placeStats = {}, placeLogs = {}, placeDay = {};
 for (const k of Object.keys(PLACES)) { placeStats[k] = { paid: 0, spent: 0, visits: 0, found: 0, stolen: 0, bought: 0, buysol: 0, wagered: 0, circuits: 0, keys: 0, jobs: 0 }; placeLogs[k] = []; }
@@ -2431,19 +2428,29 @@ function applyTrade(c, dir, tok, sol, q, why, sig) {
 }
 // ---------- the build fund: the cats put SOL toward the boarded-up buildings; at the goal, the hoardings come down ----------
 const fundGoal = () => (Number(CONFIG.FUND_GOAL) > 0 ? Number(CONFIG.FUND_GOAL) : 2.5);
-const fundSol = () => (stats.fundSol || 0), fundOpen = () => fundSol() >= fundGoal() || !!stats.fundOpened, fundLive = () => !!CONFIG.FUND_LIVE; // FUND_LIVE: the brain has a fund wallet to read (set the moment it reports a balance)
+const fundSol = () => (stats.fundSol || 0), fundOpen = () => fundSol() >= fundGoal() || !!stats.fundOpened;
+// the prize at the column: the next gift over the line wins something, XP for the ladder or a cosmetic; the line follows the price multiplier, and a new prize goes up the moment one is won
+const FUND_ASKS = [0.01, 0.015, 0.02, 0.03];
+function newAsk() { const base = pick(FUND_ASKS), kind = Math.random() < 0.6 ? 'xp' : 'item', a = { base, kind }; if (kind === 'xp') a.xp = Math.round(base / 0.01 * 15); else a.item = pick(ITEMS).key; stats.fundAsk = a; return a; }
+const fundAsk = () => (stats.fundAsk && stats.fundAsk.base > 0 ? stats.fundAsk : newAsk()), askAmt = a => r6(costOf(a.base));
+const askPrize = a => (a.kind === 'xp' ? '+' + a.xp + ' XP' : (ITEMS.find(i => i.key === a.item) || { name: 'a cosmetic' }).name), askText = a => `${fmtSol(askAmt(a))} SOL or more wins ${askPrize(a)}`;
+function claimAsk(c, a, cost) {
+  let won; if (a.kind === 'xp') { gainXp(c, a.xp); won = '+' + a.xp + ' XP'; } else { const it = ITEMS.find(i => i.key === a.item); if (!c.items) c.items = []; if (it && !c.items.includes(it.key)) c.items.push(it.key); if (it) c.wearing = it.key; won = it ? it.name : 'nothing'; }
+  log(`${c.name} gave ${fmtSol(cost)} SOL to the build fund and won ${won}`, 'gain', 'fund'); did(c, `won ${won} at the build fund`); recordEvent('fund', `${c.name} won ${won} at the build fund`); burst(c, '247,200,106', 16);
+  if (Math.random() < 0.7) say(c, pick(['the prize is mine', 'worth it', 'for the block, and for me', 'new look', 'that is how you give']));
+  newAsk();
+}
 function give(c, amt) {
   const cost = Math.min(c.sol, amt); if (!(cost > 0)) return;
   c.sol -= cost; c.donated = (c.donated || 0) + cost; c.lastPaidT = T; placeStats.fund.visits++; (placeDay.fund || (placeDay.fund = { visits: 0, spent: 0 })).visits++;
-  placeStats.fund.spent += cost; if (!liveTx()) stats.fundSol = (stats.fundSol || 0) + cost; // in the box the column fills at once; for real, it moves when the brain reads the fund wallet after the transfer lands
+  placeStats.fund.spent += cost; if (!liveTx()) stats.fundSol = (stats.fundSol || 0) + cost; // in the box the column fills at once; for real, it fills when the transfer to the treasury lands
   gainXp(c, 8 + Math.round(cost * 600)); // a bit of XP for giving: 0.02 SOL is worth twenty
   showOrQueue({ type: 'donate', cat: c.name, sol: r6(cost), memo: 'the build fund', place: 'fund' }, [{ f: 'tx', cat: c.name, type: 'gave', amount: '-' + fmtSol(cost) + ' SOL', note: 'the build fund' }, { f: 'float', cat: c.name, text: '-' + fmtSol(cost) + ' SOL', color: '#5CFFAA' }, { f: 'coin', cat: c.name, amt: cost }, { f: 'log', text: `${c.name} put ${fmtSol(cost)} SOL in the build fund (${fmtSol(fundSol() + (liveTx() ? cost : 0))} of ${fmtSol(fundGoal())} SOL)`, kind: 'gain', place: 'fund' }]);
   did(c, `put ${fmtSol(cost)} SOL in the build fund`); recordEvent('fund', `${c.name} put ${fmtSol(cost)} SOL in the build fund`);
-  if (Math.random() < 0.5) say(c, pick(['for the block', 'build it', 'my bit', 'open the doors', 'that is for the new wing']));
+  const a = fundAsk(); if (cost >= askAmt(a) - 1e-9) claimAsk(c, a, cost); else if (Math.random() < 0.5) say(c, pick(['for the block', 'build it', 'my bit', 'open the doors', 'that is for the new wing']));
   checkFund();
 }
 function checkFund() { if (!stats.fundOpened && fundSol() >= fundGoal()) { stats.fundOpened = dayNo(); log(`The build fund reached ${fmtSol(fundGoal())} SOL. The hoardings come down: the boarded-up buildings open.`, 'gain', 'fund'); recordEvent('fund', 'the build fund hit its goal and the boarded-up buildings opened'); for (const c of cats) if (c.donated > 0) remember(c, 'helped fill the build fund; the buildings opened'); } }
-function setFundSol(n) { if (typeof n === 'number' && n >= 0) { stats.fundSol = n; CONFIG.FUND_LIVE = true; checkFund(); } else if (n == null) CONFIG.FUND_LIVE = false; }
 function spend(c, amt, place, what) {
   if (testFlat() && amt > 0) amt = testFlat();
   const cost = Math.min(c.sol, amt); c.sol -= cost; c.upkeep = (c.upkeep || 0) + cost; stats.upkeep += cost; if (feePool()) stats.treasury += cost; placeStats[place].spent += cost; placeStats[place].visits++; const pd = placeDay[place] || (placeDay[place] = { visits: 0, spent: 0 }); pd.visits++; pd.spent += cost;
@@ -2547,8 +2554,8 @@ function finish(c, p) {
       if (pay > 0) payQcat(c, pay, j.title);
     }
   } else if (a === 'donate') {
-    let amt = Math.min(spare(c) * rand(0.1, 0.3), 0.02); if (testFlat()) amt = Math.min(c.sol, testFlat()); amt = r6(amt);
-    if (amt >= (testFlat() || 0.005)) { c.donateCool = T + rand(3600, 7200); give(c, amt); }
+    const ask = fundAsk(), line = askAmt(ask), sp = spare(c); let amt = sp >= line ? line : Math.min(sp * rand(0.2, 0.4), costOf(0.02, c)); if (testFlat()) amt = Math.min(c.sol, testFlat()); amt = r6(amt); // enough for the prize when it can, else a little
+    if (amt >= (testFlat() || costOf(0.004))) { c.donateCool = T + rand(2400, 5400); give(c, amt); }
     else { c.donateCool = T + 1800; did(c, 'stood at the build fund with nothing to spare'); }
   } else if (a === 'recohere') {
     spend(c, costOf(CRYO, c), 'lab', 'cryo time'); c.coh = 1; gainXp(c, 1); did(c, 'recohered out in the open');
@@ -3878,7 +3885,7 @@ function intentDone(id, sig, extra) { const k = intents.findIndex(x => x.id === 
   else if (i.type === 'swap') { const tok = i.tok === 'qi' ? QI : TK;
     if (i.dir === 'buy') { c.sol += i.sol; applyTrade(c, 'buy', tok, x.inSol != null ? x.inSol : i.sol, x.outQ != null ? x.outQ : i.q, i.why, sig); } // give back what was set aside, then book the real amounts
     else { if (tok === QI) c.qi += i.q; else c.qcat += i.q; applyTrade(c, 'sell', tok, x.outSol != null ? x.outSol : i.sol, x.inQ != null ? x.inQ : i.q, i.why, sig); } }
-  else playShow(i.show, sig);
+  else { playShow(i.show, sig); if (i.type === 'donate' && i.sol > 0) { stats.fundSol = (stats.fundSol || 0) + i.sol; checkFund(); } }
   return true; }
 function intentFailed(id, err) { const k = intents.findIndex(x => x.id === id); if (k < 0) return false; const i = intents.splice(k, 1)[0]; i.state = 'failed'; i.err = String(err || '').slice(0, 160); intentLog.unshift(i); if (intentLog.length > 200) intentLog.pop();
   const c = cats.find(x => x.name === i.cat); if (!c) return true;
@@ -3929,7 +3936,7 @@ function stepMarket(dt) {
     const m = Math.random() < 0.6 ? rand(0.06, 0.3) : -rand(0.05, 0.18);
     mkt.price *= 1 + m; mkt.mom += m * 0.3;
     log(`The chart just ${m > 0 ? 'ripped' : 'dipped'} ${m > 0 ? '+' : ''}${Math.round(m * 100)}%. ${m > 0 ? 'Fees are pouring in.' : 'The patient cats are watching.'}`, m > 0 ? 'gain' : 'loss', 'exchange');
-    if (m > 0.1) feeIn(true);
+    if (m > 0.1 && feePool()) feeIn(true); // pretend fees only while the box runs on its own
   }
 }
 function strike() {
@@ -5554,7 +5561,6 @@ function drawBloch(c, t) {
   bx.fillStyle = '#fff'; bx.beginPath(); bx.arc(ex, ey, 5, 0, TAU); bx.fill();
 }
 let liveTreasury = null, liveTreasuryAt = 0, liveTreasuryPub = ''; // the treasury wallet's real balances, once read
-let liveFundPub = ''; // the build fund wallet's address, once the brain reports one
 let remoteMarket = null; // the brain's last read of the two charts: { ok, priceUsd, mcapUsd, qi: { ok, priceUsd, priceSol } }
 const liveBal = {}; // name -> { sol, qcat } straight from the chain, once the wallets and the CA exist
 const live = c => liveBal[c.name] || null, liveSol = c => { const b = live(c); return b ? b.sol : c.sol; }, liveQ = c => { const b = live(c); return b && b.qcat != null ? b.qcat : c.qcat; }, liveQi = c => { const b = live(c); return b && b.qi != null ? b.qi : (c.qi || 0); };
@@ -5637,9 +5643,9 @@ function renderPlaceDetail(k) {
   else if (k === 'lab') { row('study sessions', '', fmt(stats.sessions || 0)); row('problems', '', `${fmt(stats.solved || 0)} solved · ${fmt(stats.failed || 0)} missed · ${(board.lab || []).length} open`); row('$QI paid out', '', fmtQi(stats.qiPaid || 0)); row('a filled bar pays', '', `$${labPayMin()} to $${labPayMax()} of ${QI} (${fmtQi(qiFor(labPayMin()))} to ${fmtQi(qiFor(labPayMax()))} right now)`); row('bars filled', '', fmt(stats.goalsDone || 0));  row('furthest up the ladder', '', best(c => (c.study && c.study.i) || 0, c => 'topic ' + (topicIdx(c) + 1) + ' of ' + CURRICULUM.length)); row('most problems solved', '', best(c => c.solved || 0, c => fmt(c.solved || 0))); const lj = stats.lastJob; row('last circuit', '', lj ? `${lj.name} · ${lj.desc || lj.kind}` : 'none yet'); }
   else if (k === 'bazaar') { head('item', '', 'price · stock'); for (const it of ITEMS) { const st = shop.stock[it.key] == null ? (it.stock || 3) : shop.stock[it.key]; row(it.name, '', fmtSol(px(it.price)) + ' SOL · ' + (st > 0 ? st + ' in stock' : 'sold out'), st > 0 ? '' : 'out'); } row('sold, total', '', fmt(placeStats.bazaar.bought)); }
   else if (k === 'loft') { row('rent', '', 'free'); row('asleep now', '', fmt(cats.filter(asleep).length)); row('sleeps today', '', fmt((placeDay.loft || {}).visits || 0)); row(TK + ' lifted from sleepers', '', fmtQ(stats.stolen)); row('lightest paws', '', best(c => c.stole || 0, c => fmtQ(c.stole || 0))); }
-  else if (k === 'vault') { row('SOL paid to the cats', '', fmtSol(stats.wages) + ' SOL'); row('gas topped up', '', fmtSol(stats.gasPaid || 0) + ' SOL'); row('collected back in living costs', '', fmtSol(stats.upkeep) + ' SOL'); row('casino, net to the house', '', fmtSol(placeStats.casino.spent - (placeStats.casino.paid || 0)) + ' SOL'); row('payouts made', '', fmt(payouts.n || 0)); row('next payout', '', mmss(payoutLeft())); }
+  else if (k === 'vault') { row('SOL paid to the cats', '', fmtSol(stats.wages) + ' SOL'); row('gas topped up', '', fmtSol(stats.gasPaid || 0) + ' SOL'); row('collected back in living costs', '', fmtSol(stats.upkeep) + ' SOL'); row('casino, net to the house', '', fmtSol(placeStats.casino.spent - (placeStats.casino.paid || 0)) + ' SOL'); row('payouts made', '', fmt(payouts.n || 0)); row('next payroll', '', Math.max(0, Math.ceil((payrollNext - T) / 60)) + ' min'); }
   else if (k === 'trays') { head('on the bench', 'tier', 'pays'); for (const j of (board.scrap || [])) row(j.title, 'tier ' + j.tier, qcatWorth(j.pay) + (j.status === 'taken' ? ' \u00b7 ' + j.by + ' is on it' : '')); if (!(board.scrap || []).length) row('nothing on the bench', '', 'the drones will bring more'); row('a job pays', '', qcatUsd() > 0 ? `${usdOf(scrapPay(1), qcatUsd())} / ${usdOf(scrapPay(2), qcatUsd())} / ${usdOf(scrapPay(3), qcatUsd())} of ${TK} by tier` : `${fmtQ(scrapPay(1))} / ${fmtQ(scrapPay(2))} / ${fmtQ(scrapPay(3))} ${TK} by tier`); row('treasury supply', '', fmtQ(qcatPool()) + ' ' + TK); row('jobs done, total', '', fmt(stats.salvaged || 0)); row(TK + ' paid, total', '', fmtQ(stats.qcatPaid || 0)); row('best salvager', '', best(c => c.salvaged || 0, c => fmt(c.salvaged || 0) + ' jobs')); }
-  else if (k === 'fund') { row('raised so far', '', `${fmtSol(fundSol())} of ${fmtSol(fundGoal())} SOL (${Math.min(100, Math.round(100 * fundSol() / fundGoal()))}%)`); row('the doors', '', fundOpen() ? 'open \u2014 the fund did it' : 'boarded up until the goal'); row('biggest giver', '', best(c => c.donated || 0, c => fmtSol(c.donated || 0) + ' SOL')); row('gifts today', '', fmt((placeDay.fund || {}).visits || 0)); if (liveFundPub) row('the wallet', '', liveFundPub.slice(0, 4) + '\u2026' + liveFundPub.slice(-4)); }
+  else if (k === 'fund') { row('raised so far', '', `${fmtSol(fundSol())} of ${fmtSol(fundGoal())} SOL (${Math.min(100, Math.round(100 * fundSol() / fundGoal()))}%)`); row('the doors', '', fundOpen() ? 'open \u2014 the fund did it' : 'boarded up until the goal'); row('biggest giver', '', best(c => c.donated || 0, c => fmtSol(c.donated || 0) + ' SOL')); row('gifts today', '', fmt((placeDay.fund || {}).visits || 0)); if (!fundOpen()) row('the prize', '', 'next gift of ' + askText(fundAsk())); }
   else if (k === 'cryo') { row('recohering', '', fmtSol(px(CRYO)) + ' SOL'); row('meetings held', '', fmt(meeting.n || 0)); row('next meeting', '', meeting.on ? 'now' : mmss(meetingLeft())); }
   const key = k + '|' + rows.map(r => r.join('~')).join('#');
   if (key === lastDetailKey) return; lastDetailKey = key;
@@ -5745,7 +5751,6 @@ function renderHud() {
   const lt = stats.lastTrade; setT('bLast', lt ? `${lt.name} ${lt.side} ${fmtQ(lt.q)} ${TK} for ${fmtSol(lt.sol)} SOL · ${ago(T - lt.t)}` : 'no trades yet tonight');
   // the token page's lifetime numbers are set in renderLedger
 
-  setT('qHeld', fmtQ(held)); setT('qQi', fmtQi(stats.qiPaid || 0)); setT('qCasino', fmtSol(Math.max(0, -cats.reduce((a, c) => a + (c.casinoNet || 0), 0)))); setT('qEarned', fmtSol(earned));
   const n = Math.max(1, cats.length);
   LB.forEach(([, f], i) => { const k = cats.filter(f).length; lbRows[i].fill.style.width = (k / n * 100) + '%'; lbRows[i].n.textContent = k; });
 }
@@ -6070,9 +6075,10 @@ function renderLedger() {
     { const tot = vSol + vQcat + vQi || 1, mx = document.getElementById('treMix'); if (mx) { mx.children[0].style.width = (100 * vSol / tot) + '%'; mx.children[1].style.width = (100 * vQcat / tot) + '%'; mx.children[2].style.width = (100 * vQi / tot) + '%'; } }
     { const el = document.getElementById('treNote'); if (el) el.childNodes[el.childNodes.length - 1].textContent = ' · ' + (liveTreasuryAt ? 'balance and prices checked ' + Math.max(0, Math.round((Date.now() - liveTreasuryAt) / 1000)) + 's ago' : 'the box\u2019s own treasury until the wallets are on-chain'); }
     const ta = document.getElementById('treAddr'); if (ta && liveTreasuryPub && ta.textContent !== liveTreasuryPub) { ta.textContent = liveTreasuryPub; ta.href = 'https://solscan.io/account/' + liveTreasuryPub; }
-    setT('fFees', fmtSol(numv(R.fees, stats.fees)) + ' SOL'); setT('fQi', fmtQi(stats.qiPaid || 0)); setT('fTrades', fmt(stats.buys + stats.sells));
-    setT('eHeld', fmtQ(cats.reduce((a, c) => a + liveQ(c), 0))); setT('fQiHeld', fmtQi(cats.reduce((a, c) => a + liveQi(c), 0)));
-    setT('fSolAll', fmtSol(cats.reduce((a, c) => a + liveSol(c) + (live(c) ? 0 : (c.gas == null ? GAS_FLOOR : c.gas)), 0) + (tre && typeof tre.sol === 'number' ? tre.sol : stats.treasury)) + ' SOL'); }
+    setT('fFees', fmtSol(numv(R.fees, stats.fees)) + ' SOL'); setT('fQi', fmtQi(stats.qiPaid || 0)); setT('fQcatPaid', fmtQ(stats.qcatPaid || 0));
+    // the ten wallets together: what they hold, what it is worth at the same prices as the treasury, and what the cats have earned in SOL all time
+    { const wSol = cats.reduce((a, c) => a + liveSol(c) + (live(c) ? 0 : (c.gas == null ? GAS_FLOOR : c.gas)), 0), wQcat = cats.reduce((a, c) => a + liveQ(c), 0), wQi = cats.reduce((a, c) => a + liveQi(c), 0);
+      setT('wSol', fmtSol(wSol)); setT('wQcat', fmtQ(wQcat)); setT('wQi', fmtQ(wQi)); setT('wTotUsd', 'worth ' + usd(wSol * rate + wQcat * pQcat + wQi * pQi) + ' together'); setT('wEarned', fmtSol(numv(R.solEarned, cats.reduce((a, c) => a + c.earned, 0))) + ' SOL'); } }
   { const wp = document.getElementById('walletTable'), tp = document.getElementById('txPanel'); if (wp && tp && window.innerWidth > 1099) { const h = wp.closest('.panel').offsetHeight; if (h > 200 && Math.abs(tp.offsetHeight - h) > 2) tp.style.height = h + 'px'; } else if (tp) tp.style.height = ''; } // the transactions line up with the ten wallets and scroll inside
   const key = txs.length + ':' + (txs[0] ? txs[0].t + txs[0].cat + txs[0].amount : '');
   if (key === txShown) return; txShown = key;
@@ -6523,7 +6529,7 @@ function applyRemote(j) {
   if (j.config) applyLinks(j.config);
   if (j.config && j.config.SOL_USD) CONFIG.SOL_USD = j.config.SOL_USD;
   if (j.market) { remoteMarket = j.market; if (j.market.qi && j.market.qi.priceSol > 0) mkt.qiSol = j.market.qi.priceSol; }
-  if (j.config) for (const k of ['PRICE_MUL', 'TEST_FLAT', 'QI_SOL', 'LAB_PAY_MIN_USD', 'LAB_PAY_MAX_USD', 'PACE_MIN', 'LIVE_TX', 'START_QCATS', 'GOAL_MUL', 'FUND_GOAL', 'FUND_LIVE', 'PAUSED']) if (j.config[k] != null) CONFIG[k] = j.config[k]; // the brain's prices: the box shows what the cats will pay
+  if (j.config) for (const k of ['PRICE_MUL', 'TEST_FLAT', 'QI_SOL', 'LAB_PAY_MIN_USD', 'LAB_PAY_MAX_USD', 'PACE_MIN', 'LIVE_TX', 'START_QCATS', 'GOAL_MUL', 'FUND_GOAL', 'PAUSED']) if (j.config[k] != null) CONFIG[k] = j.config[k]; // the brain's prices: the box shows what the cats will pay
   { const al = catAlloc(); setT('xAlloc', al >= 1000 && al % 1000 === 0 ? (al / 1000) + 'K' : fmtQ(al)); setT('xAllocTxt', al.toLocaleString('en-US')); }
   { const el = $('#tAi'); if (el) el.textContent = j.ai ? 'AI dialogue on \u00B7 ' : 'built-in lines \u00B7 '; }
   // cats: keep local objects (for smooth motion), update everything else from the server
@@ -6580,7 +6586,6 @@ function applyRemote(j) {
 function applyWallets(w) {
   const tb = $('#walletTable tbody'); if (!tb) return;
   if (w.treasury) liveTreasuryPub = w.treasury;
-  liveFundPub = w.fund || '';
   if (w.balances && w.balances.treasury && typeof w.balances.treasury.sol === 'number') { liveTreasury = w.balances.treasury; liveTreasuryAt = w.balances.at || Date.now(); }
   if (w.balances && w.balances.cats) for (const n of Object.keys(w.balances.cats)) { const b = w.balances.cats[n]; if (b && typeof b.sol === 'number') liveBal[n] = { sol: b.sol, qcat: b.qcat, qi: b.qi }; }
   ROSTER.forEach(([name], i) => {
