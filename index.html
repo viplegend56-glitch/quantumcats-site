@@ -480,11 +480,13 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 .cc-act{font-size:14.5px;line-height:1.35;color:var(--text);min-height:2.7em}
 .cc-act b{display:inline-block;font-family:var(--hud);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;margin-bottom:5px;color:#041018;background:rgb(var(--ac))}
 .cc-think{font-style:italic;color:#B4BEE4;font-size:13px}
-.cc-foot{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--mono);font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:9px}
+.cc-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:9px}
 .cc-foot b{font-family:var(--hud);font-size:1.05rem;font-weight:700;color:var(--gold)}
 .cc-foot b span{font-size:.7rem;color:var(--muted);margin-left:4px;letter-spacing:.04em}
-.cc-m{display:flex;gap:9px}
-.cc-m i{font-style:normal} .cc-m i.hot{color:var(--magenta)}
+.cc-m{display:flex;gap:10px;align-items:center}
+.cc-m i{font-style:normal;display:flex;flex-direction:column;gap:3px;min-width:46px} .cc-m em{font-style:normal;font-size:10px;letter-spacing:.04em;color:var(--muted)}
+.cc-m u{display:block;height:4px;border-radius:2px;background:rgba(140,151,194,.18);overflow:hidden} .cc-m s{display:block;height:100%;width:0;background:var(--cyan);border-radius:2px;transition:width .4s}
+.cc-m i.hot em{color:var(--magenta)} .cc-m i.hot s{background:var(--magenta)}
 .cards .empty{grid-column:1/-1;padding:40px 0;color:var(--muted);font-family:var(--mono);font-size:13px;text-align:center}
 
 /* ---------- talk ---------- */
@@ -528,7 +530,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 .txs th{font-family:var(--hud);font-weight:600;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px 7px}
 .txs td{padding:7px 12px;border-top:1px solid var(--line);color:var(--muted);vertical-align:top}
 .txs td.t{white-space:nowrap} .txs td.c{color:var(--text);white-space:nowrap} .txs td.a{white-space:nowrap;color:var(--text)}
-.txs tr.gain td.a{color:var(--gold)} .txs tr.buy td.a{color:#5CFFAA} .txs tr.loss td.a{color:var(--magenta)}
+.txs tr.gain td.a{color:var(--gold)} .txs tr.buy td.a{color:#5CFFAA} .txs tr.in td.a{color:#5CFFAA} .txs tr.loss td.a{color:var(--magenta)}
 .wallets{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
 .wallets td{padding:10px 12px;border-top:1px solid var(--line);color:var(--muted);vertical-align:middle}
 .wallets td:first-child{color:var(--text);white-space:nowrap} .wallets td:first-child b{margin-left:9px;font-family:var(--hud);font-size:14px}
@@ -2407,7 +2409,7 @@ function arrive(c, p) {
     const want = c.cold > 0.9 ? 15 : c.cold > 0.75 ? 10 : c.cold > 0.5 ? 5 : 3; const ok = WARM_SESSIONS.filter(m => m <= want && c.sol >= warmCost(m, c) + costOf(FOOD, c) * 2); const min = ok.length ? ok[ok.length - 1] : 3; // never the last of its money: it keeps two meals back
     c.warmMin = min; c.actDur = min * 60; spend(c, warmCost(min, c), 'vent', `${min} minutes at the heater`); c.doing = `${min} minutes at the heater`; placeStats.vent.sessions = (placeStats.vent.sessions || 0) + 1; placeStats.vent.minutes = (placeStats.vent.minutes || 0) + min;
   }
-  if (c.act === 'sleep') { c.actDur = c.fainted ? rand(120, 200) : rand(1080, 1320); c.fainted = false; placeStats.loft.visits++; (placeDay.loft || (placeDay.loft = { visits: 0, spent: 0 })).visits++; if (BUNK > 0) spend(c, costOf(BUNK, c), 'loft', 'a bunk for the night'); if (Math.random() < 0.5) log(`${c.name} climbed into the bunks to sleep`, 'info', 'loft'); }
+  if (c.act === 'sleep') { c.actDur = c.fainted ? rand(120, 200) : clamp(420 + 480 * clamp(c.tired) + rand(-30, 30), 420, 900); /* 7 to 15 minutes: the more tired, the longer */ c.fainted = false; placeStats.loft.visits++; (placeDay.loft || (placeDay.loft = { visits: 0, spent: 0 })).visits++; if (BUNK > 0) spend(c, costOf(BUNK, c), 'loft', 'a bunk for the night'); if (Math.random() < 0.5) log(`${c.name} climbed into the bunks to sleep`, 'info', 'loft'); }
   if (c.act === 'idle' && wx.rain + wx.snow > 0.3) c.doing = `sheltering in a box from the ${wx.snow > wx.rain ? 'snow' : 'rain'}`;
   if ((c.act === 'warm' || c.act === 'eat') && Math.random() < 0.2) {
     const o = cats.find(o => o !== c && o.state === 'act' && o.act === c.act);
@@ -5826,7 +5828,7 @@ function makeCard(c) {
   el.innerHTML = '<div class="cc-top"><span class="sw"></span><div><h3></h3><div class="role"></div></div></div>'
     + '<div class="cc-bal"><div><b class="sol"></b><span>SOL earned</span></div><div><b class="paw"></b><span>SOL on paw</span></div><div><b class="q"></b><span class="tk"></span></div><div><b class="qi"></b><span>$QI earned</span></div></div>'
     + '<div class="cc-act"><b></b><br><span></span></div><div class="cc-think"></div>'
-    + '<div class="cc-foot"><span class="st"></span><span class="cc-m"><i></i><i></i><i></i></span></div>';
+    + '<div class="cc-foot"><span class="st"></span><span class="cc-m"><i><em>tired</em><u><s></s></u></i><i><em>hungry</em><u><s></s></u></i><i><em>cold</em><u><s></s></u></i></span></div>';
   const sw = el.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye);
   el.querySelector('h3').textContent = c.name; { const b = document.createElement('span'); b.className = 'lvl-badge'; el.querySelector('h3').appendChild(b); }
   el.querySelector('.tk').textContent = TK + ' holding';
@@ -5857,8 +5859,8 @@ function renderCards(force) {
     const net = c.stole - c.robbed;
     q.st.textContent = c.sol < costOf(FOOD, c) ? 'broke' : net > 0 ? `+${fmtQ(net)} lifted` : net < 0 ? `${fmtQ(net)} robbed` : `${fmtSol(c.sol)} SOL`;
     q.st.classList.toggle('hot', c.sol < costOf(FOOD, c) || net < 0);
-    const ms = [['hun', c.hunger], ['cold', c.cold], ['decoh', 1 - c.coh]];
-    q.m.forEach((e, i) => { e.textContent = `${ms[i][0]} ${Math.round(ms[i][1] * 100)}`; e.classList.toggle('hot', ms[i][1] > 0.65); });
+    const ms = [c.tired, c.hunger, c.cold];
+    q.m.forEach((e, i) => { const v = clamp(ms[i] || 0); e.querySelector('s').style.width = Math.round(v * 100) + '%'; e.title = e.querySelector('em').textContent + ' ' + Math.round(v * 100) + '%'; e.classList.toggle('hot', v > 0.65); });
   }
 }
 
@@ -5923,12 +5925,12 @@ function renderPlan() {
   if (key === evKey) return; evKey = key;
   for (const c of rows) {
     let d = el.querySelector('[data-cat="' + c.name + '"]');
-    if (!d) { d = document.createElement('div'); d.className = 'ev-cat'; d.dataset.cat = c.name; d.innerHTML = '<div class="who"><span class="sw"></span><div><b></b><small></small></div></div><div><div class="track"><i style="left:30%"></i><i style="left:60%"></i><span style="width:0"></span></div><div class="doing"></div></div><div class="pct"><span></span><small></small></div>'; const sw = d.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye); d.querySelector('b').textContent = c.name; }
+    if (!d) { d = document.createElement('div'); d.className = 'ev-cat'; d.dataset.cat = c.name; d.innerHTML = '<div class="who"><span class="sw"></span><div><b></b><small></small></div></div><div><div class="track"><i style="left:30%"></i><i style="left:60%"></i><span style="width:0"></span></div><div class="doing"></div></div><div class="pct"><span></span></div>'; const sw = d.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye); d.querySelector('b').textContent = c.name; }
     const f = agentProgress(c);
     d.querySelector('.who small').textContent = `level ${c.lvl || 1} \u00b7 ${lvlTitle(c)} \u00b7 ${c.tr.label}`;
     requestAnimationFrame(() => { d.querySelector('.track span').style.width = (f * 100).toFixed(1) + '%'; });
     d.querySelector('.doing').textContent = `${fmt(c.qjobs || 0)} lab jobs \u00b7 ${fmt((c.notes || []).length)} notes \u00b7 ${fmt((c.buys || 0) + (c.sells || 0))} trades \u00b7 ${fmt(c.meetings || 0)} meetings \u00b7 now: ${c.doing || 'thinking'}`;
-    d.querySelector('.pct span').textContent = (f * 100).toFixed(2) + '%'; d.querySelector('.pct small').textContent = agentStage(f);
+    d.querySelector('.pct span').textContent = (f * 100).toFixed(2) + '%';
     el.appendChild(d); // appending an existing node moves it: the list stays sorted without rebuilding
   }
 }
@@ -6080,7 +6082,7 @@ function renderBoard() {
 /* ---------- ledger ---------- */
 const placeBody = null, txBody = $('#txTable tbody');
 let txShown = -1;
-const TXK = { gas: 'info', qi: 'gain', chore: 'info', shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'loss', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info', gave: 'info', fund: 'gain', deposit: 'gain' };
+const TXK = { gas: 'info', qi: 'in', chore: 'info', shop: 'info', wage: 'gain', buy: 'buy', sell: 'loss', fees: 'gain', circuit: 'link', stole: 'loss', scrap: 'in', lost: 'loss', found: 'gain', spent: 'info', wager: 'gain', casino: 'info', gave: 'info', fund: 'gain', deposit: 'gain' };
 function renderLedger() {
   { const R = remote || {}, numv = (v, f) => (v != null && isFinite(v) ? Number(v) : f), tre = liveTreasury;
     const tSol = tre && typeof tre.sol === 'number' ? tre.sol : stats.treasury, rate = Number(CONFIG.SOL_USD) || 0, usd = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
