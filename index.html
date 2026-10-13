@@ -617,7 +617,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   </div>
 </header>
 
-<!-- ============ THE BOX ============ -->
+
 <div class="page" data-page="box">
 <section class="stage" aria-label="The box, live">
   <h1 class="sr-only" data-name>Quantum Cats</h1>
@@ -726,28 +726,28 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
             <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="170" y1="0" x2="420" y2="0"><stop offset="0" stop-color="#5CF2FF"/><stop offset="1" stop-color="#F7C86A"/></linearGradient>
             <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
-          <!-- fees in -->
+
           <path class="lp-fwd" d="M170 150 H420" fill="none" stroke="url(#lg1)" stroke-width="2" stroke-dasharray="8 7"/>
-          <!-- treasury to the three ways it pays -->
+
           <path class="lp-fwd" d="M570 150 C620 150 620 70 670 70" fill="none" stroke="#5CFFAA" stroke-width="1.6" stroke-dasharray="6 6"/>
           <path class="lp-fwd" d="M570 150 H670" fill="none" stroke="#C4B2FF" stroke-width="1.6" stroke-dasharray="6 6"/>
           <path class="lp-fwd" d="M570 150 C620 150 620 230 670 230" fill="none" stroke="#F7C86A" stroke-width="1.6" stroke-dasharray="6 6"/>
-          <!-- the three ways reach the cats -->
+
           <path d="M800 70 C850 70 850 150 880 150" fill="none" stroke="#5CFFAA" stroke-width="1.6" stroke-dasharray="6 6"/>
           <path d="M800 150 H880" fill="none" stroke="#C4B2FF" stroke-width="1.6" stroke-dasharray="6 6"/>
           <path d="M800 230 C850 230 850 150 880 150" fill="none" stroke="#F7C86A" stroke-width="1.6" stroke-dasharray="6 6"/>
           <circle r="3" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="6s" begin="4.5s" repeatCount="indefinite" path="M570 150 C620 150 620 230 670 230 L800 230 C850 230 850 150 880 150"/></circle>
-          <!-- what comes back -->
+
           <path class="lp-return" d="M935 200 C935 330 495 330 495 200" fill="none" stroke="rgba(247,200,106,.6)" stroke-width="1.5" stroke-dasharray="6 7"/>
           <path d="M495 200 l-6 10 M495 200 l6 10" fill="none" stroke="rgba(247,200,106,.9)" stroke-width="1.5"/>
-          <!-- nodes -->
+
           <g class="lp-node" transform="translate(95 150)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">TRADES</text><text y="16" class="lp-v">every $QCATS trade</text></g>
           <g class="lp-node" transform="translate(495 150)"><polygon points="-74,-40 68,-40 74,-34 74,40 -68,40 -74,34" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-8" class="lp-k gold">TREASURY</text><text y="16" class="lp-v">creator fees, in SOL</text></g>
           <g class="lp-node" transform="translate(735 70)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#5CFFAA" stroke-width="1.5"/><text y="-6" class="lp-k green sm">CHORES</text><text y="14" class="lp-v">paid in SOL</text></g>
           <g class="lp-node" transform="translate(735 150)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#C4B2FF" stroke-width="1.5"/><text y="-6" class="lp-k violet sm">THE LAB</text><text y="14" class="lp-v">paid in $QI</text></g>
           <g class="lp-node" transform="translate(735 230)"><polygon points="-64,-30 58,-30 64,-24 64,30 -58,30 -64,24" fill="rgba(9,13,32,.95)" stroke="#F7C86A" stroke-width="1.5"/><text y="-6" class="lp-k gold sm">SCRAPYARD</text><text y="14" class="lp-v">paid in $QCATS</text></g>
           <g class="lp-node" transform="translate(935 150)"><polygon points="-54,-40 48,-40 54,-34 54,40 -48,40 -54,34" fill="rgba(9,13,32,.95)" stroke="#5CF2FF" stroke-width="1.5"/><text y="-8" class="lp-k">THE CATS</text><text y="16" class="lp-v">ten wallets</text></g>
-          <!-- pulses -->
+
           <circle r="4" fill="#F7C86A" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite" path="M170 150 H420"/></circle>
           <circle r="3" fill="#5CFFAA" filter="url(#glow)"><animateMotion dur="6s" begin="1s" repeatCount="indefinite" path="M570 150 C620 150 620 70 670 70 L800 70 C850 70 850 150 880 150"/></circle>
           <circle r="3" fill="#C4B2FF" filter="url(#glow)"><animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M570 150 H880"/></circle>
@@ -763,7 +763,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 </section>
 </div>
 
-<!-- ============ THE CATS ============ -->
+
 <div class="page" data-page="cats" hidden>
   <section class="sec pg">
     <div class="wrap">
@@ -804,8 +804,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   </section>
 </div>
 
-<!-- ============ LEADERBOARD ============ -->
-<!-- ============ WORK ============ -->
+
+
 <div class="page" data-page="work" hidden>
   <section class="sec pg" style="padding-bottom:0">
     <div class="wrap">
@@ -880,7 +880,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   </section>
 </div>
 
-<!-- ============ RECAP ============ -->
+
 <div class="page" data-page="recap" hidden>
   <section class="sec pg">
     <div class="wrap">
@@ -916,7 +916,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   </section>
 </div>
 
-<!-- ============ TALK ============ -->
+
 <div class="page" data-page="plan" hidden>
   <section class="sec pg">
     <div class="wrap">
@@ -976,7 +976,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   </section>
 </div>
 
-<!-- ============ RULES ============ -->
+
 <div class="page" data-page="rules" hidden>
   <section class="sec pg" id="runs">
     <div class="wrap">
@@ -1080,8 +1080,8 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
   </section>
 </div>
 
-<!-- ============ LEDGER ============ -->
-<!-- ============ $QCATS ============ -->
+
+
 <div class="page" data-page="qcat" hidden>
   <section class="sec pg">
     <div class="wrap">
@@ -5663,7 +5663,7 @@ function renderPlaceDetail(k) {
   else if (k === 'vent') { head('session', '', 'price'); for (const m of WARM_SESSIONS) row(m + ' minutes', '', fmtSol(px(WARM_MAX * m / WARM_MAX_MIN)) + ' SOL'); row('sessions tonight', '', fmt(placeStats.vent.sessions || 0)); row('minutes of warmth sold', '', fmt(placeStats.vent.minutes || 0)); }
   else if (k === 'yard') { row('a visit', '', fmtSol(px(PLAY)) + ' SOL, however long'); row('visits today', '', fmt((placeDay.yard || {}).visits || 0)); row('most plays', '', best(c => c.plays || 0, c => fmt(c.plays || 0) + ' plays')); }
   else if (k === 'arena') { row('entry', '', fmtSol(px(ARENA_FEE)) + ' SOL'); row('SOL wagered, total', '', fmtSol(placeStats.arena.wagered)); row('fights', '', fmt(placeStats.arena.fights || 0)); row('entry fees collected', '', fmtSol(placeStats.arena.spent) + ' SOL'); row('best record', '', best(c => c.arenaW || 0, c => `${c.arenaW || 0}w ${c.arenaL || 0}l`)); row('up the most', '', best(c => c.arenaSol || 0, c => '+' + fmtSol(c.arenaSol || 0) + ' SOL')); row('down the most', '', best(c => -(c.arenaSol || 0), c => '-' + fmtSol(-(c.arenaSol || 0)) + ' SOL')); }
-  else if (k === 'exchange') { row('$QI sold for SOL', '', fmtQi(stats.qiSold || 0) + ' · ' + fmtSol(stats.qiSellSol || 0) + ' SOL'); row(TK + ' sold for SOL', '', fmtQ(stats.sold) + ' · ' + fmtSol(stats.sellSol) + ' SOL'); row(TK + ' bought', '', fmtQ(stats.boughtBack) + ' · ' + fmtSol(stats.buySol) + ' SOL'); row(QI + ' bought', '', fmtQi(stats.qiBought || 0) + ' · ' + fmtSol(stats.qiBuySol || 0) + ' SOL'); row('a buy is at most', '', '$15 of either'); row('trades', '', fmt(stats.buys + stats.sells)); const lt = stats.lastTrade; row('last trade', '', lt ? `${lt.name} ${lt.side} ${fmtQ(lt.q)} ${lt.tok || TK} for ${fmtSol(lt.sol)} SOL` : 'none yet'); row('biggest seller', '', best(c => (c.sellSol || 0) + (c.qiSellSol || 0), c => fmtSol((c.sellSol || 0) + (c.qiSellSol || 0)) + ' SOL')); row('biggest buyer', '', best(c => c.solSpent || 0, c => fmtSol(c.solSpent || 0) + ' SOL')); }
+  else if (k === 'exchange') { row('$QI sold for SOL', '', fmtQi(stats.qiSold || 0) + ' · ' + fmtSol(stats.qiSellSol || 0) + ' SOL'); row(TK + ' sold for SOL', '', fmtQ(stats.sold) + ' · ' + fmtSol(stats.sellSol) + ' SOL'); row(TK + ' bought', '', fmtQ(stats.boughtBack) + ' · ' + fmtSol(stats.buySol) + ' SOL'); row('a buy is', '', 'a quarter, half, three quarters or all of the spare SOL, ' + TK + ' only'); row('trades', '', fmt(stats.buys + stats.sells)); const lt = stats.lastTrade; row('last trade', '', lt ? `${lt.name} ${lt.side} ${fmtQ(lt.q)} ${lt.tok || TK} for ${fmtSol(lt.sol)} SOL` : 'none yet'); row('biggest seller', '', best(c => (c.sellSol || 0) + (c.qiSellSol || 0), c => fmtSol((c.sellSol || 0) + (c.qiSellSol || 0)) + ' SOL')); row('biggest buyer', '', best(c => c.solSpent || 0, c => fmtSol(c.solSpent || 0) + ' SOL')); }
   else if (k === 'casino') { row('SOL wagered', '', fmtSol(placeStats.casino.wagered)); row('SOL the house kept', '', fmtSol(placeStats.casino.spent)); row('SOL the house paid out', '', fmtSol(placeStats.casino.paid || 0)); row('biggest win', '', stats.casinoBestW ? `${stats.casinoBestW.name} · +${fmtSol(stats.casinoBestW.sol)} SOL` : '–'); row('biggest loss', '', stats.casinoBestL ? `${stats.casinoBestL.name} · -${fmtSol(stats.casinoBestL.sol)} SOL` : '–'); row('up the most overall', '', best(c => c.casinoNet || 0, c => '+' + fmtSol(c.casinoNet || 0) + ' SOL')); row('down the most overall', '', best(c => -(c.casinoNet || 0), c => '-' + fmtSol(-(c.casinoNet || 0)) + ' SOL')); row('stakes', '', '0.01 to 0.05 SOL a spin · a win pays double, three sevens pay x4'); }
   else if (k === 'lab') { row('study sessions', '', fmt(stats.sessions || 0)); row('problems', '', `${fmt(stats.solved || 0)} solved · ${fmt(stats.failed || 0)} missed · ${(board.lab || []).length} open`); row('$QI paid out', '', fmtQi(stats.qiPaid || 0)); row('a filled bar pays', '', `$${labPayMin()} to $${labPayMax()} of ${QI} (${fmtQi(qiFor(labPayMin()))} to ${fmtQi(qiFor(labPayMax()))} right now)`); row('bars filled', '', fmt(stats.goalsDone || 0));  row('furthest up the ladder', '', best(c => (c.study && c.study.i) || 0, c => 'topic ' + (topicIdx(c) + 1) + ' of ' + CURRICULUM.length)); row('most problems solved', '', best(c => c.solved || 0, c => fmt(c.solved || 0))); const lj = stats.lastJob; row('last circuit', '', lj ? `${lj.name} · ${lj.desc || lj.kind}` : 'none yet'); }
   else if (k === 'bazaar') { head('item', '', 'price · stock'); for (const it of ITEMS) { const st = shop.stock[it.key] == null ? (it.stock || 3) : shop.stock[it.key]; row(it.name, '', fmtSol(px(it.price)) + ' SOL · ' + (st > 0 ? st + ' in stock' : 'sold out'), st > 0 ? '' : 'out'); } row('sold, total', '', fmt(placeStats.bazaar.bought)); }
