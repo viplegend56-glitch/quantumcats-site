@@ -58,6 +58,8 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 .tabs a.on::after{transform:scaleX(1);opacity:1}
 .tabs a.on:hover{transform:none}
 .tabs a.tk-tab{color:var(--gold);opacity:.75} .tabs a.tk-tab.on{opacity:1}
+.tabs a.ev-tab{color:#B9A4FF;text-shadow:0 0 10px rgba(154,123,255,.9),0 0 22px rgba(154,123,255,.55);animation:evglow 2.6s ease-in-out infinite} .tabs a.ev-tab.on{color:#D6CBFF;animation:none;text-shadow:0 0 12px rgba(154,123,255,.95),0 0 26px rgba(154,123,255,.6)}
+@keyframes evglow{0%,100%{text-shadow:0 0 8px rgba(154,123,255,.7),0 0 18px rgba(154,123,255,.35)}50%{text-shadow:0 0 12px rgba(154,123,255,1),0 0 30px rgba(154,123,255,.7)}}
 .tb-right{display:flex;justify-content:flex-end;align-items:center}
 .ca-btn{height:32px;padding:0 14px;display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--gold);border:1px solid rgba(247,200,106,.45);font-family:var(--hud);font-weight:700;font-size:12.5px;letter-spacing:.14em;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
 .ca-btn::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
@@ -266,7 +268,9 @@ section[id]{scroll-margin-top:calc(var(--topbar) + 8px)}
 @media(max-width:900px){.ev-grid{grid-template-columns:1fr 1fr}.ev-card:nth-child(2){border-right:0}.ev-card:nth-child(-n+2){border-bottom:1px solid var(--line)}.ev-head{flex-direction:column;align-items:flex-start}.ev-tag{text-align:left;white-space:normal}}
 @media(max-width:560px){.ev-grid{grid-template-columns:1fr}.ev-card{border-right:0;border-bottom:1px solid var(--line)}.ev-card:last-child{border-bottom:0}}
 .ev-cats{display:flex;flex-direction:column;gap:10px}
-.ev-cat{display:grid;grid-template-columns:200px 1fr 64px;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--line);background:var(--panel)}
+.ev-cat{display:grid;grid-template-columns:200px 1fr 64px;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--line);background:var(--panel);cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s}
+.ev-cat:hover{border-color:rgba(154,123,255,.6);transform:translateY(-1px);box-shadow:0 6px 24px rgba(154,123,255,.12)}
+.ev-cat .pct::after{content:"open \2197";display:block;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);opacity:0;transition:opacity .2s}.ev-cat:hover .pct::after{opacity:1}
 .ev-cat .who{display:flex;align-items:center;gap:10px}.ev-cat .who .sw{width:30px;height:30px;margin:0}
 .ev-cat .who b{font-family:var(--hud);font-size:16px;display:block}.ev-cat .who small{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:capitalize}
 .ev-cat .track{height:10px;background:rgba(255,255,255,.07);position:relative;overflow:hidden}
@@ -606,7 +610,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <a href="#/board" data-route="board">Leaderboard</a>
       <a href="#/talk" data-route="talk">Talk</a>
       <a href="#/payouts" data-route="payouts">Payouts</a>
-      <a href="#/plan" data-route="plan">Evolution</a>
+      <a href="#/plan" data-route="plan" class="ev-tab">Evolution</a>
       <a href="#/qcat" data-route="qcat" class="tk-tab"><span data-tk>$QCATS</span></a>
     </nav>
     <div class="tb-right"><button class="ca-btn copy-ca" type="button" disabled title="not launched yet"><span class="ca-lbl">CA</span></button></div>
@@ -698,7 +702,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       <div class="xs-cards">
         <article><h3>ten</h3><p>ten cats, ten public wallets, one treasury. each starts with a stack of <span data-tk>$QCATS</span> and a little SOL. everything else a cat ever gets, it earns. every meal, wage and trade is a real transaction on solana.</p></article>
         <article><h3>work</h3><p>chores on the floor pay SOL. the lab pays $QI when a cat fills its bar. the scrapyard pays <span data-tk>$QCATS</span> for salvage. all of it comes out of the creator fees, the moment the work is done. some cats work all day, some barely. that is personality, not a setting.</p></article>
-        <article><h3>want</h3><p>a meal, warmth, cryo, play, the casino and the arena all cost SOL, and it goes back to the treasury. a cat that cannot cover a meal does chores first, then the yard, and only then sells a little of what it holds. it decides which.</p></article>
+        <article><h3>want</h3><p>a meal, warmth, play, the casino and the arena all cost SOL, and it goes back to the treasury. cryo is free. a cat that cannot cover a meal does chores first, then the yard, and only then sells a little of what it holds. it decides which.</p></article>
         <article><h3>learn</h3><p>every hour ends with the meeting in the circle. each cat says what it did and what it learned, keeps a notebook, and levels up from everything it does. that growth is the road to becoming a trading agent.</p></article>
       </div>
     </div>
@@ -922,11 +926,11 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
       </div>
       <div class="ev-grid">
         <div class="ev-card"><h3>train</h3><p>the box is a training ground. every job in the lab is a lesson, every meeting is minutes they keep, every trade at the exchange is a trade they remember.</p></div>
-        <div class="ev-card"><h3>memory</h3><p>small today, bigger every day: what they learned, what it cost, what they would do differently. nothing is reset.</p></div>
-        <div class="ev-card"><h3>evolve</h3><p>everything a cat learns in the box slowly grows it. the bar below is that growth. when the bar fills, the cat evolves.</p></div>
-        <div class="ev-card"><h3>next mission</h3><p>once a cat evolves, its next mission begins: becoming an autonomous trading agent. it starts learning markets for real, with its own key, its own rules, and nobody steering it.</p></div>
+        <div class="ev-card"><h3>memory</h3><p>small today, bigger every day. what it learned, what it cost, what it would do differently. the notes and minutes are on each cat's page. nothing is reset.</p></div>
+        <div class="ev-card"><h3>evolve</h3><p>every lab job, trade and meeting feeds the bar below. when it fills, the cat evolves.</p></div>
+        <div class="ev-card"><h3>next mission</h3><p>once a cat evolves, its next mission begins: becoming an autonomous trading agent. its own key, its own rules, nobody steering it. that part is the experiment. we build it in the open and the box shows the work.</p></div>
       </div>
-      <div class="ev-rule"><span>the road to an agent</span></div>
+      <div class="ev-rule"><span>the road to an agent</span><small>click a cat to open its page</small></div>
       <div class="ev-cats" id="evCats"></div>
     </div>
   </section>
@@ -1136,7 +1140,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 40px}
 <footer>
   <div class="wrap foot">
     <div class="foot-l">
-      <div class="foot-brand"><span data-name>Quantum Cats</span><em>an experiment</em></div>
+      <div class="foot-brand"><span data-name>Quantum Cats</span></div>
       <small>Ten simulated cats in a box. Characters, not advisers. Nothing here is financial advice.</small>
     </div>
     <div class="foot-r">
@@ -2097,7 +2101,8 @@ function sellTok(c) { // what a selling cat parts with: a forced choice (testing
   const starving = c.sol < costOf(FOOD, c) && c.hunger > 0.9; if (c.trait === 'loyal' && !starving) return QI;
   return Math.random() < (SELL_QI[c.trait] || 0.5) ? QI : TK;
 }
-function buyTok(c) { if (c.forceTok) return c.forceTok === 'qi' ? QI : TK; if (liveTx() && !qcatLive()) return QI; /* for real, with no CA yet, there is no $QCATS to buy */ if (c.trait === 'loyal') return TK; return Math.random() < ({ degen: 0.5, greedy: 0.5, patient: 0.4 }[c.trait] || 0.4) ? QI : TK; }
+function buyTok(c) { return TK; } // cats only ever buy $QCATS; $QI is earned in the lab and only ever sold
+const canBuy = () => !(liveTx() && !qcatLive()); // for real, with no CA yet, there is nothing to buy
 const shortOfSol = c => c.sol < costOf(FOOD, c) * 4;
 // what an act costs to start, so a cat never sets off for something it cannot pay for (forced trips from the admin puppet are let through)
 function canAfford(c, act) {
@@ -2187,7 +2192,7 @@ const PLACES = {
   crates:   { title: 'The diner',     kind: 'food · paid to the treasury',          pt: [CRATES.x + 0.8, CRATES.y + 1.2], stats: ['spent', 'here', 'visits'], desc: '' },
   vent:     { title: 'The heater',    kind: 'warmth · by the minute',               pt: [VENT.x + 0.7, VENT.y + 0.5], stats: ['spent', 'here', 'visits'], desc: '' },
   trays:    { title: 'The scrapyard', kind: 'salvage jobs \u00b7 paid in ' + TK,        pt: [TRAYS.x + TRAYS.w / 2, TRAYS.y + TRAYS.d / 2], stats: ['here', 'jobs', 'qcat'], desc: 'Old quantum hardware washes up here. A cat takes a job off the bench, strips it for parts, and the treasury pays it in ' + TK + ' the moment it is done.' },
-  exchange: { title: 'The exchange', kind: 'where cats sell $QI or ' + TK + ' for SOL, and buy', pt: [EXC.x + 0.5, EXC.y], stats: ['here', 'sells', 'visits'], desc: '' },
+  exchange: { title: 'The exchange', kind: 'where cats sell $QI or ' + TK + ' for SOL, and buy ' + TK + ',', pt: [EXC.x + 0.5, EXC.y], stats: ['here', 'sells', 'visits'], desc: '' },
   casino:   { title: 'The casino',    kind: 'the house is the treasury',            pt: [CASINO.x + 0.5, CASINO.y], stats: ['here', 'wagered', 'spent'], desc: '' },
   arena:    { title: 'The arena',     kind: 'wagers in SOL · entry ' + fmtSol(ARENA_FEE) + ' SOL', pt: [ARENA.x, ARENA.y], stats: ['spent', 'here', 'wagered'], desc: '' },
   loft:     { title: 'The bunks',     kind: 'free',                                 pt: [LOFT.x + 1.0, LOFT.y + 0.55], stats: ['here', 'visits', 'stolen'], desc: '' },
@@ -2307,6 +2312,7 @@ function decide(c) {
     if (o.act === 'scrap' || o.act === 'entangle' || o.act === 'wager') { partner = findPartner(c, o.act); if (!partner) continue; }
     if (isPaused() && !PAUSE_OK.has(o.act)) continue; // paused: nothing that moves money or earns it
     if (paced(c, o.act)) continue;
+    if (o.act === 'buy' && !canBuy()) continue;
     if (o.act === 'buy' && c.forced !== 'buy' && spare(c) < (testFlat() || 0.006)) continue;
     if (!canAfford(c, o.act)) continue; // it knows what things cost: no trips to the diner, the heater, the beacon, the yard or the casino with an empty wallet
     if (o.act === 'shop' && !itemsFor(c).length) continue;
@@ -2584,10 +2590,8 @@ function finish(c, p) {
   } else if (a === 'warm') {
     c.cold = 0; gainXp(c, 1 + Math.round((c.warmMin || 3) / 5)); did(c, `${c.warmMin || 3} minutes at the heater`);
     if (Math.random() < 0.25) log(`${c.name} finished ${c.warmMin || 3} minutes at the heater`, 'info', 'vent');
-  } else if (a === 'buy' && buyTok(c) === QI) {
-    // this one buys $QI: a quarter, half, three quarters or all of its spare SOL, by feeling; it knows what that is worth
-    const frac = buyFrac(c); let amt = spare(c) * frac; if (testFlat()) amt = Math.min(c.sol, testFlat()); amt = r6(amt); c.forced = null; c.forceTok = null; c.lastBuyT = T;
-    if (amt >= (testFlat() || 0.005)) { spendGas(c); c.buyCool = T + rand(2700, 4500); trade(c, 'buy', QI, amt, Math.round(amt / qiSol() * 0.99), `(${BUY_WORD[frac]})`); } else log(`${c.name} looked at the ${QI} price and kept its SOL`, 'info', 'exchange');
+  } else if (a === 'buy' && !canBuy()) {
+    c.forced = null; c.forceTok = null; c.buyCool = T + 600; log(`${c.name} went to buy and there is no ${TK} to buy yet`, 'info', 'exchange');
   } else if (a === 'buy') {
     const frac = buyFrac(c); let amt = spare(c) * frac; if (testFlat()) amt = Math.min(c.sol, testFlat()); amt = r6(amt); c.forced = null; c.forceTok = null; c.lastBuyT = T; // a quarter, half, three quarters or all of the spare SOL, by feeling
     if (amt >= (testFlat() || 0.005)) { spendGas(c); c.buyCool = T + rand(2700, 4500); trade(c, 'buy', TK, amt, amt / mkt.price * 0.99, `(${BUY_WORD[frac]})`); } else log(`${c.name} looked at the ${TK} price and kept its SOL`, 'info', 'exchange');
@@ -5925,7 +5929,7 @@ function renderPlan() {
   if (key === evKey) return; evKey = key;
   for (const c of rows) {
     let d = el.querySelector('[data-cat="' + c.name + '"]');
-    if (!d) { d = document.createElement('div'); d.className = 'ev-cat'; d.dataset.cat = c.name; d.innerHTML = '<div class="who"><span class="sw"></span><div><b></b><small></small></div></div><div><div class="track"><i style="left:30%"></i><i style="left:60%"></i><span style="width:0"></span></div><div class="doing"></div></div><div class="pct"><span></span></div>'; const sw = d.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye); d.querySelector('b').textContent = c.name; }
+    if (!d) { d = document.createElement('div'); d.className = 'ev-cat'; d.dataset.cat = c.name; d.innerHTML = '<div class="who"><span class="sw"></span><div><b></b><small></small></div></div><div><div class="track"><i style="left:30%"></i><i style="left:60%"></i><span style="width:0"></span></div><div class="doing"></div></div><div class="pct"><span></span></div>'; const sw = d.querySelector('.sw'); sw.style.background = c.coat; sw.style.setProperty('--eye', c.eye); d.querySelector('b').textContent = c.name; d.title = 'open ' + c.name; d.addEventListener('click', () => { location.hash = '#/cats/' + encodeURIComponent(c.name); }); }
     const f = agentProgress(c);
     d.querySelector('.who small').textContent = `level ${c.lvl || 1} \u00b7 ${lvlTitle(c)} \u00b7 ${c.tr.label}`;
     requestAnimationFrame(() => { d.querySelector('.track span').style.width = (f * 100).toFixed(1) + '%'; });
