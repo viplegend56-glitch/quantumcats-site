@@ -2040,9 +2040,9 @@ function stepPayout() { if (!payouts.unpaid.length || T < unpaidNext) return; un
 const txWith = (c, type, amount, note, sig) => { tx(c, type, amount, note); if (sig) txs[0].sig = sig; };
 const qiSol = () => (mkt.qiSol > 0 ? mkt.qiSol : Number(CONFIG.QI_SOL) > 0 ? Number(CONFIG.QI_SOL) : 0.1); // about $15 a share at $150 SOL until the chart is wired in; the real chart replaces it once the mint is set // SOL per $QI, from the chart once it is wired in
 const qiLive = () => CONFIG.QI_LIVE === true; // the real $QI wallet is being read: nothing moves until a payout
-const fmtQi = n => { const a = Math.abs(n || 0); if (a >= 1000) return fmtQ(n); if (!(a > 0)) return '0'; let d = 1; while (d < 4 && Number(a.toFixed(d)) === 0) d++; return n.toFixed(d); }; // the lab's stock: one decimal, more only when one would show a bare zero
+const fmtQi = n => { const a = Math.abs(n || 0); if (a >= 1000) return fmtQ(n); if (!(a > 0)) return '0'; let d = 2; while (d < 4 && Number(a.toFixed(d)) === 0) d++; return n.toFixed(d); }; // the lab's stock: two decimals, more only when they would show a bare zero
 const usdQ = v => '$' + (Math.abs(v) >= 1000 ? Math.round(v).toLocaleString('en-US') : v.toFixed(2)); // a dollar figure for the stock
-const qiPay = q => usdQ(q * qiUsd()) + ' in ' + QI; // a payout or a sale, in dollars first
+const qiPay = q => usdQ(q * qiUsd()) + ' ' + QI; // a payout or a sale, in dollars first: '$5.00 $QUBT'
 const qiBoth = q => fmtQi(q) + ' ' + QI + ' · ' + usdQ(q * qiUsd()); // a holding: shares, then what they are worth now
 // when something happened, as the box tells time: the day it was, and how many real minutes of that day were left (a box day is one hour)
 const whenLabel = e => { let left; if (e.at != null) left = Math.max(0, Math.ceil((DAY_SECS - (e.at % DAY_SECS)) / 60)); else if (e.t) { const [h, m] = String(e.t).split(':').map(Number); left = Math.max(0, Math.ceil((1440 - (h * 60 + m)) / 24)); } else left = 0; return (e.day ? 'day ' + e.day : 'today') + ' \u00b7 ' + left + ' min left'; };
@@ -5947,7 +5947,7 @@ function renderPlan() {
 }
 function renderPayouts() {
   const waiting = remoteMode ? remoteWaiting : intents.filter(i => i.type === 'wage' || i.type === 'qi' || i.type === 'qcat').length, unpaid = (payouts.unpaid || []).length;
-  setT('poN', fmt(payouts.n || 0)); setT('poSol', fmtSol(stats.wages) + ' SOL'); setT('poQi', usdQ((stats.qiPaid || 0) * qiUsd()) + ' · ' + fmtQi(stats.qiPaid || 0)); setT('poWait', fmt(waiting) + (unpaid ? ' · ' + unpaid + ' retrying' : ''));
+  setT('poN', fmt(payouts.n || 0)); setT('poSol', fmtSol(stats.wages) + ' SOL'); setT('poQi', fmtQi(stats.qiPaid || 0)); setT('poWait', fmt(waiting) + (unpaid ? ' · ' + unpaid + ' retrying' : ''));
   renderPayroll();
   const key = payouts.log.length + ':' + (payouts.log[0] ? payouts.log[0].at + payouts.log[0].name : '') + '|' + waiting + '|' + cats.map(c => c.name + Math.round(c.earned * 1e4) + (c.qiEarned || 0)).join(',');
   if (key === poKey) return; poKey = key;
@@ -6107,7 +6107,7 @@ function renderLedger() {
     { const tot = vSol + vQcat + vQi || 1, mx = document.getElementById('treMix'); if (mx) { mx.children[0].style.width = (100 * vSol / tot) + '%'; mx.children[1].style.width = (100 * vQcat / tot) + '%'; mx.children[2].style.width = (100 * vQi / tot) + '%'; } }
     { const el = document.getElementById('treNote'); if (el) el.childNodes[el.childNodes.length - 1].textContent = ' · ' + (liveTreasuryAt ? 'balance and prices checked ' + Math.max(0, Math.round((Date.now() - liveTreasuryAt) / 1000)) + 's ago' : 'the box\u2019s own treasury until the wallets are on-chain'); }
     const ta = document.getElementById('treAddr'); if (ta && liveTreasuryPub && ta.textContent !== liveTreasuryPub) { ta.textContent = liveTreasuryPub; ta.href = 'https://solscan.io/account/' + liveTreasuryPub; }
-    setT('fFees', fmtSol(numv(R.fees, stats.fees)) + ' SOL'); setT('fQi', usdQ((stats.qiPaid || 0) * qiUsd()) + ' · ' + fmtQi(stats.qiPaid || 0)); setT('fQcatPaid', fmtQ(stats.qcatPaid || 0));
+    setT('fFees', fmtSol(numv(R.fees, stats.fees)) + ' SOL'); setT('fQi', fmtQi(stats.qiPaid || 0)); setT('fQcatPaid', fmtQ(stats.qcatPaid || 0));
     // the ten wallets together: what they hold, what it is worth at the same prices as the treasury, and what the cats have earned in SOL all time
     { const wSol = cats.reduce((a, c) => a + liveSol(c) + (live(c) ? 0 : (c.gas == null ? GAS_FLOOR : c.gas)), 0), wQcat = cats.reduce((a, c) => a + liveQ(c), 0), wQi = cats.reduce((a, c) => a + liveQi(c), 0);
       setT('wSol', fmtSol(wSol)); setT('wQcat', fmtQ(wQcat)); setT('wQi', fmtQ(wQi)); setT('wTotUsd', 'worth ' + usd(wSol * rate + wQcat * pQcat + wQi * pQi) + ' together'); setT('wEarned', fmtSol(numv(R.solEarned, cats.reduce((a, c) => a + c.earned, 0))) + ' SOL'); } }
